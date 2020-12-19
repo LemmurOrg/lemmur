@@ -161,7 +161,7 @@ class InstancePage extends HookWidget {
                   fetcher: (page, batchSize, sort) =>
                       LemmyApi(instanceUrl).v1.getPosts(
                             // TODO: switch between all and subscribed
-                            type: PostListingType.all,
+                            type: PostListingType.local,
                             sort: sort,
                             limit: batchSize,
                             page: page,

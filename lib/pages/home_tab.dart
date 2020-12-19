@@ -26,7 +26,7 @@ class HomeTab extends HookWidget {
     final accStore = useAccountsStore();
     final selectedList = useState(_SelectedList(
         listingType: accStore.hasNoAccount
-            ? PostListingType.all
+            ? PostListingType.local
             : PostListingType.subscribed));
     final isc = useInfiniteScrollController();
     final theme = Theme.of(context);
@@ -71,7 +71,7 @@ class HomeTab extends HookWidget {
                   title: Text('All'),
                   leading: SizedBox(width: 20, height: 20),
                   onTap: () =>
-                      pop(_SelectedList(listingType: PostListingType.all)),
+                      pop(_SelectedList(listingType: PostListingType.local)),
                 ),
                 for (final instance in accStore.instances) ...[
                   Padding(
@@ -128,7 +128,7 @@ class HomeTab extends HookWidget {
                   ListTile(
                     title: Text('All'),
                     onTap: () => pop(_SelectedList(
-                      listingType: PostListingType.all,
+                      listingType: PostListingType.local,
                       instanceUrl: instance,
                     )),
                     leading: SizedBox(width: 20),
@@ -248,7 +248,7 @@ class InfiniteHomeList extends HookWidget {
           listingType != PostListingType.community, 'only subscribed or all');
 
       final instances = () {
-        if (listingType == PostListingType.all) {
+        if (listingType == PostListingType.local) {
           return accStore.instances;
         } else {
           return accStore.loggedInInstances;
