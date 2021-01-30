@@ -57,7 +57,7 @@ jobs:
             build/app/outputs/flutter-apk/app-x86_64-release.apk
             ${{steps.sign_app.outputs.signedReleaseFile}}
 
-  #  linux-build:
+  # linux-build:
   #   name: Linux build
   #   needs: CI
   #   runs-on: ubuntu-latest
@@ -126,8 +126,8 @@ jobs:
     name: Release
     needs:
       - CI
-      - linux-build
-      - windows-build
+      # - linux-build
+      # - windows-build
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/') && github.repository == 'krawieck/lemmur'
     steps:
