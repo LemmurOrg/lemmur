@@ -32,12 +32,14 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
+      - run: mkdir -p build/app/outputs/flutter-apk/signed
+
       - name: Android build
-        run: flutter build apk --split-per-abi
+        run: flutter build apk --target-platform android-arm
 
       - uses: r0adkll/sign-android-release@v1
         name: Sign app APK
-        id: sign_app
+        id: sign_app_arm
         with:
           releaseDirectory: build/app/outputs/flutter-apk/
           signingKeyBase64: ${{ secrets.SIGNING_KEY }}
@@ -45,17 +47,43 @@ jobs:
           keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
           keyPassword: ${{ secrets.KEY_PASSWORD }}
 
-      - run: echo ${{steps.sign_app.outputs.signedReleaseFile}}
+      - run: mv ${{steps.sign_app_arm.outputs.signedReleaseFile}} build/app/outputs/flutter-apk/signed/arm.apk
+
+      - name: Android build
+        run: flutter build apk --target-platform android-arm64
+
+      - uses: r0adkll/sign-android-release@v1
+        name: Sign app APK
+        id: sign_app_arm64
+        with:
+          releaseDirectory: build/app/outputs/flutter-apk/
+          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+          alias: ${{ secrets.ALIAS }}
+          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
+
+      - run: mv ${{steps.sign_app_arm64.outputs.signedReleaseFile}} build/app/outputs/flutter-apk/signed/arm64.apk
+
+      - name: Android build
+        run: flutter build apk --target-platform android-x64
+
+      - uses: r0adkll/sign-android-release@v1
+        name: Sign app APK
+        id: sign_app_x64
+        with:
+          releaseDirectory: build/app/outputs/flutter-apk/
+          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+          alias: ${{ secrets.ALIAS }}
+          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
+
+      - run: mv ${{steps.sign_app_x64.outputs.signedReleaseFile}} build/app/outputs/flutter-apk/signed/x64.apk
 
       - uses: actions/upload-artifact@v2
-        if: startsWith(github.ref, 'refs/tags/')
         with:
           name: android-build
           path: |
-            build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
-            build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
-            build/app/outputs/flutter-apk/app-x86_64-release.apk
-            ${{steps.sign_app.outputs.signedReleaseFile}}
+            build/app/outputs/flutter-apk/signed/*
 
   # linux-build:
   #   name: Linux build
