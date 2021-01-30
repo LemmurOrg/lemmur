@@ -57,7 +57,7 @@ jobs:
             build/app/outputs/flutter-apk/app-x86_64-release.apk
             ${{steps.sign_app.outputs.signedReleaseFile}}
 
-  # linux-build:
+  #  linux-build:
   #   name: Linux build
   #   needs: CI
   #   runs-on: ubuntu-latest
