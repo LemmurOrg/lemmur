@@ -34,7 +34,7 @@ jobs:
 
       - run: mkdir -p build/app/outputs/flutter-apk/signed
 
-      - name: Android build
+      - name: Android build arm
         run: flutter build apk --target-platform android-arm
 
       - uses: r0adkll/sign-android-release@v1
@@ -49,7 +49,7 @@ jobs:
 
       - run: mv ${{steps.sign_app_arm.outputs.signedReleaseFile}} build/app/outputs/flutter-apk/signed/arm.apk
 
-      - name: Android build
+      - name: Android build arm64
         run: flutter build apk --target-platform android-arm64
 
       - uses: r0adkll/sign-android-release@v1
@@ -64,7 +64,7 @@ jobs:
 
       - run: mv ${{steps.sign_app_arm64.outputs.signedReleaseFile}} build/app/outputs/flutter-apk/signed/arm64.apk
 
-      - name: Android build
+      - name: Android build x64
         run: flutter build apk --target-platform android-x64
 
       - uses: r0adkll/sign-android-release@v1
