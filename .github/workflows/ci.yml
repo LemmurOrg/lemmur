@@ -29,6 +29,9 @@ jobs:
         with:
           channel: "stable"
 
+      - name: Get dependencies
+        run: flutter pub get
+
       - name: Run lints
         run: flutter analyze
 
@@ -37,9 +40,6 @@ jobs:
 
       - name: Run tests
         run: flutter test
-
-      - name: Get dependencies
-        run: flutter pub get
 
       - name: Inject keystore
         working-directory: android
