@@ -1,3 +1,9 @@
+## Unreleased
+
+### Fixed
+
+- Fixed a bug where replying to a comment would instead reply to the parent of that comment
+
 ## v0.2.0 - 2021-01-27
 
 ### Breaking changes
