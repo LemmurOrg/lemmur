@@ -104,20 +104,20 @@ class MediaViewPage extends HookWidget {
           : null,
       body: GestureDetector(
         onTapUp: (details) => showButtons.value = !showButtons.value,
-        onVerticalDragStart: (details) {
-          if (!isZoomedOut.value) return;
-          isDragging.value = true;
-          initialPositionY.value = details.globalPosition.dy;
-        },
-        onVerticalDragUpdate: (details) {
-          if (!isZoomedOut.value) return;
-          // currentPositionY.value = details.globalPosition.dy;
-          positionYDelta.value =
-              details.globalPosition.dy - initialPositionY.value;
-        },
+        onVerticalDragStart: isZoomedOut.value
+            ? (details) {
+                isDragging.value = true;
+                initialPositionY.value = details.globalPosition.dy;
+              }
+            : null,
+        onVerticalDragUpdate: isZoomedOut.value
+            ? (details) {
+                positionYDelta.value =
+                    details.globalPosition.dy - initialPositionY.value;
+              }
+            : null,
         onVerticalDragEnd: isZoomedOut.value
             ? (details) {
-                if (!isZoomedOut.value) return;
                 isDragging.value = false;
                 if (details.primaryVelocity.abs() > 1000) {
                   Navigator.of(context).pop();
