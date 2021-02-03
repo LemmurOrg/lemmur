@@ -142,6 +142,10 @@ class MediaViewPage extends HookWidget {
               scaleStateChangedCallback: (value) {
                 isZoomedOut.value = value == PhotoViewScaleState.zoomedOut ||
                     value == PhotoViewScaleState.initial;
+                showButtons.value = isZoomedOut.value;
+              },
+              onTapUp: (_, __, ___) {
+                showButtons.value = !showButtons.value;
               },
               minScale: PhotoViewComputedScale.contained,
               initialScale: PhotoViewComputedScale.contained,
