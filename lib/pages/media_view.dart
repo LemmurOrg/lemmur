@@ -11,6 +11,7 @@ import '../widgets/bottom_modal.dart';
 class MediaViewPage extends HookWidget {
   final String url;
   final GlobalKey<ScaffoldState> _key = GlobalKey();
+  static const dismissThreshold = 150;
 
   MediaViewPage(this.url);
 
@@ -22,7 +23,6 @@ class MediaViewPage extends HookWidget {
     final isDragging = useState(false);
     final initialPositionY = useState<double>(0);
     final positionYDelta = useState<double>(0);
-    const disposeLimit = 150;
 
     notImplemented() {
       _key.currentState.showSnackBar(const SnackBar(
@@ -121,8 +121,8 @@ class MediaViewPage extends HookWidget {
                 isDragging.value = false;
                 if (details.primaryVelocity.abs() > 1000) {
                   Navigator.of(context).pop();
-                } else if (positionYDelta.value > disposeLimit ||
-                    positionYDelta.value < -disposeLimit) {
+                } else if (positionYDelta.value > dismissThreshold ||
+                    positionYDelta.value < -dismissThreshold) {
                   Navigator.of(context).pop();
                 } else {
                   positionYDelta.value = 0;
