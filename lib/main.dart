@@ -65,31 +65,6 @@ class MyApp extends HookWidget {
   }
 }
 
-class TemporarySearchTab extends HookWidget {
-  const TemporarySearchTab();
-
-  @override
-  Widget build(BuildContext context) {
-    final accStore = useAccountsStore();
-    return ListView(
-      children: [
-        const ListTile(
-          title: Center(
-              child: Text('🚧 this tab is still under construction 🚧\n'
-                  'but you can open your instances in a browser '
-                  ' for missing functionality')),
-        ),
-        const Divider(),
-        for (final inst in accStore.instances)
-          ListTile(
-            title: Text(inst),
-            onTap: () => ul.launch('https://$inst/'),
-          )
-      ],
-    );
-  }
-}
-
 class MyHomePage extends HookWidget {
   const MyHomePage();
 
