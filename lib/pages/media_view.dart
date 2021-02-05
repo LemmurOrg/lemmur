@@ -13,8 +13,8 @@ import '../widgets/bottom_modal.dart';
 class MediaViewPage extends HookWidget {
   final String url;
   final GlobalKey<ScaffoldState> _key = GlobalKey();
-  static const dismissThreshold = 150;
-  static const velocityThreshold = 1000;
+  static const yThreshold = 150;
+  static const speedThreshold = 1000;
 
   MediaViewPage(this.url);
 
@@ -26,6 +26,10 @@ class MediaViewPage extends HookWidget {
     final currentOpacity = useState<double>(1);
     final isDragging = useState(false);
     final positionYDelta = useState<double>(0);
+    final positionXDelta = useState<double>(0);
+
+    final offset = useState(Offset.zero);
+    final prevOffset = usePrevious(offset.value);
 
     notImplemented() {
       _key.currentState.showSnackBar(const SnackBar(
@@ -85,7 +89,8 @@ class MediaViewPage extends HookWidget {
       key: _key,
       extendBodyBehindAppBar: true,
       extendBody: true,
-      backgroundColor: Colors.black.withOpacity(currentOpacity.value),
+      backgroundColor: Colors.black
+          .withOpacity(max(0, 1.0 - (positionYDelta.value.abs() / 200))),
       appBar: showButtons.value
           ? AppBar(
               backgroundColor: Colors.black38,
@@ -105,25 +110,32 @@ class MediaViewPage extends HookWidget {
               ],
             )
           : null,
-      body: GestureDetector(
-        onTapUp: (details) => showButtons.value = !showButtons.value,
-        onVerticalDragUpdate: isZoomedOut.value
-            ? (details) {
+      body: Listener(
+        onPointerMove: isZoomedOut.value
+            ? (event) {
                 isDragging.value = true;
                 currentOpacity.value =
                     max(0, 1.0 - (positionYDelta.value.abs() / 200));
-                positionYDelta.value += details.delta.dy;
+                positionYDelta.value += event.delta.dy;
+                positionXDelta.value += event.delta.dx;
+                offset.value = event.delta;
               }
             : null,
-        onVerticalDragEnd: isZoomedOut.value
+        onPointerCancel: (_) {
+          positionYDelta.value = 0;
+          positionXDelta.value = 0;
+        },
+        onPointerUp: isZoomedOut.value
             ? (details) {
                 isDragging.value = false;
-                if (details.primaryVelocity.abs() > velocityThreshold ||
-                    positionYDelta.value > dismissThreshold.abs()) {
+                final speed = (offset.value - prevOffset).distance;
+                if (speed > speedThreshold ||
+                    positionYDelta.value.abs() > yThreshold) {
                   Navigator.of(context).pop();
                 } else {
                   currentOpacity.value = 1;
                   positionYDelta.value = 0;
+                  positionXDelta.value = 0;
                 }
               }
             : null,
@@ -132,10 +144,10 @@ class MediaViewPage extends HookWidget {
             duration: isDragging.value
                 ? Duration.zero
                 : const Duration(milliseconds: 100),
-            top: 0 + positionYDelta.value,
-            bottom: 0 - positionYDelta.value,
-            left: 0,
-            right: 0,
+            top: positionYDelta.value,
+            bottom: -positionYDelta.value,
+            left: positionXDelta.value,
+            right: -positionXDelta.value,
             child: PhotoView(
               backgroundDecoration:
                   const BoxDecoration(color: Colors.transparent),
