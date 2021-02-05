@@ -14,7 +14,7 @@ class MediaViewPage extends HookWidget {
   final String url;
   final GlobalKey<ScaffoldState> _key = GlobalKey();
   static const yThreshold = 150;
-  static const speedThreshold = 1000;
+  static const speedThreshold = 45;
 
   MediaViewPage(this.url);
 
