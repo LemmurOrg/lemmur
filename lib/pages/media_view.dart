@@ -1,4 +1,4 @@
-import 'dart:math' show max;
+import 'dart:math' show max, min;
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:esys_flutter_share/esys_flutter_share.dart';
@@ -148,23 +148,30 @@ class MediaViewPage extends HookWidget {
             bottom: -positionYDelta.value,
             left: positionXDelta.value,
             right: -positionXDelta.value,
-            child: PhotoView(
-              backgroundDecoration:
-                  const BoxDecoration(color: Colors.transparent),
-              scaleStateChangedCallback: (value) {
-                isZoomedOut.value = value == PhotoViewScaleState.zoomedOut ||
-                    value == PhotoViewScaleState.initial;
-                showButtons.value = isZoomedOut.value;
-              },
-              onTapUp: (_, __, ___) {
-                showButtons.value = !showButtons.value;
-              },
-              minScale: PhotoViewComputedScale.contained,
-              initialScale: PhotoViewComputedScale.contained,
-              imageProvider: CachedNetworkImageProvider(url),
-              heroAttributes: PhotoViewHeroAttributes(tag: url),
-              loadingBuilder: (context, event) =>
-                  const Center(child: CircularProgressIndicator()),
+            child: AnimatedContainer(
+              transform:
+                  Matrix4.rotationZ(min(-positionXDelta.value / 1000, 0.5)),
+              duration: isDragging.value
+                  ? Duration.zero
+                  : const Duration(milliseconds: 100),
+              child: PhotoView(
+                backgroundDecoration:
+                    const BoxDecoration(color: Colors.transparent),
+                scaleStateChangedCallback: (value) {
+                  isZoomedOut.value = value == PhotoViewScaleState.zoomedOut ||
+                      value == PhotoViewScaleState.initial;
+                  showButtons.value = isZoomedOut.value;
+                },
+                onTapUp: (_, __, ___) {
+                  showButtons.value = !showButtons.value;
+                },
+                minScale: PhotoViewComputedScale.contained,
+                initialScale: PhotoViewComputedScale.contained,
+                imageProvider: CachedNetworkImageProvider(url),
+                heroAttributes: PhotoViewHeroAttributes(tag: url),
+                loadingBuilder: (context, event) =>
+                    const Center(child: CircularProgressIndicator()),
+              ),
             ),
           ),
         ]),
