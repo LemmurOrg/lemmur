@@ -14,6 +14,7 @@ class MediaViewPage extends HookWidget {
   final String url;
   final GlobalKey<ScaffoldState> _key = GlobalKey();
   static const dismissThreshold = 150;
+  static const velocityThreshold = 1000;
 
   MediaViewPage(this.url);
 
@@ -117,7 +118,7 @@ class MediaViewPage extends HookWidget {
         onVerticalDragEnd: isZoomedOut.value
             ? (details) {
                 isDragging.value = false;
-                if (details.primaryVelocity.abs() > 1000 ||
+                if (details.primaryVelocity.abs() > velocityThreshold ||
                     positionYDelta.value > dismissThreshold.abs()) {
                   Navigator.of(context).pop();
                 } else {
