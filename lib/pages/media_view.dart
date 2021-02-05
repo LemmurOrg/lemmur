@@ -1,3 +1,5 @@
+import 'dart:math' show max;
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/material.dart';
@@ -20,8 +22,8 @@ class MediaViewPage extends HookWidget {
     final showButtons = useState(true);
     final isZoomedOut = useState(true);
 
+    final currentOpacity = useState<double>(1);
     final isDragging = useState(false);
-    final initialPositionY = useState<double>(0);
     final positionYDelta = useState<double>(0);
 
     notImplemented() {
@@ -82,7 +84,7 @@ class MediaViewPage extends HookWidget {
       key: _key,
       extendBodyBehindAppBar: true,
       extendBody: true,
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.black.withOpacity(currentOpacity.value),
       appBar: showButtons.value
           ? AppBar(
               backgroundColor: Colors.black38,
@@ -104,27 +106,22 @@ class MediaViewPage extends HookWidget {
           : null,
       body: GestureDetector(
         onTapUp: (details) => showButtons.value = !showButtons.value,
-        onVerticalDragStart: isZoomedOut.value
-            ? (details) {
-                isDragging.value = true;
-                initialPositionY.value = details.globalPosition.dy;
-              }
-            : null,
         onVerticalDragUpdate: isZoomedOut.value
             ? (details) {
-                positionYDelta.value =
-                    details.globalPosition.dy - initialPositionY.value;
+                isDragging.value = true;
+                currentOpacity.value =
+                    max(0, 1.0 - (positionYDelta.value.abs() / 200));
+                positionYDelta.value += details.delta.dy;
               }
             : null,
         onVerticalDragEnd: isZoomedOut.value
             ? (details) {
                 isDragging.value = false;
-                if (details.primaryVelocity.abs() > 1000) {
-                  Navigator.of(context).pop();
-                } else if (positionYDelta.value > dismissThreshold ||
-                    positionYDelta.value < -dismissThreshold) {
+                if (details.primaryVelocity.abs() > 1000 ||
+                    positionYDelta.value > dismissThreshold.abs()) {
                   Navigator.of(context).pop();
                 } else {
+                  currentOpacity.value = 1;
                   positionYDelta.value = 0;
                 }
               }
@@ -139,6 +136,8 @@ class MediaViewPage extends HookWidget {
             left: 0,
             right: 0,
             child: PhotoView(
+              backgroundDecoration:
+                  const BoxDecoration(color: Colors.transparent),
               scaleStateChangedCallback: (value) {
                 isZoomedOut.value = value == PhotoViewScaleState.zoomedOut ||
                     value == PhotoViewScaleState.initial;
