@@ -4,6 +4,11 @@
 
 - Online users count is now correctly displayed
 
+### Changed
+
+- Changed MediaViewPage dismissal to be more fun, it now
+  moves on the x axis, changes scale and rotates a bit for more user enjoyment
+
 ### Fixed
 
 - Fixed a bug where replying to a comment would instead reply to the parent of that comment
