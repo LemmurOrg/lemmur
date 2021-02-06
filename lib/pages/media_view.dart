@@ -132,7 +132,7 @@ class MediaViewPage extends HookWidget {
           AnimatedPositioned(
             duration: isDragging.value
                 ? Duration.zero
-                : const Duration(milliseconds: 100),
+                : const Duration(milliseconds: 200),
             top: offset.value.dy,
             bottom: -offset.value.dy,
             left: offset.value.dx,
@@ -140,11 +140,11 @@ class MediaViewPage extends HookWidget {
             child: AnimatedContainer(
               transform: Matrix4Transform()
                   .scale(max(0.9, 1 - offset.value.dy.abs() / 1000))
-                  .rotate(min(-offset.value.dx / 1000, 0.3))
+                  .rotate(min(-offset.value.dx / 2000, 0.1))
                   .matrix4,
               duration: isDragging.value
                   ? Duration.zero
-                  : const Duration(milliseconds: 100),
+                  : const Duration(milliseconds: 200),
               child: PhotoView(
                 backgroundDecoration:
                     const BoxDecoration(color: Colors.transparent),
