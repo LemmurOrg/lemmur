@@ -122,11 +122,7 @@ class AddInstancePage extends HookWidget {
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: SizedBox(
               height: 40,
-              child: RaisedButton(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                color: theme.accentColor,
+              child: ElevatedButton(
                 onPressed: isSite.value == true ? handleOnAdd : null,
                 child: !debounce.loading
                     ? const Text('Add')

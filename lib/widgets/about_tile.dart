@@ -34,7 +34,7 @@ class AboutTile extends HookWidget {
     return AboutListTile(
       icon: const Icon(Icons.info),
       aboutBoxChildren: [
-        FlatButton.icon(
+        TextButton.icon(
           icon: const Icon(Icons.subject),
           label: const Text('changelog'),
           onPressed: () => showModalBottomSheet(
@@ -44,12 +44,12 @@ class AboutTile extends HookWidget {
             ),
           ),
         ),
-        FlatButton.icon(
+        TextButton.icon(
           icon: const Icon(Icons.code),
           label: const Text('source code'),
           onPressed: () => openInBrowser('https://github.com/krawieck/lemmur'),
         ),
-        FlatButton.icon(
+        TextButton.icon(
           icon: const Icon(Icons.monetization_on),
           label: const Text('support development'),
           onPressed: () {
@@ -59,12 +59,12 @@ class AboutTile extends HookWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    FlatButton(
+                    TextButton(
                       onPressed: () =>
                           openInBrowser('https://patreon.com/lemmur'),
                       child: const Text('Patreon'),
                     ),
-                    FlatButton(
+                    TextButton(
                       onPressed: () =>
                           openInBrowser('https://buymeacoff.ee/lemmur'),
                       child: const Text('Buy Me a Coffee'),

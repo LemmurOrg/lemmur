@@ -285,7 +285,7 @@ class CreatePostPage extends HookWidget {
                     ],
                   ),
                 ),
-                FlatButton(
+                TextButton(
                   onPressed: delayed.pending ? () {} : handleSubmit,
                   child: delayed.loading
                       ? const CircularProgressIndicator()

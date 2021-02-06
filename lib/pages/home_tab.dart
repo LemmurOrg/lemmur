@@ -224,11 +224,7 @@ class HomeTab extends HookWidget {
         centerTitle: true,
         title: TextButton(
           style: TextButton.styleFrom(
-            shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(10))),
             padding: const EdgeInsets.symmetric(horizontal: 15),
-            primary: theme.buttonColor,
-            textStyle: theme.primaryTextTheme.headline6,
           ),
           onPressed: handleListChange,
           child: Row(

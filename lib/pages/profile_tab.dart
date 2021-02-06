@@ -40,7 +40,7 @@ class UserProfileTab extends HookWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text('No account was added.'),
-              FlatButton.icon(
+              TextButton.icon(
                 onPressed: () {
                   goTo(context, (_) => AccountsConfigPage());
                 },
@@ -61,7 +61,7 @@ class UserProfileTab extends HookWidget {
         backgroundColor: Colors.transparent,
         shadowColor: Colors.transparent,
         centerTitle: true,
-        title: FlatButton(
+        title: TextButton(
           onPressed: () {
             showModalBottomSheet(
               context: context,

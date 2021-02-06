@@ -110,11 +110,11 @@ class AccountsConfigPage extends HookWidget {
               title: const Text('Remove instance?'),
               content: Text('Are you sure you want to remove $instanceHost?'),
               actions: [
-                FlatButton(
+                TextButton(
                   onPressed: () => Navigator.of(context).pop(false),
                   child: const Text('no'),
                 ),
-                FlatButton(
+                TextButton(
                   onPressed: () => Navigator.of(context).pop(true),
                   child: const Text('yes'),
                 ),
@@ -134,11 +134,11 @@ class AccountsConfigPage extends HookWidget {
               content: Text(
                   'Are you sure you want to remove $username@$instanceHost?'),
               actions: [
-                FlatButton(
+                TextButton(
                   onPressed: () => Navigator.of(context).pop(false),
                   child: const Text('no'),
                 ),
-                FlatButton(
+                TextButton(
                   onPressed: () => Navigator.of(context).pop(true),
                   child: const Text('yes'),
                 ),
@@ -193,16 +193,14 @@ class AccountsConfigPage extends HookWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(top: 100),
-                  child: FlatButton.icon(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      onPressed: () => showCupertinoModalPopup(
-                            context: context,
-                            builder: (_) => AddInstancePage(),
-                          ),
-                      icon: const Icon(Icons.add),
-                      label: const Text('Add instance')),
+                  child: TextButton.icon(
+                    onPressed: () => showCupertinoModalPopup(
+                      context: context,
+                      builder: (_) => AddInstancePage(),
+                    ),
+                    icon: const Icon(Icons.add),
+                    label: const Text('Add instance'),
+                  ),
                 ),
               ],
             ),

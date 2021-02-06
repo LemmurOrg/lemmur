@@ -170,11 +170,11 @@ class _ManageAccount extends HookWidget {
                 ],
               ),
               actions: [
-                FlatButton(
+                TextButton(
                   onPressed: () => Navigator.of(context).pop(false),
                   child: const Text('no'),
                 ),
-                FlatButton(
+                TextButton(
                   onPressed: () => Navigator.of(context).pop(true),
                   child: const Text('yes'),
                 ),
@@ -405,12 +405,6 @@ class _ManageAccount extends HookWidget {
         const SizedBox(height: 8),
         ElevatedButton(
           onPressed: saveDelayedLoading.loading ? null : handleSubmit,
-          style: ElevatedButton.styleFrom(
-            visualDensity: VisualDensity.comfortable,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
           child: saveDelayedLoading.loading
               ? const SizedBox(
                   width: 20,
@@ -424,10 +418,6 @@ class _ManageAccount extends HookWidget {
           onPressed: deleteAccountDialog,
           style: ElevatedButton.styleFrom(
             primary: Colors.red,
-            visualDensity: VisualDensity.comfortable,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
           ),
           child: const Text('DELETE ACCOUNT'),
         ),
@@ -533,12 +523,6 @@ class _ImagePicker extends HookWidget {
             if (pictrsDeleteToken.value == null)
               ElevatedButton(
                 onPressed: delayedLoading.loading ? null : uploadImage,
-                style: ElevatedButton.styleFrom(
-                  visualDensity: VisualDensity.comfortable,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
                 child: delayedLoading.loading
                     ? const SizedBox(
                         height: 20,

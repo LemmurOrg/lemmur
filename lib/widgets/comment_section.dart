@@ -50,7 +50,7 @@ class CommentSection extends HookWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
         child: Row(
           children: [
-            OutlineButton(
+            OutlinedButton(
               onPressed: () {
                 showModalBottomSheet(
                     backgroundColor: Colors.transparent,
@@ -75,9 +75,6 @@ class CommentSection extends HookWidget {
                           ),
                         ));
               },
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
               child: Row(
                 children: [
                   Text(sortPairs[sorting.value][1] as String),

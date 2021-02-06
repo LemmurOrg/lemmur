@@ -125,12 +125,6 @@ class SelectInstanceButton extends HookWidget {
           onChange?.call(val);
         }
       },
-      style: OutlinedButton.styleFrom(
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10))),
-        padding: const EdgeInsets.symmetric(horizontal: 15),
-        primary: theme.textTheme.bodyText1.color,
-      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

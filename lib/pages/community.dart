@@ -459,10 +459,7 @@ class _AboutTab extends StatelessWidget {
         const _Divider(),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: OutlineButton(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
+          child: OutlinedButton(
             onPressed: goToCategories,
             child: Text(community.category.name),
           ),
@@ -470,10 +467,7 @@ class _AboutTab extends StatelessWidget {
         const _Divider(),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: OutlineButton(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
+          child: OutlinedButton(
             onPressed: goToModlog,
             child: const Text('Modlog'),
           ),
@@ -570,40 +564,44 @@ class _FollowButton extends HookWidget {
       delayed.cancel();
     }
 
-    return Center(
-      child: SizedBox(
-        height: 27,
-        width: 160,
-        child: delayed.loading
-            ? RaisedButton(
-                onPressed: null,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: const SizedBox(
-                  height: 15,
-                  width: 15,
-                  child: CircularProgressIndicator(),
-                ),
-              )
-            : RaisedButton.icon(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-                onPressed: loggedInAction(delayed.pending ? (_) {} : subscribe),
-                icon: isSubbed.value
-                    ? Icon(Icons.remove, size: 18, color: colorOnTopOfAccent)
-                    : Icon(Icons.add, size: 18, color: colorOnTopOfAccent),
-                color: theme.accentColor,
-                label: Text(
-                  '${isSubbed.value ? 'un' : ''}subscribe',
-                  style: TextStyle(
-                      color: colorOnTopOfAccent,
-                      fontSize: theme.textTheme.subtitle1.fontSize),
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
+    return Theme(
+      data: ThemeData(
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: theme.elevatedButtonTheme.style.copyWith(
+            shape: MaterialStateProperty.all(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
               ),
+            ),
+          ),
+        ),
+      ),
+      child: Center(
+        child: SizedBox(
+          height: 27,
+          width: 160,
+          child: delayed.loading
+              ? const ElevatedButton(
+                  onPressed: null,
+                  child: SizedBox(
+                    height: 15,
+                    width: 15,
+                    child: CircularProgressIndicator(),
+                  ),
+                )
+              : ElevatedButton.icon(
+                  onPressed:
+                      loggedInAction(delayed.pending ? (_) {} : subscribe),
+                  icon: isSubbed.value
+                      ? const Icon(Icons.remove, size: 18)
+                      : const Icon(Icons.add, size: 18),
+                  label: Text(
+                    '${isSubbed.value ? 'un' : ''}subscribe',
+                    style:
+                        theme.textTheme.subtitle1.copyWith(color: Colors.black),
+                  ),
+                ),
+        ),
       ),
     );
   }

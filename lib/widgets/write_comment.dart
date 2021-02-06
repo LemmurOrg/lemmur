@@ -123,7 +123,7 @@ class WriteComment extends HookWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              FlatButton(
+              TextButton(
                 onPressed: delayed.pending ? () {} : handleSubmit,
                 child: delayed.loading
                     ? const CircularProgressIndicator()

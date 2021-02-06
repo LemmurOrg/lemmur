@@ -108,98 +108,85 @@ class AddAccountPage extends HookWidget {
         backgroundColor: theme.canvasColor,
         shadowColor: Colors.transparent,
       ),
-      body: Padding(
+      body: ListView(
         padding: const EdgeInsets.all(15),
-        child: ListView(
-          children: [
-            if (icon.value == null)
-              const SizedBox(height: 150)
-            else
-              SizedBox(
-                height: 150,
-                child: FullscreenableImage(
-                  url: icon.value,
-                  child: CachedNetworkImage(
-                    imageUrl: icon.value,
-                    errorWidget: (_, __, ___) => const SizedBox.shrink(),
-                  ),
+        children: [
+          if (icon.value == null)
+            const SizedBox(height: 150)
+          else
+            SizedBox(
+              height: 150,
+              child: FullscreenableImage(
+                url: icon.value,
+                child: CachedNetworkImage(
+                  imageUrl: icon.value,
+                  errorWidget: (_, __, ___) => const SizedBox.shrink(),
                 ),
               ),
-            FlatButton(
-              onPressed: selectInstance,
-              shape: RoundedRectangleBorder(
+            ),
+          TextButton(
+            onPressed: selectInstance,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(selectedInstance.value),
+                const Icon(Icons.arrow_drop_down),
+              ],
+            ),
+          ),
+          // TODO: add support for password managers
+          TextField(
+            autofocus: true,
+            controller: usernameController,
+            decoration: InputDecoration(
+              isDense: true,
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(selectedInstance.value),
-                  const Icon(Icons.arrow_drop_down),
-                ],
-              ),
+              labelText: 'Username or email',
             ),
-            // TODO: add support for password managers
-            TextField(
-              autofocus: true,
-              controller: usernameController,
-              decoration: InputDecoration(
-                isDense: true,
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                labelText: 'Username or email',
-              ),
-            ),
-            const SizedBox(height: 5),
-            TextField(
-              controller: passwordController,
-              obscureText: true,
-              decoration: InputDecoration(
-                isDense: true,
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                labelText: 'Password',
-              ),
-            ),
-            RaisedButton(
-              color: theme.accentColor,
-              padding: const EdgeInsets.all(0),
-              shape: RoundedRectangleBorder(
+          ),
+          const SizedBox(height: 5),
+          TextField(
+            controller: passwordController,
+            obscureText: true,
+            decoration: InputDecoration(
+              isDense: true,
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
-              onPressed: usernameController.text.isEmpty ||
-                      passwordController.text.isEmpty
-                  ? null
-                  : loading.pending
-                      ? () {}
-                      : handleOnAdd,
-              child: !loading.loading
-                  ? const Text('Sign in')
-                  : SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        valueColor:
-                            AlwaysStoppedAnimation<Color>(theme.canvasColor),
-                      ),
+              labelText: 'Password',
+            ),
+          ),
+          ElevatedButton(
+            onPressed: usernameController.text.isEmpty ||
+                    passwordController.text.isEmpty
+                ? null
+                : loading.pending
+                    ? () {}
+                    : handleOnAdd,
+            child: !loading.loading
+                ? const Text('Sign in')
+                : SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      valueColor:
+                          AlwaysStoppedAnimation<Color>(theme.canvasColor),
                     ),
-            ),
-            FlatButton(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              onPressed: () {
-                ul.launch('https://${selectedInstance.value}/login');
-              },
-              child: const Text('Register'),
-            ),
-          ],
-        ),
+                  ),
+          ),
+          TextButton(
+            onPressed: () {
+              ul.launch('https://${selectedInstance.value}/login');
+            },
+            child: const Text('Register'),
+          ),
+        ],
       ),
     );
   }

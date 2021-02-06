@@ -50,10 +50,7 @@ class PostListOptions extends HookWidget {
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
       child: Row(
         children: [
-          OutlineButton(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
+          OutlinedButton(
             onPressed: () => selectSortType(context),
             child: Row(
               mainAxisSize: MainAxisSize.min,
