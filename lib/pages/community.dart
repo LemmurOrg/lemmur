@@ -540,6 +540,7 @@ class _FollowButton extends HookWidget {
       data: ElevatedButtonThemeData(
         style: theme.elevatedButtonTheme.style.copyWith(
           shape: MaterialStateProperty.all(const StadiumBorder()),
+          textStyle: MaterialStateProperty.all(theme.textTheme.subtitle1),
         ),
       ),
       child: Center(
@@ -561,11 +562,7 @@ class _FollowButton extends HookWidget {
                   icon: isSubbed.value
                       ? const Icon(Icons.remove, size: 18)
                       : const Icon(Icons.add, size: 18),
-                  label: Text(
-                    '${isSubbed.value ? 'un' : ''}subscribe',
-                    style:
-                        theme.textTheme.subtitle1.copyWith(color: Colors.black),
-                  ),
+                  label: Text('${isSubbed.value ? 'un' : ''}subscribe'),
                 ),
         ),
       ),
