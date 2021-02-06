@@ -24,6 +24,7 @@ class MediaViewPage extends HookWidget {
     final showButtons = useState(true);
     final isZoomedOut = useState(true);
 
+    final isInitial = useState(true);
     final isDragging = useState(false);
 
     final offset = useState(Offset.zero);
@@ -109,12 +110,13 @@ class MediaViewPage extends HookWidget {
             )
           : null,
       body: Listener(
-        onPointerMove: isZoomedOut.value
+        onPointerMove: isZoomedOut.value && isInitial.value
             ? (event) {
+                if (!isDragging.value && event.delta.dy < 5) return;
                 isDragging.value = true;
                 offset.value += event.delta;
               }
-            : null,
+            : (_) => offset.value = Offset.zero,
         onPointerCancel: (_) => offset.value = Offset.zero,
         onPointerUp: isZoomedOut.value
             ? (_) {
@@ -149,6 +151,7 @@ class MediaViewPage extends HookWidget {
                 backgroundDecoration:
                     const BoxDecoration(color: Colors.transparent),
                 scaleStateChangedCallback: (value) {
+                  isInitial.value = value == PhotoViewScaleState.initial;
                   isZoomedOut.value = value == PhotoViewScaleState.zoomedOut ||
                       value == PhotoViewScaleState.initial;
                   showButtons.value = isZoomedOut.value;
