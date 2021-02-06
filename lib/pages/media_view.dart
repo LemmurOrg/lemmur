@@ -112,7 +112,7 @@ class MediaViewPage extends HookWidget {
       body: Listener(
         onPointerMove: isZoomedOut.value && isInitial.value
             ? (event) {
-                if (!isDragging.value && event.delta.dy < 5) return;
+                if (!isDragging.value && event.delta.dy.abs() < 5) return;
                 isDragging.value = true;
                 offset.value += event.delta;
               }
@@ -120,6 +120,8 @@ class MediaViewPage extends HookWidget {
         onPointerCancel: (_) => offset.value = Offset.zero,
         onPointerUp: isZoomedOut.value
             ? (_) {
+                if (!isDragging.value) showButtons.value = !showButtons.value;
+
                 isDragging.value = false;
                 final speed = (offset.value - prevOffset).distance;
                 if (speed > speedThreshold ||
@@ -156,9 +158,11 @@ class MediaViewPage extends HookWidget {
                       value == PhotoViewScaleState.initial;
                   showButtons.value = isZoomedOut.value;
                 },
-                onTapUp: (_, __, ___) {
-                  showButtons.value = !showButtons.value;
-                },
+                onTapUp: isZoomedOut.value
+                    ? null
+                    : (_, __, ___) {
+                        showButtons.value = !showButtons.value;
+                      },
                 minScale: PhotoViewComputedScale.contained,
                 initialScale: PhotoViewComputedScale.contained,
                 imageProvider: CachedNetworkImageProvider(url),
