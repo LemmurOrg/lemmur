@@ -11,11 +11,11 @@ import '../hooks/logged_in_action.dart';
 import '../hooks/memo_future.dart';
 import '../hooks/stores.dart';
 import '../util/extensions/api.dart';
+import '../util/extensions/spaced.dart';
 import '../util/goto.dart';
 import '../util/intl.dart';
 import '../util/more_icon.dart';
 import '../util/text_color.dart';
-import '../widgets/badge.dart';
 import '../widgets/bottom_modal.dart';
 import '../widgets/fullscreenable_image.dart';
 import '../widgets/info_table_popup.dart';
@@ -435,25 +435,22 @@ class _AboutTab extends StatelessWidget {
           const _Divider(),
         ],
         SizedBox(
-          height: 25,
+          height: 32,
           child: ListView(
             scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 15),
             children: [
-              // TODO: consider using Chips
-              Padding(
-                padding: const EdgeInsets.only(left: 7),
-                child: _Badge('${onlineUsers ?? 'X'} users online'),
-              ),
-              _Badge(
-                  '''${community.counts.subscribers} subscriber${pluralS(community.counts.subscribers)}'''),
-              _Badge(
-                  '''${community.counts.posts} post${pluralS(community.counts.posts)}'''),
-              Padding(
-                padding: const EdgeInsets.only(right: 15),
-                child: _Badge(
-                    '''${community.counts.comments} comment${pluralS(community.counts.comments)}'''),
-              ),
-            ],
+              Chip(label: Text('${onlineUsers ?? 'X'} users online')),
+              Chip(
+                  label: Text(
+                      '${community.counts.subscribers} subscriber${pluralS(community.counts.subscribers)}')),
+              Chip(
+                  label: Text(
+                      '${community.counts.posts} post${pluralS(community.counts.posts)}')),
+              Chip(
+                  label: Text(
+                      '${community.counts.comments} comment${pluralS(community.counts.comments)}')),
+            ].spaced(8),
           ),
         ),
         const _Divider(),
@@ -492,29 +489,6 @@ class _AboutTab extends StatelessWidget {
   }
 }
 
-class _Badge extends StatelessWidget {
-  final String text;
-  final bool noPad;
-
-  const _Badge(this.text, {this.noPad = false});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Padding(
-      padding: noPad ? const EdgeInsets.all(0) : const EdgeInsets.only(left: 8),
-      child: Badge(
-        child: Text(
-          text,
-          style:
-              TextStyle(color: textColorBasedOnBackground(theme.accentColor)),
-        ),
-      ),
-    );
-  }
-}
-
 class _Divider extends StatelessWidget {
   const _Divider();
 
@@ -537,8 +511,6 @@ class _FollowButton extends HookWidget {
     final isSubbed = useState(community.subscribed ?? false);
     final delayed = useDelayedLoading();
     final loggedInAction = useLoggedInAction(community.instanceHost);
-
-    final colorOnTopOfAccent = textColorBasedOnBackground(theme.accentColor);
 
     subscribe(Jwt token) async {
       delayed.start();
@@ -564,16 +536,10 @@ class _FollowButton extends HookWidget {
       delayed.cancel();
     }
 
-    return Theme(
-      data: ThemeData(
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: theme.elevatedButtonTheme.style.copyWith(
-            shape: MaterialStateProperty.all(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-            ),
-          ),
+    return ElevatedButtonTheme(
+      data: ElevatedButtonThemeData(
+        style: theme.elevatedButtonTheme.style.copyWith(
+          shape: MaterialStateProperty.all(const StadiumBorder()),
         ),
       ),
       child: Center(

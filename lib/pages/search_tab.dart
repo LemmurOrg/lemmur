@@ -98,29 +98,32 @@ class SelectInstanceButton extends HookWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final accStore = useAccountsStore();
+
     return OutlinedButton(
       onPressed: () async {
         final val = await showModalBottomSheet<String>(
-            backgroundColor: Colors.transparent,
-            isScrollControlled: true,
-            context: context,
-            builder: (context) => BottomModal(
-                  child: Column(
-                    children: [
-                      for (final inst in accStore.instances)
-                        ListTile(
-                          leading: inst == instanceHost
-                              ? Icon(
-                                  Icons.radio_button_on,
-                                  color: theme.accentColor,
-                                )
-                              : const Icon(Icons.radio_button_off),
-                          title: Text(inst),
-                          onTap: () => Navigator.of(context).pop(inst),
-                        )
-                    ],
-                  ),
-                ));
+          backgroundColor: Colors.transparent,
+          isScrollControlled: true,
+          context: context,
+          builder: (context) => BottomModal(
+            child: Column(
+              children: [
+                for (final inst in accStore.instances)
+                  ListTile(
+                    leading: inst == instanceHost
+                        ? Icon(
+                            Icons.radio_button_on,
+                            color: theme.accentColor,
+                          )
+                        : const Icon(Icons.radio_button_off),
+                    title: Text(inst),
+                    onTap: () => Navigator.of(context).pop(inst),
+                  )
+              ],
+            ),
+          ),
+        );
+
         if (val != null) {
           onChange?.call(val);
         }

@@ -8,10 +8,10 @@ import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../hooks/stores.dart';
 import '../util/extensions/api.dart';
+import '../util/extensions/spaced.dart';
 import '../util/goto.dart';
 import '../util/more_icon.dart';
 import '../util/text_color.dart';
-import '../widgets/badge.dart';
 import '../widgets/bottom_modal.dart';
 import '../widgets/fullscreenable_image.dart';
 import '../widgets/info_table_popup.dart';
@@ -296,18 +296,20 @@ class _AboutTab extends HookWidget {
             ),
             const _Divider(),
             SizedBox(
-              height: 25,
+              height: 32,
               child: ListView(
                 scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 15),
                 children: [
-                  const SizedBox(width: 7),
-                  _Badge('${site.online} users online'),
-                  _Badge('${site.siteView.counts.users} users'),
-                  _Badge('${site.siteView.counts.communities} communities'),
-                  _Badge('${site.siteView.counts.posts} posts'),
-                  _Badge('${site.siteView.counts.comments} comments'),
-                  const SizedBox(width: 15),
-                ],
+                  Chip(label: Text('${site.online} users online')),
+                  Chip(label: Text('${site.siteView.counts.users} users')),
+                  Chip(
+                      label: Text(
+                          '${site.siteView.counts.communities} communities')),
+                  Chip(label: Text('${site.siteView.counts.posts} posts')),
+                  Chip(
+                      label: Text('${site.siteView.counts.comments} comments')),
+                ].spaced(8),
               ),
             ),
             const _Divider(),
@@ -401,28 +403,6 @@ class _AboutTab extends HookWidget {
               onTap: goToModLog,
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class _Badge extends StatelessWidget {
-  final String text;
-
-  const _Badge(this.text);
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Padding(
-      padding: const EdgeInsets.only(left: 8),
-      child: Badge(
-        child: Text(
-          text,
-          style:
-              TextStyle(color: textColorBasedOnBackground(theme.accentColor)),
         ),
       ),
     );
