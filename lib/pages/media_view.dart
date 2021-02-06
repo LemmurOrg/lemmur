@@ -37,8 +37,8 @@ class MediaViewPage extends HookWidget {
 
     useEffect(() {
       if (showButtons.value) {
+        // TODO: somehow hide navbar on android without a content jump
         SystemChrome.setEnabledSystemUIOverlays([
-          SystemUiOverlay.bottom,
           SystemUiOverlay.top,
         ]);
       } else {
