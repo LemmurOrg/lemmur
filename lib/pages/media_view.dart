@@ -5,6 +5,7 @@ import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:matrix4_transform/matrix4_transform.dart';
 import 'package:photo_view/photo_view.dart';
 
 import '../widgets/bottom_modal.dart';
@@ -23,10 +24,7 @@ class MediaViewPage extends HookWidget {
     final showButtons = useState(true);
     final isZoomedOut = useState(true);
 
-    final currentOpacity = useState<double>(1);
     final isDragging = useState(false);
-    final positionYDelta = useState<double>(0);
-    final positionXDelta = useState<double>(0);
 
     final offset = useState(Offset.zero);
     final prevOffset = usePrevious(offset.value);
@@ -89,8 +87,8 @@ class MediaViewPage extends HookWidget {
       key: _key,
       extendBodyBehindAppBar: true,
       extendBody: true,
-      backgroundColor: Colors.black
-          .withOpacity(max(0, 1.0 - (positionYDelta.value.abs() / 200))),
+      backgroundColor:
+          Colors.black.withOpacity(max(0, 1.0 - (offset.value.dy.abs() / 200))),
       appBar: showButtons.value
           ? AppBar(
               backgroundColor: Colors.black38,
@@ -114,28 +112,19 @@ class MediaViewPage extends HookWidget {
         onPointerMove: isZoomedOut.value
             ? (event) {
                 isDragging.value = true;
-                currentOpacity.value =
-                    max(0, 1.0 - (positionYDelta.value.abs() / 200));
-                positionYDelta.value += event.delta.dy;
-                positionXDelta.value += event.delta.dx;
-                offset.value = event.delta;
+                offset.value += event.delta;
               }
             : null,
-        onPointerCancel: (_) {
-          positionYDelta.value = 0;
-          positionXDelta.value = 0;
-        },
+        onPointerCancel: (_) => offset.value = Offset.zero,
         onPointerUp: isZoomedOut.value
-            ? (details) {
+            ? (_) {
                 isDragging.value = false;
                 final speed = (offset.value - prevOffset).distance;
                 if (speed > speedThreshold ||
-                    positionYDelta.value.abs() > yThreshold) {
+                    offset.value.dy.abs() > yThreshold) {
                   Navigator.of(context).pop();
                 } else {
-                  currentOpacity.value = 1;
-                  positionYDelta.value = 0;
-                  positionXDelta.value = 0;
+                  offset.value = Offset.zero;
                 }
               }
             : null,
@@ -144,13 +133,15 @@ class MediaViewPage extends HookWidget {
             duration: isDragging.value
                 ? Duration.zero
                 : const Duration(milliseconds: 100),
-            top: positionYDelta.value,
-            bottom: -positionYDelta.value,
-            left: positionXDelta.value,
-            right: -positionXDelta.value,
+            top: offset.value.dy,
+            bottom: -offset.value.dy,
+            left: offset.value.dx,
+            right: -offset.value.dx,
             child: AnimatedContainer(
-              transform:
-                  Matrix4.rotationZ(min(-positionXDelta.value / 1000, 0.5)),
+              transform: Matrix4Transform()
+                  .scale(max(0.9, 1 - offset.value.dy.abs() / 1000))
+                  .rotate(min(-offset.value.dx / 1000, 0.3))
+                  .matrix4,
               duration: isDragging.value
                   ? Duration.zero
                   : const Duration(milliseconds: 100),
