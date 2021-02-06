@@ -9,8 +9,8 @@ Minimum Lemmy version supported: `v0.9.4`
 
 ### Changed
 
-- Changed MediaViewPage dismissal to be more fun, it now
-  moves on the x axis, changes scale and rotates a bit for more user enjoyment
+- Changed MediaViewPage dismissal to be more fun. The image now
+  also moves on the x axis, changes scale and rotates a bit for more user enjoyment
 
 ### Fixed
 
