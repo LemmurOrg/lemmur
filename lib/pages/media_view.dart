@@ -35,24 +35,7 @@ class MediaViewPage extends HookWidget {
           content: Text("this feature hasn't been implemented yet 😰")));
     }
 
-    useEffect(() {
-      if (showButtons.value) {
-        // TODO: somehow hide navbar on android without a content jump
-        SystemChrome.setEnabledSystemUIOverlays([
-          SystemUiOverlay.top,
-        ]);
-      } else {
-        SystemChrome.setEnabledSystemUIOverlays([]);
-      }
-      return null;
-    }, [showButtons.value]);
-
-    useEffect(
-        () => () => SystemChrome.setEnabledSystemUIOverlays([
-              SystemUiOverlay.bottom,
-              SystemUiOverlay.top,
-            ]),
-        []);
+    // TODO: hide navbar and topbar on android without a content jump
 
     share() {
       showModalBottomSheet(
