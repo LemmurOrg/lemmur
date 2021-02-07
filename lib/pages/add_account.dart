@@ -99,14 +99,7 @@ class AddAccountPage extends HookWidget {
       key: scaffoldKey,
       appBar: AppBar(
         leading: const CloseButton(),
-        actionsIconTheme: theme.iconTheme,
-        iconTheme: theme.iconTheme,
-        textTheme: theme.textTheme,
-        brightness: theme.brightness,
-        centerTitle: true,
         title: const Text('Add account'),
-        backgroundColor: theme.canvasColor,
-        shadowColor: Colors.transparent,
       ),
       body: ListView(
         padding: const EdgeInsets.all(15),

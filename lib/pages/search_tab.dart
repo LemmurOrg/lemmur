@@ -22,20 +22,14 @@ class SearchTab extends HookWidget {
 
     if (instanceHost.value == null) {
       return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          shadowColor: Colors.transparent,
-        ),
+        appBar: AppBar(),
         body: const Center(
           child: Text('You do not have any instances added'),
         ),
       );
     }
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        shadowColor: Colors.transparent,
-      ),
+      appBar: AppBar(),
       body: GestureDetector(
         onTapDown: (_) => primaryFocus.unfocus(),
         child: ListView(

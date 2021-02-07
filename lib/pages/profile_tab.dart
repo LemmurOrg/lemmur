@@ -29,12 +29,7 @@ class UserProfileTab extends HookWidget {
 
     if (accountsStore.hasNoAccount) {
       return Scaffold(
-        appBar: AppBar(
-          actions: actions,
-          backgroundColor: Colors.transparent,
-          iconTheme: theme.iconTheme,
-          shadowColor: Colors.transparent,
-        ),
+        appBar: AppBar(actions: actions),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -55,12 +50,7 @@ class UserProfileTab extends HookWidget {
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-      // TODO: this is not visible in light mode when the sliver app bar
-      // in UserProfile is folded
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        shadowColor: Colors.transparent,
-        centerTitle: true,
         title: TextButton(
           onPressed: () {
             showModalBottomSheet(
@@ -104,13 +94,10 @@ class UserProfileTab extends HookWidget {
               Text(
                 // TODO: fix overflow issues
                 '@${accountsStore.defaultUsername}',
-                style: theme.primaryTextTheme.headline6,
+                style: theme.appBarTheme.textTheme.headline6,
                 overflow: TextOverflow.fade,
               ),
-              Icon(
-                Icons.expand_more,
-                color: theme.primaryIconTheme.color,
-              ),
+              Icon(Icons.expand_more),
             ],
           ),
         ),

@@ -63,14 +63,7 @@ class AddInstancePage extends HookWidget {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
-        backgroundColor: theme.scaffoldBackgroundColor,
-        brightness: theme.brightness,
-        shadowColor: Colors.transparent,
-        iconTheme: theme.iconTheme,
-        centerTitle: true,
         leading: const CloseButton(),
-        actionsIconTheme: theme.iconTheme,
-        textTheme: theme.textTheme,
         title: const Text('Add instance'),
       ),
       body: ListView(

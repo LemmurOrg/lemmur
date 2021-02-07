@@ -70,22 +70,24 @@ class UserProfile extends HookWidget {
         headerSliverBuilder: (_, __) => [
           SliverAppBar(
             pinned: true,
-            expandedHeight: 265,
+            expandedHeight: 300,
             toolbarHeight: 0,
             forceElevated: true,
-            elevation: 0,
             backgroundColor: theme.cardColor,
-            brightness: theme.brightness,
-            iconTheme: theme.iconTheme,
             flexibleSpace:
                 FlexibleSpaceBar(background: _UserOverview(userView)),
-            bottom: TabBar(
-              labelColor: theme.textTheme.bodyText1.color,
-              tabs: const [
-                Tab(text: 'Posts'),
-                Tab(text: 'Comments'),
-                Tab(text: 'About'),
-              ],
+            bottom: PreferredSize(
+              preferredSize: const TabBar(tabs: []).preferredSize,
+              child: Material(
+                color: theme.cardColor,
+                child: const TabBar(
+                  tabs: [
+                    Tab(text: 'Posts'),
+                    Tab(text: 'Comments'),
+                    Tab(text: 'About'),
+                  ],
+                ),
+              ),
             ),
           ),
         ],
@@ -180,7 +182,7 @@ class _UserOverview extends HookWidget {
                     topRight: Radius.circular(40),
                     topLeft: Radius.circular(40),
                   ),
-                  color: theme.scaffoldBackgroundColor,
+                  color: theme.cardColor,
                 ),
               ),
             ),

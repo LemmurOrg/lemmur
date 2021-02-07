@@ -250,10 +250,7 @@ class CreatePostPage extends HookWidget {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.close),
-          onPressed: Navigator.of(context).pop,
-        ),
+        leading: const CloseButton(),
         actions: [
           IconButton(
             icon: Icon(showFancy.value ? Icons.build : Icons.brush),

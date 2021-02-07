@@ -38,13 +38,7 @@ class ManageAccountPage extends HookWidget {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: theme.scaffoldBackgroundColor,
-        brightness: theme.brightness,
-        shadowColor: Colors.transparent,
-        iconTheme: theme.iconTheme,
-        title:
-            Text('@$instanceHost@$username', style: theme.textTheme.headline6),
-        centerTitle: true,
+        title: Text('@$instanceHost@$username'),
       ),
       body: FutureBuilder<UserSafeSettings>(
         future: userFuture,

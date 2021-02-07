@@ -15,6 +15,22 @@ ThemeData _themeFactory({bool dark = false, bool amoled = false}) {
     cardColor: maybeAmoledColor,
     splashColor: maybeAmoledColor,
     visualDensity: VisualDensity.adaptivePlatformDensity,
+    appBarTheme: AppBarTheme(
+      elevation: 0,
+      brightness: theme.brightness,
+      color: Colors.transparent,
+      shadowColor: Colors.transparent,
+      centerTitle: true,
+      iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
+      textTheme: TextTheme(
+        headline6: theme.textTheme.headline6
+            .copyWith(fontSize: 20, fontWeight: FontWeight.w500),
+      ),
+    ),
+    tabBarTheme: TabBarTheme(
+      unselectedLabelColor: Colors.grey,
+      labelColor: theme.colorScheme.onSurface,
+    ),
     chipTheme: ChipThemeData(
       backgroundColor: theme.accentColor,
       disabledColor: Colors.amber,

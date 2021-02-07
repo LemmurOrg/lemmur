@@ -221,7 +221,6 @@ class HomeTab extends HookWidget {
             onPressed: () => goTo(context, (_) => const InboxPage()),
           )
         ],
-        centerTitle: true,
         title: TextButton(
           style: TextButton.styleFrom(
             padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -234,14 +233,11 @@ class HomeTab extends HookWidget {
               Flexible(
                 child: Text(
                   title,
-                  style: theme.primaryTextTheme.headline6,
+                  style: theme.appBarTheme.textTheme.headline6,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              Icon(
-                Icons.arrow_drop_down,
-                color: theme.primaryTextTheme.headline6.color,
-              ),
+              const Icon(Icons.arrow_drop_down),
             ],
           ),
         ),

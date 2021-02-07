@@ -80,7 +80,6 @@ class MediaViewPage extends HookWidget {
       appBar: showButtons.value
           ? AppBar(
               backgroundColor: Colors.black38,
-              shadowColor: Colors.transparent,
               leading: const CloseButton(),
               actions: [
                 IconButton(

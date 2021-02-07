@@ -85,12 +85,7 @@ class CommunityPage extends HookWidget {
 
     if (community == null) {
       return Scaffold(
-        appBar: AppBar(
-          iconTheme: theme.iconTheme,
-          brightness: theme.brightness,
-          backgroundColor: theme.cardColor,
-          elevation: 0,
-        ),
+        appBar: AppBar(),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -156,12 +151,8 @@ class CommunityPage extends HookWidget {
             SliverAppBar(
               expandedHeight: 300,
               pinned: true,
-              elevation: 0,
               backgroundColor: theme.cardColor,
-              brightness: theme.brightness,
-              iconTheme: theme.iconTheme,
-              title: Text('!${community.community.name}',
-                  style: TextStyle(color: colorOnCard)),
+              title: Text('!${community.community.name}'),
               actions: [
                 IconButton(icon: const Icon(Icons.share), onPressed: _share),
                 IconButton(icon: Icon(moreIcon), onPressed: _openMoreMenu),
@@ -173,20 +164,19 @@ class CommunityPage extends HookWidget {
                   onlineUsers: fullCommunitySnap.data?.online,
                 ),
               ),
-            ),
-            SliverPersistentHeader(
-              delegate: _SliverAppBarDelegate(
-                TabBar(
-                  labelColor: theme.textTheme.bodyText1.color,
-                  unselectedLabelColor: Colors.grey,
-                  tabs: const [
-                    Tab(text: 'Posts'),
-                    Tab(text: 'Comments'),
-                    Tab(text: 'About'),
-                  ],
+              bottom: PreferredSize(
+                preferredSize: const TabBar(tabs: []).preferredSize,
+                child: Material(
+                  color: theme.cardColor,
+                  child: TabBar(
+                    tabs: [
+                      Tab(text: 'Posts'),
+                      Tab(text: 'Comments'),
+                      Tab(text: 'About'),
+                    ],
+                  ),
                 ),
               ),
-              pinned: true,
             ),
           ],
           body: TabBarView(
@@ -376,27 +366,6 @@ class _CommunityOverview extends StatelessWidget {
       ),
     ]);
   }
-}
-
-class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
-  final TabBar _tabBar;
-
-  const _SliverAppBarDelegate(this._tabBar);
-
-  @override
-  double get minExtent => _tabBar.preferredSize.height;
-  @override
-  double get maxExtent => _tabBar.preferredSize.height;
-
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    final theme = Theme.of(context);
-    return Container(color: theme.cardColor, child: _tabBar);
-  }
-
-  @override
-  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) => false;
 }
 
 class _AboutTab extends StatelessWidget {

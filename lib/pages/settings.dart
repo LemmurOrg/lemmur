@@ -22,12 +22,7 @@ class SettingsPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        brightness: theme.brightness,
-        backgroundColor: theme.scaffoldBackgroundColor,
-        shadowColor: Colors.transparent,
-        iconTheme: theme.iconTheme,
-        title: Text('Settings', style: theme.textTheme.headline6),
-        centerTitle: true,
+        title: const Text('Settings'),
       ),
       body: ListView(
         children: [
@@ -58,17 +53,11 @@ class AppearanceConfigPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final configStore = useConfigStore();
 
     return Scaffold(
       appBar: AppBar(
-        brightness: theme.brightness,
-        backgroundColor: theme.scaffoldBackgroundColor,
-        shadowColor: Colors.transparent,
-        iconTheme: theme.iconTheme,
-        title: Text('Appearance', style: theme.textTheme.headline6),
-        centerTitle: true,
+        title: const Text('Appearance'),
       ),
       body: ListView(
         children: [
@@ -153,12 +142,7 @@ class AccountsConfigPage extends HookWidget {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        backgroundColor: theme.scaffoldBackgroundColor,
-        brightness: theme.brightness,
-        shadowColor: Colors.transparent,
-        iconTheme: theme.iconTheme,
-        title: Text('Accounts', style: theme.textTheme.headline6),
-        centerTitle: true,
+        title: Text('Accounts'),
       ),
       floatingActionButton: SpeedDial(
         animatedIcon: AnimatedIcons.menu_close, // TODO: change to + => x
