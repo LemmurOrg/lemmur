@@ -37,11 +37,9 @@ class AboutTile extends HookWidget {
         TextButton.icon(
           icon: const Icon(Icons.subject),
           label: const Text('changelog'),
-          onPressed: () => showModalBottomSheet(
+          onPressed: () => showBottomModal(
             context: context,
-            builder: (_) => BottomModal(
-              child: MarkdownBody(data: changelog),
-            ),
+            builder: (_) => MarkdownBody(data: changelog),
           ),
         ),
         TextButton.icon(

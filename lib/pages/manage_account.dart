@@ -11,6 +11,7 @@ import '../hooks/ref.dart';
 import '../hooks/stores.dart';
 import '../util/pictrs.dart';
 import '../widgets/bottom_safe.dart';
+import '../widgets/radio_picker.dart';
 
 /// Page for managing things like username, email, avatar etc
 /// This page will assume the manage account is logged in and
@@ -265,21 +266,15 @@ class _ManageAccount extends HookWidget {
                 )
               ],
             ),
-            DropdownButton<PostListingType>(
-              items: [
-                for (final postListingType in [
-                  PostListingType.all,
-                  PostListingType.local,
-                  PostListingType.subscribed,
-                ])
-                  DropdownMenuItem(
-                    value: postListingType,
-                    child: Text(postListingType.value),
-                  )
+            RadioPicker<PostListingType>(
+              values: const [
+                PostListingType.all,
+                PostListingType.local,
+                PostListingType.subscribed,
               ],
+              groupValue: defaultListingType.value,
               onChanged: (value) => defaultListingType.value = value,
-              value: defaultListingType.value,
-              isDense: true,
+              map: (value) => value.value,
             ),
           ],
         ),
@@ -297,17 +292,11 @@ class _ManageAccount extends HookWidget {
                 )
               ],
             ),
-            DropdownButton<SortType>(
-              items: [
-                for (final defaultSortType in SortType.values)
-                  DropdownMenuItem(
-                    value: defaultSortType,
-                    child: Text(defaultSortType.value),
-                  )
-              ],
+            RadioPicker<SortType>(
+              values: SortType.values,
+              groupValue: defaultSortType.value,
               onChanged: (value) => defaultSortType.value = value,
-              value: defaultSortType.value,
-              isDense: true,
+              map: (value) => value.value,
             ),
           ],
         ),

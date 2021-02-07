@@ -66,38 +66,35 @@ class InstancePage extends HookWidget {
     final site = siteSnap.data;
 
     void _openMoreMenu(BuildContext c) {
-      showModalBottomSheet(
-        backgroundColor: Colors.transparent,
+      showBottomModal(
         context: context,
-        builder: (context) => BottomModal(
-          child: Column(
-            children: [
-              ListTile(
-                leading: const Icon(Icons.open_in_browser),
-                title: const Text('Open in browser'),
-                onTap: () async => await ul
-                        .canLaunch('https://${site.instanceHost}')
-                    ? ul.launch('https://${site.instanceHost}')
-                    : Scaffold.of(context).showSnackBar(
-                        const SnackBar(content: Text("can't open in browser"))),
-              ),
-              ListTile(
-                leading: const Icon(Icons.info_outline),
-                title: const Text('Nerd stuff'),
-                onTap: () {
-                  showInfoTablePopup(context, {
-                    'url': instanceHost,
-                    'creator': '@${site.siteView.creator.name}',
-                    'version': site.version,
-                    'enableDownvotes': site.siteView.site.enableDownvotes,
-                    'enableNsfw': site.siteView.site.enableNsfw,
-                    'published': site.siteView.site.published,
-                    'updated': site.siteView.site.updated,
-                  });
-                },
-              ),
-            ],
-          ),
+        builder: (context) => Column(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.open_in_browser),
+              title: const Text('Open in browser'),
+              onTap: () async => await ul
+                      .canLaunch('https://${site.instanceHost}')
+                  ? ul.launch('https://${site.instanceHost}')
+                  : Scaffold.of(context).showSnackBar(
+                      const SnackBar(content: Text("can't open in browser"))),
+            ),
+            ListTile(
+              leading: const Icon(Icons.info_outline),
+              title: const Text('Nerd stuff'),
+              onTap: () {
+                showInfoTablePopup(context, {
+                  'url': instanceHost,
+                  'creator': '@${site.siteView.creator.name}',
+                  'version': site.version,
+                  'enableDownvotes': site.siteView.site.enableDownvotes,
+                  'enableNsfw': site.siteView.site.enableNsfw,
+                  'published': site.siteView.site.published,
+                  'updated': site.siteView.site.updated,
+                });
+              },
+            ),
+          ],
         ),
       );
     }

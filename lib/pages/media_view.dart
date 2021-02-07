@@ -44,31 +44,28 @@ class MediaViewPage extends HookWidget {
         []);
 
     share() {
-      showModalBottomSheet(
-        backgroundColor: Colors.transparent,
+      showBottomModal(
         context: context,
-        builder: (context) => BottomModal(
-          child: Column(
-            children: [
-              ListTile(
-                leading: const Icon(Icons.link),
-                title: const Text('Share link'),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  Share.text('Share image url', url, 'text/plain');
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.image),
-                title: const Text('Share file'),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  notImplemented();
-                  // TODO: share file
-                },
-              ),
-            ],
-          ),
+        builder: (context) => Column(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.link),
+              title: const Text('Share link'),
+              onTap: () {
+                Navigator.of(context).pop();
+                Share.text('Share image url', url, 'text/plain');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.image),
+              title: const Text('Share file'),
+              onTap: () {
+                Navigator.of(context).pop();
+                notImplemented();
+                // TODO: share file
+              },
+            ),
+          ],
         ),
       );
     }

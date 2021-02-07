@@ -7,8 +7,8 @@ import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../hooks/delayed_loading.dart';
 import '../hooks/stores.dart';
-import '../widgets/bottom_modal.dart';
 import '../widgets/fullscreenable_image.dart';
+import '../widgets/radio_picker.dart';
 import 'add_instance.dart';
 
 /// A modal where an account can be added for a given instance
@@ -22,61 +22,20 @@ class AddAccountPage extends HookWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    final usernameController = useTextEditingController();
-    final passwordController = useTextEditingController();
-    useValueListenable(usernameController);
-    useValueListenable(passwordController);
+    final usernameController = useListenable(useTextEditingController());
+    final passwordController = useListenable(useTextEditingController());
     final accountsStore = useAccountsStore();
 
     final loading = useDelayedLoading();
     final selectedInstance = useState(instanceHost);
     final icon = useState<String>(null);
+
     useEffect(() {
       LemmyApiV2(selectedInstance.value)
           .run(GetSite())
           .then((site) => icon.value = site.siteView.site.icon);
       return null;
     }, [selectedInstance.value]);
-
-    /// show a modal with a list of instance checkboxes
-    selectInstance() async {
-      final val = await showModalBottomSheet<String>(
-        backgroundColor: Colors.transparent,
-        isScrollControlled: true,
-        context: context,
-        builder: (context) => BottomModal(
-          title: 'select instance',
-          child: Column(children: [
-            for (final i in accountsStore.instances)
-              RadioListTile<String>(
-                value: i,
-                groupValue: selectedInstance.value,
-                onChanged: (val) {
-                  Navigator.of(context).pop(val);
-                },
-                title: Text(i),
-              ),
-            ListTile(
-              leading: const Padding(
-                padding: EdgeInsets.all(8),
-                child: Icon(Icons.add),
-              ),
-              title: const Text('Add instance'),
-              onTap: () async {
-                final val = await showCupertinoModalPopup<String>(
-                  context: context,
-                  builder: (context) => AddInstancePage(),
-                );
-                Navigator.of(context).pop(val);
-              },
-            ),
-          ]),
-        ),
-      );
-      if (val != null) {
-        selectedInstance.value = val;
-      }
-    }
 
     handleOnAdd() async {
       try {
@@ -117,14 +76,34 @@ class AddAccountPage extends HookWidget {
                 ),
               ),
             ),
-          TextButton(
-            onPressed: selectInstance,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(selectedInstance.value),
-                const Icon(Icons.arrow_drop_down),
-              ],
+          RadioPicker<String>(
+            values: accountsStore.instances.toList(),
+            groupValue: selectedInstance.value,
+            onChanged: (value) => selectedInstance.value = value,
+            map: (value) => value,
+            buttonBuilder: (context, displayValue, onPressed) => TextButton(
+              onPressed: onPressed,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(displayValue),
+                  const Icon(Icons.arrow_drop_down),
+                ],
+              ),
+            ),
+            trailing: ListTile(
+              leading: const Padding(
+                padding: EdgeInsets.all(8),
+                child: Icon(Icons.add),
+              ),
+              title: const Text('Add instance'),
+              onTap: () async {
+                final value = await showCupertinoModalPopup<String>(
+                  context: context,
+                  builder: (context) => AddInstancePage(),
+                );
+                Navigator.of(context).pop(value);
+              },
             ),
           ),
           // TODO: add support for password managers

@@ -106,35 +106,31 @@ class CommunityPage extends HookWidget {
         Share.text('Share instance', community.community.actorId, 'text/plain');
 
     void _openMoreMenu() {
-      showModalBottomSheet(
-        backgroundColor: Colors.transparent,
+      showBottomModal(
         context: context,
-        builder: (context) => BottomModal(
-          child: Column(
-            children: [
-              ListTile(
-                leading: const Icon(Icons.open_in_browser),
-                title: const Text('Open in browser'),
-                onTap: () async => await ul
-                        .canLaunch(community.community.actorId)
-                    ? ul.launch(community.community.actorId)
-                    : Scaffold.of(context).showSnackBar(
-                        const SnackBar(content: Text("can't open in browser"))),
-              ),
-              ListTile(
-                leading: const Icon(Icons.info_outline),
-                title: const Text('Nerd stuff'),
-                onTap: () {
-                  showInfoTablePopup(context, {
-                    'id': community.community.id,
-                    'actorId': community.community.actorId,
-                    'created by': '@${community.creator.name}',
-                    'published': community.community.published,
-                  });
-                },
-              ),
-            ],
-          ),
+        builder: (context) => Column(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.open_in_browser),
+              title: const Text('Open in browser'),
+              onTap: () async => await ul.canLaunch(community.community.actorId)
+                  ? ul.launch(community.community.actorId)
+                  : Scaffold.of(context).showSnackBar(
+                      const SnackBar(content: Text("can't open in browser"))),
+            ),
+            ListTile(
+              leading: const Icon(Icons.info_outline),
+              title: const Text('Nerd stuff'),
+              onTap: () {
+                showInfoTablePopup(context, {
+                  'id': community.community.id,
+                  'actorId': community.community.actorId,
+                  'created by': '@${community.creator.name}',
+                  'published': community.community.published,
+                });
+              },
+            ),
+          ],
         ),
       );
     }

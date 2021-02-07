@@ -52,28 +52,26 @@ class CommentSection extends HookWidget {
           children: [
             OutlinedButton(
               onPressed: () {
-                showModalBottomSheet(
-                    backgroundColor: Colors.transparent,
-                    context: context,
-                    builder: (context) => BottomModal(
-                          title: 'sort by',
-                          child: Column(
-                            children: [
-                              for (final e in sortPairs.entries)
-                                ListTile(
-                                  leading: Icon(e.value[0] as IconData),
-                                  title: Text(e.value[1] as String),
-                                  trailing: sorting.value == e.key
-                                      ? const Icon(Icons.check)
-                                      : null,
-                                  onTap: () {
-                                    Navigator.of(context).pop();
-                                    sortComments(e.key);
-                                  },
-                                )
-                            ],
-                          ),
-                        ));
+                showBottomModal(
+                  title: 'sort by',
+                  context: context,
+                  builder: (context) => Column(
+                    children: [
+                      for (final e in sortPairs.entries)
+                        ListTile(
+                          leading: Icon(e.value[0] as IconData),
+                          title: Text(e.value[1] as String),
+                          trailing: sorting.value == e.key
+                              ? const Icon(Icons.check)
+                              : null,
+                          onTap: () {
+                            Navigator.of(context).pop();
+                            sortComments(e.key);
+                          },
+                        )
+                    ],
+                  ),
+                );
               },
               child: Row(
                 children: [
