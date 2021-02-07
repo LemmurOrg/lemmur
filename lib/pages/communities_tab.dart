@@ -159,8 +159,6 @@ class CommunitiesTab extends HookWidget {
           textAlign: TextAlign.center,
           decoration: InputDecoration(
             suffixIcon: filterIcon,
-            isDense: true,
-            border: const OutlineInputBorder(),
             hintText: 'Filter', // TODO: hint with an filter icon
           ),
         ),

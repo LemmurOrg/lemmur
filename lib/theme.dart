@@ -44,6 +44,13 @@ ThemeData _themeFactory({bool dark = false, bool amoled = false}) {
       brightness: theme.brightness,
       labelPadding: const EdgeInsets.symmetric(horizontal: 12),
     ),
+    inputDecorationTheme: InputDecorationTheme(
+      contentPadding: const EdgeInsets.all(10),
+      isDense: true,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+    ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         primary: theme.accentColor,

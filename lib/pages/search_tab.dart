@@ -38,15 +38,7 @@ class SearchTab extends HookWidget {
             TextField(
               controller: searchInputController,
               textAlign: TextAlign.center,
-              decoration: InputDecoration(
-                fillColor: Colors.grey,
-                isDense: true,
-                contentPadding: const EdgeInsets.symmetric(vertical: 10),
-                hintText: 'search',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
+              decoration: const InputDecoration(hintText: 'search'),
             ),
             const SizedBox(height: 5),
             Row(

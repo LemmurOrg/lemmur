@@ -131,29 +131,13 @@ class AddAccountPage extends HookWidget {
           TextField(
             autofocus: true,
             controller: usernameController,
-            decoration: InputDecoration(
-              isDense: true,
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              labelText: 'Username or email',
-            ),
+            decoration: const InputDecoration(labelText: 'Username or email'),
           ),
           const SizedBox(height: 5),
           TextField(
             controller: passwordController,
             obscureText: true,
-            decoration: InputDecoration(
-              isDense: true,
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              labelText: 'Password',
-            ),
+            decoration: const InputDecoration(labelText: 'Password'),
           ),
           ElevatedButton(
             onPressed: usernameController.text.isEmpty ||

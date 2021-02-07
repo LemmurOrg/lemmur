@@ -219,98 +219,37 @@ class _ManageAccount extends HookWidget {
         ),
         const SizedBox(height: 8),
         Text('Display Name', style: theme.textTheme.headline6),
-        TextField(
-          controller: displayNameController,
-          decoration: InputDecoration(
-            isDense: true,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-        ),
+        TextField(controller: displayNameController),
         const SizedBox(height: 8),
         Text('Bio', style: theme.textTheme.headline6),
         TextField(
           controller: bioController,
           minLines: 4,
           maxLines: 10,
-          decoration: InputDecoration(
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
         ),
         const SizedBox(height: 8),
         Text('Email', style: theme.textTheme.headline6),
-        TextField(
-          controller: emailController,
-          decoration: InputDecoration(
-            isDense: true,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-        ),
+        TextField(controller: emailController),
         const SizedBox(height: 8),
         Text('Matrix User', style: theme.textTheme.headline6),
-        TextField(
-          controller: matrixUserController,
-          decoration: InputDecoration(
-            isDense: true,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-        ),
+        TextField(controller: matrixUserController),
         const SizedBox(height: 8),
         Text('New password', style: theme.textTheme.headline6),
         TextField(
           controller: newPasswordController,
           obscureText: true,
-          decoration: InputDecoration(
-            isDense: true,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
         ),
         const SizedBox(height: 8),
         Text('Verify password', style: theme.textTheme.headline6),
         TextField(
           controller: newPasswordVerifyController,
           obscureText: true,
-          decoration: InputDecoration(
-            isDense: true,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
         ),
         const SizedBox(height: 8),
         Text('Old password', style: theme.textTheme.headline6),
         TextField(
           controller: oldPasswordController,
           obscureText: true,
-          decoration: InputDecoration(
-            isDense: true,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
         ),
         const SizedBox(height: 8),
         Row(

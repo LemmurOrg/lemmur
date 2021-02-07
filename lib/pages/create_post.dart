@@ -166,9 +166,9 @@ class CreatePostPage extends HookWidget {
           enabled: pictrsDeleteToken.value == null,
           controller: urlController,
           decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'URL',
-              suffixIcon: Icon(Icons.link)),
+            labelText: 'URL',
+            suffixIcon: Icon(Icons.link),
+          ),
         ),
       ),
       const SizedBox(width: 5),
@@ -189,8 +189,7 @@ class CreatePostPage extends HookWidget {
       controller: titleController,
       minLines: 1,
       maxLines: 2,
-      decoration: const InputDecoration(
-          border: OutlineInputBorder(), labelText: 'Title'),
+      decoration: const InputDecoration(labelText: 'Title'),
     );
 
     final body = IndexedStack(
@@ -201,9 +200,7 @@ class CreatePostPage extends HookWidget {
           keyboardType: TextInputType.multiline,
           maxLines: null,
           minLines: 5,
-          textAlignVertical: TextAlignVertical.top,
-          decoration: const InputDecoration(
-              border: OutlineInputBorder(), labelText: 'Body'),
+          decoration: const InputDecoration(labelText: 'Body'),
         ),
         Padding(
           padding: const EdgeInsets.all(16),

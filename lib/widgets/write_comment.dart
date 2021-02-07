@@ -105,8 +105,6 @@ class WriteComment extends HookWidget {
                 autofocus: true,
                 minLines: 5,
                 maxLines: null,
-                textAlignVertical: TextAlignVertical.top,
-                decoration: const InputDecoration(border: OutlineInputBorder()),
               ),
               Padding(
                 padding: const EdgeInsets.all(16),

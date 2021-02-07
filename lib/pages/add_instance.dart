@@ -100,13 +100,7 @@ class AddInstancePage extends HookWidget {
                 autofocus: true,
                 controller: instanceController,
                 autocorrect: false,
-                decoration: InputDecoration(
-                  isDense: true,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  labelText: 'instance url',
-                ),
+                decoration: const InputDecoration(labelText: 'instance url'),
               ),
             ),
           ),
