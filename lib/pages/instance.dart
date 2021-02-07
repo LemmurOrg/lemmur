@@ -163,7 +163,7 @@ class InstancePage extends HookWidget {
                 preferredSize: const TabBar(tabs: []).preferredSize,
                 child: Material(
                   color: theme.cardColor,
-                  child: TabBar(
+                  child: const TabBar(
                     tabs: [
                       Tab(text: 'Posts'),
                       Tab(text: 'Comments'),

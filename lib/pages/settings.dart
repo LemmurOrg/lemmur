@@ -17,34 +17,30 @@ class SettingsPage extends StatelessWidget {
   const SettingsPage();
 
   @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Settings'),
-      ),
-      body: ListView(
-        children: [
-          ListTile(
-            leading: const Icon(Icons.person),
-            title: const Text('Accounts'),
-            onTap: () {
-              goTo(context, (_) => AccountsConfigPage());
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.color_lens),
-            title: const Text('Appearance'),
-            onTap: () {
-              goTo(context, (_) => const AppearanceConfigPage());
-            },
-          ),
-          const AboutTile()
-        ],
-      ),
-    );
-  }
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: const Text('Settings'),
+        ),
+        body: ListView(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.person),
+              title: const Text('Accounts'),
+              onTap: () {
+                goTo(context, (_) => AccountsConfigPage());
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.color_lens),
+              title: const Text('Appearance'),
+              onTap: () {
+                goTo(context, (_) => const AppearanceConfigPage());
+              },
+            ),
+            const AboutTile()
+          ],
+        ),
+      );
 }
 
 /// Settings for theme color, AMOLED switch
@@ -142,7 +138,7 @@ class AccountsConfigPage extends HookWidget {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text('Accounts'),
+        title: const Text('Accounts'),
       ),
       floatingActionButton: SpeedDial(
         animatedIcon: AnimatedIcons.menu_close, // TODO: change to + => x

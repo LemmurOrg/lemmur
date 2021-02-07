@@ -15,7 +15,6 @@ import '../util/extensions/spaced.dart';
 import '../util/goto.dart';
 import '../util/intl.dart';
 import '../util/more_icon.dart';
-import '../util/text_color.dart';
 import '../widgets/bottom_modal.dart';
 import '../widgets/fullscreenable_image.dart';
 import '../widgets/info_table_popup.dart';
@@ -68,8 +67,6 @@ class CommunityPage extends HookWidget {
         ));
       }
     });
-
-    final colorOnCard = textColorBasedOnBackground(theme.cardColor);
 
     final community = () {
       if (fullCommunitySnap.hasData) {
@@ -168,7 +165,7 @@ class CommunityPage extends HookWidget {
                 preferredSize: const TabBar(tabs: []).preferredSize,
                 child: Material(
                   color: theme.cardColor,
-                  child: TabBar(
+                  child: const TabBar(
                     tabs: [
                       Tab(text: 'Posts'),
                       Tab(text: 'Comments'),

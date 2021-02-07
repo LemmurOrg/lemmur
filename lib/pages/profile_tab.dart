@@ -97,7 +97,7 @@ class UserProfileTab extends HookWidget {
                 style: theme.appBarTheme.textTheme.headline6,
                 overflow: TextOverflow.fade,
               ),
-              Icon(Icons.expand_more),
+              const Icon(Icons.expand_more),
             ],
           ),
         ),

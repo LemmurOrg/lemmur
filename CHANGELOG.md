@@ -1,3 +1,15 @@
+## Unreleased
+
+Lemmur is now available on the [play store](https://play.google.com/store/apps/details?id=com.krawieck.lemmur) and [f-droid]()
+
+### Changed
+
+- Posts with large amount of text are now truncated in infinite scroll views
+
+### Fixed
+
+- Fixed issue where the "About lemmur" tile would not appear on Windows/Linux
+
 ## v0.2.2 - 2021-02-03
 
 Minimum Lemmy version supported: `v0.9.4`

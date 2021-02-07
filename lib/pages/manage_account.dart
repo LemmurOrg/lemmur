@@ -27,7 +27,6 @@ class ManageAccountPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final accountStore = useAccountsStore();
-    final theme = Theme.of(context);
 
     final userFuture = useMemoized(() async {
       final site = await LemmyApiV2(instanceHost).run(
