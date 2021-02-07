@@ -116,50 +116,40 @@ class MediaViewPage extends HookWidget {
                 offset.value = Offset.zero;
                 isDragging.value = false;
               },
-        child: Stack(children: [
-          AnimatedPositioned(
-            duration: isDragging.value
-                ? Duration.zero
-                : const Duration(milliseconds: 200),
-            top: offset.value.dy,
-            bottom: -offset.value.dy,
-            left: offset.value.dx,
-            right: -offset.value.dx,
-            child: AnimatedContainer(
-              transform: Matrix4Transform()
-                  .scale(max(0.9, 1 - offset.value.dy.abs() / 1000))
-                  .rotate(min(-offset.value.dx / 2000, 0.1))
-                  .matrix4,
-              duration: isDragging.value
-                  ? Duration.zero
-                  : const Duration(milliseconds: 200),
-              child: PhotoView(
-                controller: controller,
-                backgroundDecoration:
-                    const BoxDecoration(color: Colors.transparent),
-                scaleStateChangedCallback: (value) {
-                  const dif = 100000000000000;
-                  final newScale = (controller.scale * dif).floor();
-                  final prevScale = (controller.prevValue.scale * dif).floor();
-                  if (newScale == prevScale) return;
-
-                  isZoomedOut.value = value == PhotoViewScaleState.zoomedOut ||
-                      value == PhotoViewScaleState.initial;
-                  showButtons.value = isZoomedOut.value;
-                },
-                onTapUp: isZoomedOut.value
-                    ? null
-                    : (_, __, ___) => showButtons.value = !showButtons.value,
-                minScale: PhotoViewComputedScale.contained,
-                initialScale: PhotoViewComputedScale.contained,
-                imageProvider: CachedNetworkImageProvider(url),
-                heroAttributes: PhotoViewHeroAttributes(tag: url),
-                loadingBuilder: (context, event) =>
-                    const Center(child: CircularProgressIndicator()),
-              ),
-            ),
+        child: AnimatedContainer(
+          transform: Matrix4Transform()
+              .scale(max(0.9, 1 - offset.value.dy.abs() / 1000))
+              .translateOffset(offset.value)
+              .rotate(min(-offset.value.dx / 2000, 0.1))
+              .matrix4,
+          duration: isDragging.value
+              ? Duration.zero
+              : const Duration(milliseconds: 200),
+          child: PhotoView(
+            controller: controller,
+            backgroundDecoration:
+                const BoxDecoration(color: Colors.transparent),
+            scaleStateChangedCallback: (value) {
+              const dif = 100000000000000;
+              final newScale = (controller.scale * dif).floor();
+              final prevScale = (controller.prevValue.scale * dif).floor();
+              if (newScale == prevScale) return;
+              isZoomedOut.value = value == PhotoViewScaleState.zoomedOut ||
+                  value == PhotoViewScaleState.initial;
+              showButtons.value = isZoomedOut.value;
+              isDragging.value = false;
+            },
+            onTapUp: isZoomedOut.value
+                ? null
+                : (_, __, ___) => showButtons.value = !showButtons.value,
+            minScale: PhotoViewComputedScale.contained,
+            initialScale: PhotoViewComputedScale.contained,
+            imageProvider: CachedNetworkImageProvider(url),
+            heroAttributes: PhotoViewHeroAttributes(tag: url),
+            loadingBuilder: (context, event) =>
+                const Center(child: CircularProgressIndicator()),
           ),
-        ]),
+        ),
       ),
     );
   }
