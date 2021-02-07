@@ -1,6 +1,6 @@
 ## Unreleased
 
-Lemmur is now available on the [play store](https://play.google.com/store/apps/details?id=com.krawieck.lemmur) and [f-droid]()
+Lemmur is now available on the [play store](https://play.google.com/store/apps/details?id=com.krawieck.lemmur) and [f-droid](https://f-droid.org/packages/com.krawieck.lemmur)
 
 ### Changed
 
