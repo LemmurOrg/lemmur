@@ -97,7 +97,7 @@ class MediaViewPage extends HookWidget {
                 isDragging.value = true;
                 offset.value += event.delta;
               }
-            : null,
+            : (_) => isDragging.value = false,
         onPointerCancel: (_) => offset.value = Offset.zero,
         onPointerUp: isZoomedOut.value
             ? (_) {
