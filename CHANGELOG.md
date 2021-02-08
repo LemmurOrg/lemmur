@@ -5,6 +5,7 @@ Lemmur is now available on the [play store](https://play.google.com/store/apps/d
 ### Changed
 
 - Posts with large amount of text are now truncated in infinite scroll views
+- Changed image viewer dismissal to be more fun. The image now also moves on the x axis, changes scale and rotates a bit for more user enjoyment
 
 ### Fixed
 
