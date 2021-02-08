@@ -23,6 +23,7 @@ class MediaViewPage extends HookWidget {
     final controller = useMemoized(() => PhotoViewController());
     final showButtons = useState(true);
     final isZoomedOut = useState(true);
+    final scaleIsInitial = useState(true);
 
     final isDragging = useState(false);
 
@@ -92,8 +93,10 @@ class MediaViewPage extends HookWidget {
             )
           : null,
       body: Listener(
-        onPointerMove: isZoomedOut.value
+        onPointerMove: scaleIsInitial.value
             ? (event) {
+                if (!isDragging.value &&
+                    event.delta.dx.abs() > event.delta.dy.abs()) return;
                 isDragging.value = true;
                 offset.value += event.delta;
               }
@@ -101,7 +104,10 @@ class MediaViewPage extends HookWidget {
         onPointerCancel: (_) => offset.value = Offset.zero,
         onPointerUp: isZoomedOut.value
             ? (_) {
-                if (!isDragging.value) showButtons.value = !showButtons.value;
+                if (!isDragging.value) {
+                  showButtons.value = !showButtons.value;
+                  return;
+                }
 
                 isDragging.value = false;
                 final speed = (offset.value - prevOffset).distance;
@@ -131,13 +137,22 @@ class MediaViewPage extends HookWidget {
                 const BoxDecoration(color: Colors.transparent),
             scaleStateChangedCallback: (value) {
               const dif = 100000000000000;
-              final newScale = (controller.scale * dif).floor();
-              final prevScale = (controller.prevValue.scale * dif).floor();
-              if (newScale == prevScale) return;
+
+              if (isDragging.value &&
+                  controller?.scale != null &&
+                  controller?.prevValue?.scale != null) {
+                final newScale = (controller.scale * dif).floor();
+                final prevScale = (controller.prevValue.scale * dif).floor();
+
+                if (newScale == prevScale) return;
+              }
               isZoomedOut.value = value == PhotoViewScaleState.zoomedOut ||
                   value == PhotoViewScaleState.initial;
               showButtons.value = isZoomedOut.value;
+
+              scaleIsInitial.value = value == PhotoViewScaleState.initial;
               isDragging.value = false;
+              offset.value = Offset.zero;
             },
             onTapUp: isZoomedOut.value
                 ? null
