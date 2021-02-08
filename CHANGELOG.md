@@ -2,8 +2,7 @@
 
 ### Changed
 
-- Changed image viewer dismissal to be more fun. The image now
-  also moves on the x axis, changes scale and rotates a bit for more user enjoyment
+- Changed image viewer dismissal to be more fun. The image now also moves on the x axis, changes scale and rotates a bit for more user enjoyment
 
 ## v0.2.2 - 2021-02-03
 
