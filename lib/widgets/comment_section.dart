@@ -102,7 +102,7 @@ class CommentSection extends HookWidget {
       else
         for (final com in comments)
           CommentWidget(com, postCreatorId: postCreatorId),
-      const BottomSafe(50),
+      const BottomSafe(kMinInteractiveDimension + kFloatingActionButtonMargin),
     ]);
   }
 }

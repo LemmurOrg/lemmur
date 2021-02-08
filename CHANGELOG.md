@@ -10,6 +10,7 @@ Lemmur is now available on the [play store](https://play.google.com/store/apps/d
 ### Fixed
 
 - Fixed issue where the "About lemmur" tile would not appear on Windows/Linux
+- Added a bigger bottom margin in the comment section to prevent the floating action button from covering the last comment
 
 ## v0.2.2 - 2021-02-03
 
