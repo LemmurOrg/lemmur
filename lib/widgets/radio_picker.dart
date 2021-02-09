@@ -9,7 +9,7 @@ class RadioPicker<T> extends StatelessWidget {
   final ValueChanged<T> onChanged;
 
   /// Map a given value to a string for display
-  final String Function(T) map;
+  final String Function(T) mapValueToString;
   final String title;
 
   /// custom button builder. When null, an OutlinedButton is used
@@ -24,17 +24,19 @@ class RadioPicker<T> extends StatelessWidget {
     @required this.values,
     @required this.groupValue,
     @required this.onChanged,
-    @required this.map,
+    this.mapValueToString,
     this.buttonBuilder,
     this.title,
     this.trailing,
   })  : assert(values != null),
         assert(groupValue != null),
-        assert(map != null),
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final mapValueToString =
+        this.mapValueToString ?? (value) => value.toString();
+
     final buttonBuilder = this.buttonBuilder ??
         (context, displayString, onPressed) => OutlinedButton(
               onPressed: onPressed,
@@ -58,7 +60,7 @@ class RadioPicker<T> extends StatelessWidget {
               RadioListTile<T>(
                 value: value,
                 groupValue: groupValue,
-                title: Text(map(value)),
+                title: Text(mapValueToString(value)),
                 onChanged: (value) => Navigator.of(context).pop(value),
               ),
             if (trailing != null) trailing
@@ -71,6 +73,6 @@ class RadioPicker<T> extends StatelessWidget {
       }
     }
 
-    return buttonBuilder(context, map(groupValue), onPressed);
+    return buttonBuilder(context, mapValueToString(groupValue), onPressed);
   }
 }

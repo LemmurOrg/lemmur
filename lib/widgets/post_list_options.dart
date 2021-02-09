@@ -26,7 +26,7 @@ class PostListOptions extends StatelessWidget {
               values: SortType.values,
               groupValue: sortValue,
               onChanged: onSortChanged,
-              map: (value) => value.value,
+              mapValueToString: (value) => value.value,
             ),
             const Spacer(),
             if (styleButton)

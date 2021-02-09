@@ -80,7 +80,6 @@ class AddAccountPage extends HookWidget {
             values: accountsStore.instances.toList(),
             groupValue: selectedInstance.value,
             onChanged: (value) => selectedInstance.value = value,
-            map: (value) => value,
             buttonBuilder: (context, displayValue, onPressed) => TextButton(
               onPressed: onPressed,
               child: Row(

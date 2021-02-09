@@ -53,7 +53,6 @@ class SearchTab extends HookWidget {
                     values: accStore.instances.toList(),
                     groupValue: instanceHost.value,
                     onChanged: (value) => instanceHost.value = value,
-                    map: (value) => value,
                   ),
                 ),
               ],

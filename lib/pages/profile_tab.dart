@@ -66,7 +66,6 @@ class UserProfileTab extends HookWidget {
             final userTag = value.split('@');
             accountsStore.setDefaultAccount(userTag[1], userTag[0]);
           },
-          map: (value) => value,
           buttonBuilder: (context, displayValue, onPressed) => TextButton(
             onPressed: onPressed,
             child: Row(

@@ -115,7 +115,6 @@ class CreatePostPage extends HookWidget {
       values: accStore.loggedInInstances.toList(),
       groupValue: selectedInstance.value,
       onChanged: (value) => selectedInstance.value = value,
-      map: (value) => value,
       buttonBuilder: (context, displayValue, onPressed) => TextButton(
         onPressed: onPressed,
         child: Row(
