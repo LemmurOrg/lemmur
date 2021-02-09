@@ -504,14 +504,12 @@ class _FollowButton extends HookWidget {
         style: theme.elevatedButtonTheme.style.copyWith(
           shape: MaterialStateProperty.all(const StadiumBorder()),
           textStyle: MaterialStateProperty.all(theme.textTheme.subtitle1),
-          padding: MaterialStateProperty.all(
-            const EdgeInsets.symmetric(horizontal: 20),
-          ),
         ),
       ),
       child: Center(
         child: SizedBox(
           height: 27,
+          width: 160,
           child: delayed.loading
               ? const ElevatedButton(
                   onPressed: null,
@@ -524,18 +522,11 @@ class _FollowButton extends HookWidget {
               : ElevatedButton.icon(
                   onPressed:
                       loggedInAction(delayed.pending ? (_) {} : subscribe),
-                  icon: Icon(
-                    isSubbed.value ? Icons.remove : Icons.add,
-                    size: 18,
-                  ),
-                  label: IndexedStack(
-                    index: isSubbed.value ? 1 : 0,
-                    alignment: Alignment.center,
-                    children: const [
-                      Text('subscribe'),
-                      Text('unsubscribe'),
-                    ],
-                  )),
+                  icon: isSubbed.value
+                      ? const Icon(Icons.remove, size: 18)
+                      : const Icon(Icons.add, size: 18),
+                  label: Text('${isSubbed.value ? 'un' : ''}subscribe'),
+                ),
         ),
       ),
     );

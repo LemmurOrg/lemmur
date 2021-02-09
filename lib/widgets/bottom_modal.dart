@@ -73,8 +73,10 @@ Future<T> showBottomModal<T>({
   EdgeInsets padding = EdgeInsets.zero,
 }) =>
     showCustomModalBottomSheet<T>(
-      backgroundColor: Colors.transparent,
       context: context,
+      animationCurve: Curves.easeInOutCubic,
+      duration: const Duration(milliseconds: 300),
+      backgroundColor: Colors.transparent,
       builder: builder,
       containerWidget: (context, animation, child) => BottomModal(
         title: title,
