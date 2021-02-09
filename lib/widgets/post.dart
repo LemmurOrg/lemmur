@@ -82,7 +82,7 @@ class PostWidget extends HookWidget {
                 'downvotes': post.counts.downvotes,
                 'score': post.counts.score,
                 '% of upvotes':
-                    '''${(100 * (post.counts.upvotes / (post.counts.upvotes + post.counts.downvotes))).toInt()}%''',
+                    '${(100 * (post.counts.upvotes / (post.counts.upvotes + post.counts.downvotes))).toInt()}%',
                 'local': post.post.local,
                 'published': post.post.published,
                 'updated': post.post.updated ?? 'never',
@@ -216,7 +216,7 @@ class PostWidget extends HookWidget {
                                 ),
                                 TextSpan(
                                     text:
-                                        ''' · ${timeago.format(post.post.published, locale: 'en_short')}'''),
+                                        ' · ${timeago.format(post.post.published, locale: 'en_short')}'),
                                 if (post.post.locked)
                                   const TextSpan(text: ' · 🔒'),
                                 if (post.post.stickied)

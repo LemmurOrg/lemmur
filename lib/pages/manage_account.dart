@@ -153,8 +153,8 @@ class _ManageAccount extends HookWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    '''Are you sure you want to remove @${user.instanceHost}@${user.name}? '''
-                    '''WARNING: this removes your account COMPLETELY, not from lemmur only''',
+                    'Are you sure you want to remove @${user.instanceHost}@${user.name}? '
+                    'WARNING: this removes your account COMPLETELY, not from lemmur only',
                   ),
                   TextField(
                     controller: deleteAccountPasswordController,

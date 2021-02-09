@@ -272,8 +272,7 @@ class _UserOverview extends HookWidget {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          '${compactNumber(userView.counts.commentCount)}'
-                          ''' Comment${pluralS(userView.counts.commentCount)}''',
+                          '${compactNumber(userView.counts.commentCount)} Comment${pluralS(userView.counts.commentCount)}',
                           style: TextStyle(color: colorOnTopOfAccentColor),
                         ),
                       ],
