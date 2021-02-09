@@ -177,7 +177,7 @@ class HomeTab extends HookWidget {
                   )),
                   leading: const SizedBox(width: 20),
                 ),
-              ]
+              ],
             ],
           );
         },

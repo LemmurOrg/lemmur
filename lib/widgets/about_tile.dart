@@ -39,6 +39,7 @@ class AboutTile extends HookWidget {
           label: const Text('changelog'),
           onPressed: () => showBottomModal(
             context: context,
+            padding: const EdgeInsets.all(8),
             builder: (_) => MarkdownBody(data: changelog),
           ),
         ),
