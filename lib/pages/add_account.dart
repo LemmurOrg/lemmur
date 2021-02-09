@@ -77,6 +77,7 @@ class AddAccountPage extends HookWidget {
               ),
             ),
           RadioPicker<String>(
+            title: 'select instance',
             values: accountsStore.instances.toList(),
             groupValue: selectedInstance.value,
             onChanged: (value) => selectedInstance.value = value,

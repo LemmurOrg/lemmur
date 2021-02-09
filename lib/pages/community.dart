@@ -140,9 +140,8 @@ class CommunityPage extends HookWidget {
         length: 3,
         child: NestedScrollView(
           headerSliverBuilder: (context, innerBoxIsScrolled) => <Widget>[
-            // TODO: change top section to be more flexible
             SliverAppBar(
-              expandedHeight: 300,
+              expandedHeight: community.community.icon == null ? 220 : 300,
               pinned: true,
               backgroundColor: theme.cardColor,
               title: Text('!${community.community.name}'),
@@ -234,12 +233,15 @@ class _CommunityOverview extends StatelessWidget {
                 width: 90,
                 height: 90,
                 decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.black.withOpacity(0.7), blurRadius: 3)
-                    ]),
+                  shape: BoxShape.circle,
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.7),
+                      blurRadius: 3,
+                    ),
+                  ],
+                ),
               ),
               SizedBox(
                 width: 83,
@@ -312,15 +314,16 @@ class _CommunityOverview extends StatelessWidget {
             ),
             // TITLE/MOTTO
             Center(
-                child: Padding(
-              padding: const EdgeInsets.only(top: 8, left: 20, right: 20),
-              child: Text(
-                community.community.title,
-                textAlign: TextAlign.center,
-                style:
-                    TextStyle(fontWeight: FontWeight.w300, shadows: [shadow]),
+              child: Padding(
+                padding: const EdgeInsets.only(top: 8, left: 20, right: 20),
+                child: Text(
+                  community.community.title,
+                  textAlign: TextAlign.center,
+                  style:
+                      TextStyle(fontWeight: FontWeight.w300, shadows: [shadow]),
+                ),
               ),
-            )),
+            ),
             Padding(
               padding: const EdgeInsets.only(top: 20),
               child: Stack(
@@ -336,9 +339,7 @@ class _CommunityOverview extends StatelessWidget {
                           child: Icon(Icons.people, size: 20),
                         ),
                         Text(compactNumber(community.counts.subscribers)),
-                        const Spacer(
-                          flex: 4,
-                        ),
+                        const Spacer(flex: 4),
                         const Padding(
                           padding: EdgeInsets.only(right: 3),
                           child: Icon(Icons.record_voice_over, size: 20),
@@ -471,7 +472,7 @@ class _FollowButton extends HookWidget {
     final theme = Theme.of(context);
 
     final isSubbed = useState(community.subscribed ?? false);
-    final delayed = useDelayedLoading();
+    final delayed = useDelayedLoading(Duration.zero);
     final loggedInAction = useLoggedInAction(community.instanceHost);
 
     subscribe(Jwt token) async {
@@ -503,12 +504,14 @@ class _FollowButton extends HookWidget {
         style: theme.elevatedButtonTheme.style.copyWith(
           shape: MaterialStateProperty.all(const StadiumBorder()),
           textStyle: MaterialStateProperty.all(theme.textTheme.subtitle1),
+          padding: MaterialStateProperty.all(
+            const EdgeInsets.symmetric(horizontal: 20),
+          ),
         ),
       ),
       child: Center(
         child: SizedBox(
           height: 27,
-          width: 160,
           child: delayed.loading
               ? const ElevatedButton(
                   onPressed: null,
@@ -521,11 +524,18 @@ class _FollowButton extends HookWidget {
               : ElevatedButton.icon(
                   onPressed:
                       loggedInAction(delayed.pending ? (_) {} : subscribe),
-                  icon: isSubbed.value
-                      ? const Icon(Icons.remove, size: 18)
-                      : const Icon(Icons.add, size: 18),
-                  label: Text('${isSubbed.value ? 'un' : ''}subscribe'),
-                ),
+                  icon: Icon(
+                    isSubbed.value ? Icons.remove : Icons.add,
+                    size: 18,
+                  ),
+                  label: IndexedStack(
+                    index: isSubbed.value ? 1 : 0,
+                    alignment: Alignment.center,
+                    children: const [
+                      Text('subscribe'),
+                      Text('unsubscribe'),
+                    ],
+                  )),
         ),
       ),
     );
