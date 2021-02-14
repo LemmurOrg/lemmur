@@ -85,7 +85,7 @@ class FullPostPage extends HookWidget {
     comment() async {
       final newComment = await showCupertinoModalPopup<CommentView>(
         context: context,
-        builder: (_) => WriteComment.toPost(post),
+        builder: (_) => WriteComment.toPost(post.post),
       );
       if (newComment != null) {
         newComments.value = [...newComments.value, newComment];

@@ -24,10 +24,9 @@ import 'write_comment.dart';
 /// A single comment that renders its replies
 class CommentWidget extends HookWidget {
   final int indent;
-  final int postCreatorId;
   final CommentTree commentTree;
   final bool detached;
-
+  final UserMentionView userMentionView;
   final bool wasVoted;
 
   static const colors = [
@@ -41,10 +40,20 @@ class CommentWidget extends HookWidget {
   CommentWidget(
     this.commentTree, {
     this.indent = 0,
-    @required this.postCreatorId,
     this.detached = false,
-  }) : wasVoted =
-            (commentTree.comment.myVote ?? VoteType.none) != VoteType.none;
+  })  : wasVoted =
+            (commentTree.comment.myVote ?? VoteType.none) != VoteType.none,
+        userMentionView = null;
+
+  factory CommentWidget.fromCommentView(CommentView cv) =>
+      CommentWidget(CommentTree(cv), detached: true);
+
+  CommentWidget.fromUserMentionView(this.userMentionView)
+      : commentTree =
+            CommentTree(CommentView.fromJson(userMentionView.toJson())),
+        indent = 0,
+        wasVoted = (userMentionView.myVote ?? VoteType.none) != VoteType.none,
+        detached = true;
 
   _showCommentInfo(BuildContext context) {
     final com = commentTree.comment;
@@ -95,9 +104,11 @@ class CommentWidget extends HookWidget {
     final collapsed = useState(false);
     final myVote = useState(commentTree.comment.myVote ?? VoteType.none);
     final isDeleted = useState(commentTree.comment.comment.deleted);
+
     final delayedVoting = useDelayedLoading();
     final delayedDeletion = useDelayedLoading();
     final loggedInAction = useLoggedInAction(commentTree.comment.instanceHost);
+
     final newReplies = useState(const <CommentTree>[]);
 
     final comment = commentTree.comment;
@@ -188,7 +199,8 @@ class CommentWidget extends HookWidget {
     reply() async {
       final newComment = await showCupertinoModalPopup<CommentView>(
         context: context,
-        builder: (_) => WriteComment.toComment(comment),
+        builder: (_) => WriteComment.toComment(
+            comment: comment.comment, post: comment.post),
       );
       if (newComment != null) {
         newReplies.value = [...newReplies.value, CommentTree(newComment)];
@@ -272,6 +284,7 @@ class CommentWidget extends HookWidget {
                                 content: Text('comment copied to clipboard'))));
                   }),
             const Spacer(),
+            if (userMentionView != null) _MarkMentionAsRead(userMentionView),
             if (detached)
               _CommentAction(
                 icon: Icons.link,
@@ -402,10 +415,49 @@ class CommentWidget extends HookWidget {
               CommentWidget(
                 c,
                 indent: indent + 1,
-                postCreatorId: postCreatorId,
               ),
         ],
       ),
+    );
+  }
+}
+
+class _MarkMentionAsRead extends HookWidget {
+  final UserMentionView umv;
+  const _MarkMentionAsRead(this.umv);
+
+  @override
+  Widget build(BuildContext context) {
+    final accStore = useAccountsStore();
+    final isRead = useState(umv.userMention.read);
+    final delayedRead = useDelayedLoading();
+
+    void handleMarkAsSeen() async {
+      delayedRead.start();
+      try {
+        final res = await LemmyApiV2(umv.instanceHost).run(MarkCommentAsRead(
+          commentId: umv.comment.id,
+          read: !isRead.value,
+          auth: accStore.tokenFor(umv.instanceHost, umv.recipient.name).raw,
+        ));
+        isRead.value = !isRead.value;
+        // ignore: avoid_catches_without_on_clauses
+      } catch (e) {
+        Scaffold.of(context).showSnackBar(SnackBar(
+            content:
+                Text('marking as ${isRead.value ? 'un' : ''}read failed')));
+      }
+      delayedRead.cancel();
+    }
+
+    if (delayedRead.loading) {
+      return const CircularProgressIndicator();
+    }
+
+    return _CommentAction(
+      icon: Icons.check,
+      onPressed: delayedRead.loading ? null : handleMarkAsSeen,
+      tooltip: 'mark as ${isRead.value ? 'un' : ''}read',
     );
   }
 }
@@ -439,6 +491,8 @@ class _SaveComment extends HookWidget {
       }
       delayed.cancel();
     }
+
+    if (delayed.loading) return CircularProgressIndicator();
 
     return _CommentAction(
       loading: delayed.loading,
