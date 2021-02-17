@@ -9,6 +9,7 @@ import 'package:matrix4_transform/matrix4_transform.dart';
 import '../hooks/delayed_loading.dart';
 import '../hooks/infinite_scroll.dart';
 import '../hooks/stores.dart';
+import '../util/delayed_action.dart';
 import '../util/extensions/api.dart';
 import '../util/extensions/datetime.dart';
 import '../util/goto.dart';
@@ -20,6 +21,7 @@ import '../widgets/info_table_popup.dart';
 import '../widgets/markdown_text.dart';
 import '../widgets/radio_picker.dart';
 import '../widgets/sortable_infinite_list.dart';
+import '../widgets/tile_action.dart';
 import 'send_message.dart';
 
 class InboxPage extends HookWidget {
@@ -238,60 +240,30 @@ class PrivateMessageTile extends HookWidget {
       );
     }
 
-    Function() delayedAction<T>({
-      @required DelayedLoading del,
-      @required String instanceHost,
-      @required LemmyApiQuery<T> Function() query,
-      Function(T) onSuccess,
-      Function(T) onFailure,
-      Function(T) cleanup,
-    }) {
-      assert(del != null, 'required argument');
-      assert(instanceHost != null, 'required argument');
-      assert(query != null, 'required argument');
-
-      return () async {
-        T val;
-        try {
-          del.start();
-          val = await LemmyApiV2(instanceHost).run(query());
-          if (onSuccess != null) onSuccess(val);
-          // ignore: avoid_catches_without_on_clauses
-        } catch (e) {
-          Scaffold.of(context)
-              .showSnackBar(SnackBar(content: Text(e.toString())));
-          if (onFailure != null) onFailure(val);
-        }
-        if (cleanup != null) cleanup(val);
-        del.cancel();
-      };
-    }
-
-    final handleDelete = delayedAction<PrivateMessageView>(
-      del: deleteDelayed,
-      instanceHost: account.instance,
-      query: () => DeletePrivateMessage(
-        privateMessageId: msg.privateMessage.id,
-        auth: accStore.tokenFor(account.instance, account.name)?.raw,
-        deleted: !deleted.value,
-      ),
-      onSuccess: (_) => deleted.value = !deleted.value,
-    );
-
-    final handleRead = delayedAction<PrivateMessageView>(
-      del: readDelayed,
-      instanceHost: account.instance,
-      query: () {
-        print('mark as read');
-        return MarkPrivateMessageAsRead(
-          privateMessageId: msg.privateMessage.id,
-          auth: accStore.tokenFor(account.instance, account.name)?.raw,
-          read: !read.value,
+    handleDelete() => delayedAction<PrivateMessageView>(
+          context: context,
+          del: deleteDelayed,
+          instanceHost: account.instance,
+          query: DeletePrivateMessage(
+            privateMessageId: msg.privateMessage.id,
+            auth: accStore.tokenFor(account.instance, account.name)?.raw,
+            deleted: !deleted.value,
+          ),
+          onSuccess: (_) => deleted.value = !deleted.value,
         );
-      },
-      // TODO: add notification for notifying parent list
-      onSuccess: (_) => read.value = !read.value,
-    );
+
+    handleRead() => delayedAction<PrivateMessageView>(
+          context: context,
+          del: readDelayed,
+          instanceHost: account.instance,
+          query: MarkPrivateMessageAsRead(
+            privateMessageId: msg.privateMessage.id,
+            auth: accStore.tokenFor(account.instance, account.name)?.raw,
+            read: !read.value,
+          ),
+          // TODO: add notification for notifying parent list
+          onSuccess: (_) => read.value = !read.value,
+        );
 
     final body = raw.value
         ? selectable.value
@@ -348,20 +320,20 @@ class PrivateMessageTile extends HookWidget {
             body,
           Row(children: [
             const Spacer(),
-            _Action(
+            TileAction(
               icon: moreIcon,
               onPressed: showMoreMenu,
               tooltip: 'more',
             ),
             if (toMe) ...[
-              _Action(
+              TileAction(
                 iconColor: read.value ? theme.accentColor : null,
                 icon: Icons.check,
                 tooltip: 'mark as read',
                 onPressed: handleRead,
                 delayedLoading: readDelayed,
               ),
-              _Action(
+              TileAction(
                 icon: Icons.reply,
                 tooltip: 'reply',
                 onPressed: () {
@@ -375,7 +347,7 @@ class PrivateMessageTile extends HookWidget {
                 },
               )
             ] else ...[
-              _Action(
+              TileAction(
                 icon: Icons.edit,
                 tooltip: 'edit',
                 onPressed: () async {
@@ -390,7 +362,7 @@ class PrivateMessageTile extends HookWidget {
                   if (pmv != null) content.value = pmv.privateMessage.content;
                 },
               ),
-              _Action(
+              TileAction(
                 delayedLoading: deleteDelayed,
                 icon: deleted.value ? Icons.restore : Icons.delete,
                 tooltip: 'delete',
@@ -422,40 +394,4 @@ class _SelectedAccount {
 
   @override
   int get hashCode => super.hashCode;
-}
-
-class _Action extends StatelessWidget {
-  final IconData icon;
-  final VoidCallback onPressed;
-  final String tooltip;
-  final DelayedLoading delayedLoading;
-  final Color iconColor;
-
-  const _Action({
-    Key key,
-    this.delayedLoading,
-    this.iconColor,
-    @required this.icon,
-    @required this.onPressed,
-    @required this.tooltip,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) => IconButton(
-        constraints: BoxConstraints.tight(const Size(36, 30)),
-        icon: delayedLoading?.loading ?? false
-            ? SizedBox.fromSize(
-                size: const Size.square(22),
-                child: const CircularProgressIndicator())
-            : Icon(
-                icon,
-                color: iconColor ??
-                    Theme.of(context).iconTheme.color.withAlpha(190),
-              ),
-        splashRadius: 25,
-        onPressed: delayedLoading?.pending ?? false ? () {} : onPressed,
-        iconSize: 25,
-        tooltip: tooltip,
-        padding: const EdgeInsets.all(0),
-      );
 }

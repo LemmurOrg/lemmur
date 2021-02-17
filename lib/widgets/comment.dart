@@ -11,6 +11,7 @@ import '../comment_tree.dart';
 import '../hooks/delayed_loading.dart';
 import '../hooks/logged_in_action.dart';
 import '../hooks/stores.dart';
+import '../util/delayed_action.dart';
 import '../util/extensions/api.dart';
 import '../util/extensions/datetime.dart';
 import '../util/goto.dart';
@@ -19,6 +20,7 @@ import '../util/text_color.dart';
 import 'bottom_modal.dart';
 import 'info_table_popup.dart';
 import 'markdown_text.dart';
+import 'tile_action.dart';
 import 'write_comment.dart';
 
 /// A single comment that renders its replies
@@ -113,25 +115,19 @@ class CommentWidget extends HookWidget {
 
     final comment = commentTree.comment;
 
-    handleDelete(Jwt token) async {
-      final api = LemmyApiV2(token.payload.iss);
-
-      delayedDeletion.start();
+    handleDelete(Jwt token) {
       Navigator.of(context).pop();
-      try {
-        final res = await api.run(DeleteComment(
+      delayedAction<FullCommentView>(
+        context: context,
+        del: delayedDeletion,
+        instanceHost: token.payload.iss,
+        query: DeleteComment(
           commentId: comment.comment.id,
           deleted: !isDeleted.value,
           auth: token.raw,
-        ));
-        isDeleted.value = res.commentView.comment.deleted;
-        // ignore: avoid_catches_without_on_clauses
-      } catch (e) {
-        Scaffold.of(context).showSnackBar(
-            const SnackBar(content: Text('Failed to delete/restore comment')));
-        return;
-      }
-      delayedDeletion.cancel();
+        ),
+        onSuccess: (res) => isDeleted.value = res.commentView.comment.deleted,
+      );
     }
 
     void _openMoreMenu(BuildContext context) {
@@ -207,22 +203,18 @@ class CommentWidget extends HookWidget {
       }
     }
 
-    vote(VoteType vote, Jwt token) async {
-      final api = LemmyApiV2(token.payload.iss);
-
-      delayedVoting.start();
-      try {
-        final res = await api.run(CreateCommentLike(
-            commentId: comment.comment.id, score: vote, auth: token.raw));
-        myVote.value = res.commentView.myVote ?? VoteType.none;
-        // ignore: avoid_catches_without_on_clauses
-      } catch (e) {
-        Scaffold.of(context)
-            .showSnackBar(const SnackBar(content: Text('voting failed :(')));
-        return;
-      }
-      delayedVoting.cancel();
-    }
+    vote(VoteType vote, Jwt token) => delayedAction<FullCommentView>(
+          context: context,
+          del: delayedVoting,
+          instanceHost: token.payload.iss,
+          query: CreateCommentLike(
+            commentId: comment.comment.id,
+            score: vote,
+            auth: token.raw,
+          ),
+          onSuccess: (res) =>
+              myVote.value = res.commentView.myVote ?? VoteType.none,
+        );
 
     final body = () {
       if (isDeleted.value) {
@@ -273,7 +265,7 @@ class CommentWidget extends HookWidget {
             if (selectable.value &&
                 !isDeleted.value &&
                 !comment.comment.removed)
-              _CommentAction(
+              TileAction(
                   icon: Icons.content_copy,
                   tooltip: 'copy',
                   onPressed: () {
@@ -286,26 +278,26 @@ class CommentWidget extends HookWidget {
             const Spacer(),
             if (userMentionView != null) _MarkMentionAsRead(userMentionView),
             if (detached)
-              _CommentAction(
+              TileAction(
                 icon: Icons.link,
                 onPressed: () =>
                     goToPost(context, comment.instanceHost, comment.post.id),
                 tooltip: 'go to post',
               ),
-            _CommentAction(
+            TileAction(
               icon: Icons.more_horiz,
               onPressed: () => _openMoreMenu(context),
-              loading: delayedDeletion.loading,
+              delayedLoading: delayedDeletion,
               tooltip: 'more',
             ),
             _SaveComment(commentTree.comment),
             if (!isDeleted.value && !comment.comment.removed)
-              _CommentAction(
+              TileAction(
                 icon: Icons.reply,
                 onPressed: loggedInAction((_) => reply()),
                 tooltip: 'reply',
               ),
-            _CommentAction(
+            TileAction(
               icon: Icons.arrow_upward,
               iconColor: myVote.value == VoteType.up ? theme.accentColor : null,
               onPressed: loggedInAction((token) => vote(
@@ -314,7 +306,7 @@ class CommentWidget extends HookWidget {
                   )),
               tooltip: 'upvote',
             ),
-            _CommentAction(
+            TileAction(
               icon: Icons.arrow_downward,
               iconColor: myVote.value == VoteType.down ? Colors.red : null,
               onPressed: loggedInAction(
@@ -327,8 +319,9 @@ class CommentWidget extends HookWidget {
             ),
           ]);
 
-    return GestureDetector(
-      onLongPress: () => collapsed.value = !collapsed.value,
+    return InkWell(
+      onLongPress:
+          selectable.value ? null : () => collapsed.value = !collapsed.value,
       child: Column(
         children: [
           Container(
@@ -372,10 +365,12 @@ class CommentWidget extends HookWidget {
                         context, comment.instanceHost, comment.creator.id),
                     child: Text(comment.creator.originDisplayName,
                         style: TextStyle(
-                          color: Theme.of(context).accentColor,
+                          color: theme.accentColor,
                         )),
                   ),
-                  if (isOP) _CommentTag('OP', Theme.of(context).accentColor),
+                  if (isOP) _CommentTag('OP', theme.accentColor),
+                  if (comment.creator.admin)
+                    _CommentTag('ADMIN', theme.accentColor),
                   if (comment.creator.banned)
                     const _CommentTag('BANNED', Colors.red),
                   if (comment.creatorBannedFromCommunity)
@@ -412,10 +407,7 @@ class CommentWidget extends HookWidget {
           ),
           if (!collapsed.value)
             for (final c in newReplies.value.followedBy(commentTree.children))
-              CommentWidget(
-                c,
-                indent: indent + 1,
-              ),
+              CommentWidget(c, indent: indent + 1),
         ],
       ),
     );
@@ -432,30 +424,21 @@ class _MarkMentionAsRead extends HookWidget {
     final isRead = useState(umv.userMention.read);
     final delayedRead = useDelayedLoading();
 
-    void handleMarkAsSeen() async {
-      delayedRead.start();
-      try {
-        final res = await LemmyApiV2(umv.instanceHost).run(MarkCommentAsRead(
-          commentId: umv.comment.id,
-          read: !isRead.value,
-          auth: accStore.tokenFor(umv.instanceHost, umv.recipient.name).raw,
-        ));
-        isRead.value = !isRead.value;
-        // ignore: avoid_catches_without_on_clauses
-      } catch (e) {
-        Scaffold.of(context).showSnackBar(SnackBar(
-            content:
-                Text('marking as ${isRead.value ? 'un' : ''}read failed')));
-      }
-      delayedRead.cancel();
-    }
+    Future<void> handleMarkAsSeen() => delayedAction<FullCommentView>(
+          context: context,
+          del: delayedRead,
+          instanceHost: umv.instanceHost,
+          query: MarkCommentAsRead(
+            commentId: umv.comment.id,
+            read: !isRead.value,
+            auth: accStore.tokenFor(umv.instanceHost, umv.recipient.name).raw,
+          ),
+          onSuccess: (_) => isRead.value = !isRead.value,
+        );
 
-    if (delayedRead.loading) {
-      return const CircularProgressIndicator();
-    }
-
-    return _CommentAction(
+    return TileAction(
       icon: Icons.check,
+      delayedLoading: delayedRead,
       onPressed: delayedRead.loading ? null : handleMarkAsSeen,
       tooltip: 'mark as ${isRead.value ? 'un' : ''}read',
     );
@@ -473,29 +456,20 @@ class _SaveComment extends HookWidget {
     final isSaved = useState(comment.saved ?? false);
     final delayed = useDelayedLoading();
 
-    handleSave(Jwt token) async {
-      final api = LemmyApiV2(comment.instanceHost);
+    handleSave(Jwt token) => delayedAction<FullCommentView>(
+          context: context,
+          del: delayed,
+          instanceHost: comment.instanceHost,
+          query: SaveComment(
+            commentId: comment.comment.id,
+            save: !isSaved.value,
+            auth: token.raw,
+          ),
+          onSuccess: (res) => isSaved.value = res.commentView.saved,
+        );
 
-      delayed.start();
-      try {
-        final res = await api.run(SaveComment(
-          commentId: comment.comment.id,
-          save: !isSaved.value,
-          auth: token.raw,
-        ));
-        isSaved.value = res.commentView.saved;
-        // ignore: avoid_catches_without_on_clauses
-      } catch (e) {
-        Scaffold.of(context)
-            .showSnackBar(const SnackBar(content: Text('saving failed :(')));
-      }
-      delayed.cancel();
-    }
-
-    if (delayed.loading) return CircularProgressIndicator();
-
-    return _CommentAction(
-      loading: delayed.loading,
+    return TileAction(
+      delayedLoading: delayed,
       icon: isSaved.value ? Icons.bookmark : Icons.bookmark_border,
       onPressed: loggedInAction(delayed.pending ? (_) {} : handleSave),
       tooltip: '${isSaved.value ? 'unsave' : 'save'} comment',
@@ -525,41 +499,5 @@ class _CommentTag extends StatelessWidget {
                 fontWeight: FontWeight.w800,
               )),
         ),
-      );
-}
-
-class _CommentAction extends StatelessWidget {
-  final IconData icon;
-  final VoidCallback onPressed;
-  final String tooltip;
-  final bool loading;
-  final Color iconColor;
-
-  const _CommentAction({
-    Key key,
-    this.loading = false,
-    this.iconColor,
-    @required this.icon,
-    @required this.onPressed,
-    @required this.tooltip,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) => IconButton(
-        constraints: BoxConstraints.tight(const Size(32, 26)),
-        icon: loading
-            ? SizedBox.fromSize(
-                size: const Size.square(22),
-                child: const CircularProgressIndicator())
-            : Icon(
-                icon,
-                color: iconColor ??
-                    Theme.of(context).iconTheme.color.withAlpha(190),
-              ),
-        splashRadius: 25,
-        onPressed: onPressed,
-        iconSize: 22,
-        tooltip: tooltip,
-        padding: const EdgeInsets.all(0),
       );
 }
