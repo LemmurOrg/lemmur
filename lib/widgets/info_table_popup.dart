@@ -1,21 +1,44 @@
 import 'package:flutter/material.dart';
 
-void showInfoTablePopup(BuildContext context, Map<String, dynamic> table) {
-  showDialog(
+import 'bottom_modal.dart';
+
+void showInfoTablePopup(
+  BuildContext context,
+  Map<String, dynamic> table, [
+  String title,
+]) {
+  showBottomModal(
     context: context,
-    builder: (c) => SimpleDialog(
-      contentPadding: const EdgeInsets.symmetric(
+    title: title,
+    builder: (context) => Padding(
+      padding: const EdgeInsets.symmetric(
         horizontal: 20,
         vertical: 15,
       ),
-      children: [
-        Table(
-          children: table.entries
-              .map((e) => TableRow(
-                  children: [Text('${e.key}:'), Text(e.value.toString())]))
-              .toList(),
-        ),
-      ],
+      child: Column(
+        children: [
+          Table(children: [
+            for (final e in table.entries)
+              TableRow(children: [
+                Text('${e.key}:'),
+                if (e.value is Map<String, dynamic>)
+                  GestureDetector(
+                    onTap: () => showInfoTablePopup(
+                      context,
+                      e.value as Map<String, dynamic>,
+                      e.key,
+                    ),
+                    child: Text(
+                      '[tap to show]',
+                      style: TextStyle(color: Theme.of(context).accentColor),
+                    ),
+                  )
+                else
+                  Text(e.value.toString())
+              ])
+          ]),
+        ],
+      ),
     ),
   );
 }
