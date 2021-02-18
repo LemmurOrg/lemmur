@@ -30,6 +30,7 @@ class CommentWidget extends HookWidget {
   final bool detached;
   final UserMentionView userMentionView;
   final bool wasVoted;
+  final bool canBeMarkedAsRead;
 
   static const colors = [
     Colors.pink,
@@ -43,19 +44,25 @@ class CommentWidget extends HookWidget {
     this.commentTree, {
     this.indent = 0,
     this.detached = false,
+    this.canBeMarkedAsRead = false,
   })  : wasVoted =
             (commentTree.comment.myVote ?? VoteType.none) != VoteType.none,
         userMentionView = null;
 
-  factory CommentWidget.fromCommentView(CommentView cv) =>
-      CommentWidget(CommentTree(cv), detached: true);
+  factory CommentWidget.fromCommentView(
+    CommentView cv, {
+    bool canBeMarkedAsRead,
+  }) =>
+      CommentWidget(CommentTree(cv),
+          detached: true, canBeMarkedAsRead: canBeMarkedAsRead);
 
   CommentWidget.fromUserMentionView(this.userMentionView)
       : commentTree =
             CommentTree(CommentView.fromJson(userMentionView.toJson())),
         indent = 0,
         wasVoted = (userMentionView.myVote ?? VoteType.none) != VoteType.none,
-        detached = true;
+        detached = true,
+        canBeMarkedAsRead = true;
 
   _showCommentInfo(BuildContext context) {
     final com = commentTree.comment;
@@ -276,7 +283,7 @@ class CommentWidget extends HookWidget {
                                 content: Text('comment copied to clipboard'))));
                   }),
             const Spacer(),
-            if (userMentionView != null) _MarkMentionAsRead(userMentionView),
+            if (canBeMarkedAsRead) _MarkAsRead(commentTree.comment),
             if (detached)
               TileAction(
                 icon: Icons.link,
@@ -414,24 +421,33 @@ class CommentWidget extends HookWidget {
   }
 }
 
-class _MarkMentionAsRead extends HookWidget {
-  final UserMentionView umv;
-  const _MarkMentionAsRead(this.umv);
+class _MarkAsRead extends HookWidget {
+  final CommentView commentView;
+
+  const _MarkAsRead(this.commentView);
 
   @override
   Widget build(BuildContext context) {
     final accStore = useAccountsStore();
-    final isRead = useState(umv.userMention.read);
+
+    final comment = commentView.comment;
+    final recipient = commentView.recipient;
+    final instanceHost = commentView.instanceHost;
+    final post = commentView.post;
+
+    final isRead = useState(comment.read);
     final delayedRead = useDelayedLoading();
 
     Future<void> handleMarkAsSeen() => delayedAction<FullCommentView>(
           context: context,
           del: delayedRead,
-          instanceHost: umv.instanceHost,
+          instanceHost: instanceHost,
           query: MarkCommentAsRead(
-            commentId: umv.comment.id,
+            commentId: comment.id,
             read: !isRead.value,
-            auth: accStore.tokenFor(umv.instanceHost, umv.recipient.name).raw,
+            auth: recipient != null
+                ? accStore.tokenFor(instanceHost, recipient.name)?.raw
+                : accStore.tokenForId(instanceHost, post.creatorId)?.raw,
           ),
           onSuccess: (_) => isRead.value = !isRead.value,
         );
@@ -439,7 +455,8 @@ class _MarkMentionAsRead extends HookWidget {
     return TileAction(
       icon: Icons.check,
       delayedLoading: delayedRead,
-      onPressed: delayedRead.loading ? null : handleMarkAsSeen,
+      onPressed: handleMarkAsSeen,
+      iconColor: isRead.value ? Theme.of(context).accentColor : null,
       tooltip: 'mark as ${isRead.value ? 'un' : ''}read',
     );
   }

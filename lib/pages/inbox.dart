@@ -124,7 +124,8 @@ class InboxPage extends HookWidget {
                 page: page,
                 unreadOnly: unreadOnly.value,
               )),
-              itemBuilder: (cv) => CommentWidget.fromCommentView(cv),
+              itemBuilder: (cv) =>
+                  CommentWidget.fromCommentView(cv, canBeMarkedAsRead: true),
             ),
             SortableInfiniteList<UserMentionView>(
               controller: isc2,
