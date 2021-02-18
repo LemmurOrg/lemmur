@@ -15,18 +15,20 @@ class SendMessagePage extends HookWidget {
   final UserSafe recipient;
   final PrivateMessage privateMessage;
   final String content;
+  final Jwt token;
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
   SendMessagePage({
-    @required this.username,
+    this.username,
     @required this.instanceHost,
     @required this.recipient,
+    this.token,
 
     /// if it's non null then this page is used for edit
     this.privateMessage,
     this.content,
-  })  : assert(username != null, 'argument required'),
+  })  : assert(username != null || token != null, 'argument required'),
         assert(instanceHost != null, 'argument required'),
         assert(recipient != null, 'argument required');
 
@@ -35,6 +37,7 @@ class SendMessagePage extends HookWidget {
     this.instanceHost,
     this.username,
     this.content,
+    this.token,
   })  : privateMessage = pmv.privateMessage,
         recipient = pmv.recipient;
 
@@ -56,7 +59,7 @@ class SendMessagePage extends HookWidget {
         loading.value = true;
         try {
           final msg = await LemmyApiV2(instanceHost).run(EditPrivateMessage(
-            auth: accStore.tokenFor(instanceHost, username).raw,
+            auth: token?.raw ?? accStore.tokenFor(instanceHost, username).raw,
             privateMessageId: privateMessage.id,
             content: bodyController.text,
           ));
@@ -73,7 +76,7 @@ class SendMessagePage extends HookWidget {
         loading.value = true;
         try {
           final msg = await LemmyApiV2(instanceHost).run(CreatePrivateMessage(
-            auth: accStore.tokenFor(instanceHost, username).raw,
+            auth: token?.raw ?? accStore.tokenFor(instanceHost, username)?.raw,
             content: bodyController.text,
             recipientId: recipient.id,
           ));
@@ -84,8 +87,9 @@ class SendMessagePage extends HookWidget {
           scaffoldKey.currentState.showSnackBar(SnackBar(
             content: Text(e.toString()),
           ));
+        } finally {
+          loading.value = false;
         }
-        loading.value = false;
       }
     }
 
@@ -111,6 +115,7 @@ class SendMessagePage extends HookWidget {
     );
 
     return Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
         title: Text(title),
         leading: const CloseButton(),

@@ -1,9 +1,12 @@
 import 'package:esys_flutter_share/esys_flutter_share.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v2.dart';
 
+import '../hooks/logged_in_action.dart';
 import '../widgets/user_profile.dart';
+import 'send_message.dart';
 
 /// Page showing posts, comments, and general info about a user.
 class UserPage extends HookWidget {
@@ -27,6 +30,7 @@ class UserPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final userDetailsSnap = useFuture(_userDetails);
+    final loggedInAction = useLoggedInAction(instanceHost);
 
     final body = () {
       if (userDetailsSnap.hasData) {
@@ -45,13 +49,19 @@ class UserPage extends HookWidget {
           if (userDetailsSnap.hasData) ...[
             IconButton(
               icon: const Icon(Icons.email),
-              onPressed: () {}, // TODO: go to messaging page
+              onPressed: loggedInAction((token) => showCupertinoModalPopup(
+                  context: context,
+                  builder: (_) => SendMessagePage(
+                        instanceHost: instanceHost,
+                        token: token,
+                        recipient: userDetailsSnap.data.userView.user,
+                      ))),
             ),
             IconButton(
               icon: const Icon(Icons.share),
               onPressed: () => Share.text('Share user',
                   userDetailsSnap.data.userView.user.actorId, 'text/plain'),
-            )
+            ),
           ]
         ],
       ),
