@@ -36,7 +36,7 @@ class SortableInfiniteList<T> extends HookWidget {
     final defaultController = useInfiniteScrollController();
     final isc = controller ?? defaultController;
 
-    final sort = useState(SortType.active);
+    final sort = useState(defaultSort ?? SortType.active);
 
     void changeSorting(SortType newSort) {
       sort.value = newSort;
