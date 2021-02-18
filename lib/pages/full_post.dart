@@ -8,10 +8,12 @@ import 'package:lemmy_api_client/v2.dart';
 import '../hooks/logged_in_action.dart';
 import '../hooks/refreshable.dart';
 import '../hooks/stores.dart';
+import '../util/extensions/api.dart';
 import '../util/more_icon.dart';
 import '../widgets/comment_section.dart';
 import '../widgets/post.dart';
 import '../widgets/save_post_button.dart';
+import '../widgets/title_after_scroll.dart';
 import '../widgets/write_comment.dart';
 
 /// Displays a post with its comment section
@@ -31,6 +33,8 @@ class FullPostPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final accStore = useAccountsStore();
+    final scrollController = useScrollController();
+
     final fullPostRefreshable =
         useRefreshable(() => LemmyApiV2(instanceHost).run(GetPost(
               id: id,
@@ -94,6 +98,15 @@ class FullPostPage extends HookWidget {
 
     return Scaffold(
         appBar: AppBar(
+          centerTitle: false,
+          title: TitleAfterScroll(
+            scrollController: scrollController,
+            after: 60,
+            child: Text(
+              post.community.originDisplayName,
+              overflow: TextOverflow.fade,
+            ),
+          ),
           actions: [
             IconButton(icon: const Icon(Icons.share), onPressed: sharePost),
             SavePostButton(post),
@@ -108,8 +121,10 @@ class FullPostPage extends HookWidget {
         body: RefreshIndicator(
           onRefresh: refresh,
           child: ListView(
+            controller: scrollController,
             physics: const AlwaysScrollableScrollPhysics(),
             children: [
+              const SizedBox(height: 10),
               PostWidget(post, fullPost: true),
               if (fullPostRefreshable.snapshot.hasData)
                 CommentSection(

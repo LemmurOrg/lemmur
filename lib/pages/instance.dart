@@ -17,6 +17,7 @@ import '../widgets/fullscreenable_image.dart';
 import '../widgets/info_table_popup.dart';
 import '../widgets/markdown_text.dart';
 import '../widgets/sortable_infinite_list.dart';
+import '../widgets/title_after_scroll.dart';
 import 'communities_list.dart';
 import 'users_list.dart';
 
@@ -31,8 +32,8 @@ class InstancePage extends HookWidget {
 
   InstancePage({@required this.instanceHost})
       : assert(instanceHost != null),
-        siteFuture = LemmyApiV2(instanceHost).run(GetSite()),
-        communitiesFuture = LemmyApiV2(instanceHost).run(ListCommunities(
+        siteFuture = LemmyApiV2(instanceHost).run(const GetSite()),
+        communitiesFuture = LemmyApiV2(instanceHost).run(const ListCommunities(
             type: PostListingType.local, sort: SortType.hot, limit: 6));
 
   @override
@@ -41,6 +42,7 @@ class InstancePage extends HookWidget {
     final siteSnap = useFuture(siteFuture);
     final colorOnCard = textColorBasedOnBackground(theme.cardColor);
     final accStore = useAccountsStore();
+    final scrollController = useScrollController();
 
     if (!siteSnap.hasData) {
       return Scaffold(
@@ -103,14 +105,19 @@ class InstancePage extends HookWidget {
       body: DefaultTabController(
         length: 3,
         child: NestedScrollView(
+          controller: scrollController,
           headerSliverBuilder: (context, innerBoxIsScrolled) => <Widget>[
             SliverAppBar(
               expandedHeight: 250,
               pinned: true,
               backgroundColor: theme.cardColor,
-              title: Text(
-                site.siteView.site.name,
-                style: TextStyle(color: colorOnCard),
+              title: TitleAfterScroll(
+                after: 110,
+                scrollController: scrollController,
+                child: Text(
+                  site.siteView.site.name,
+                  style: TextStyle(color: colorOnCard),
+                ),
               ),
               actions: [
                 IconButton(icon: const Icon(Icons.share), onPressed: _share),

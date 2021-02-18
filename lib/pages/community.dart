@@ -20,6 +20,7 @@ import '../widgets/fullscreenable_image.dart';
 import '../widgets/info_table_popup.dart';
 import '../widgets/markdown_text.dart';
 import '../widgets/sortable_infinite_list.dart';
+import '../widgets/title_after_scroll.dart';
 
 /// Displays posts, comments, and general info about the given community
 class CommunityPage extends HookWidget {
@@ -51,6 +52,7 @@ class CommunityPage extends HookWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final accountsStore = useAccountsStore();
+    final scrollController = useScrollController();
 
     final fullCommunitySnap = useMemoFuture(() {
       final token = accountsStore.defaultTokenFor(instanceHost);
@@ -139,12 +141,22 @@ class CommunityPage extends HookWidget {
       body: DefaultTabController(
         length: 3,
         child: NestedScrollView(
+          controller: scrollController,
           headerSliverBuilder: (context, innerBoxIsScrolled) => <Widget>[
             SliverAppBar(
               expandedHeight: community.community.icon == null ? 220 : 300,
               pinned: true,
               backgroundColor: theme.cardColor,
-              title: Text('!${community.community.name}'),
+              title: TitleAfterScroll(
+                scrollController: scrollController,
+                after: community.community.icon == null ? 110 : 190,
+                fade: true,
+                child: Text(
+                  '!${community.community.name}',
+                  overflow: TextOverflow.fade,
+                  softWrap: false,
+                ),
+              ),
               actions: [
                 IconButton(icon: const Icon(Icons.share), onPressed: _share),
                 IconButton(icon: Icon(moreIcon), onPressed: _openMoreMenu),
