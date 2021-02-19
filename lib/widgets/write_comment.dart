@@ -63,7 +63,6 @@ class WriteComment extends HookWidget {
         Navigator.of(context).pop(res.commentView);
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {
-        print(e);
         scaffoldKey.currentState.showSnackBar(
             const SnackBar(content: Text('Failed to post comment')));
       }
