@@ -229,7 +229,8 @@ class HomeTab extends HookWidget {
                 child: Text(
                   title,
                   style: theme.appBarTheme.textTheme.headline6,
-                  overflow: TextOverflow.ellipsis,
+                  overflow: TextOverflow.fade,
+                  softWrap: false,
                 ),
               ),
               const Icon(Icons.arrow_drop_down),
