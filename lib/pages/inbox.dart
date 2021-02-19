@@ -1,5 +1,6 @@
 import 'dart:math' show pi;
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -287,11 +288,35 @@ class PrivateMessageTile extends HookWidget {
                 toMe ? 'from ' : 'to ',
                 style: TextStyle(color: theme.textTheme.caption.color),
               ),
-              GestureDetector(
+              InkWell(
+                borderRadius: BorderRadius.circular(10),
                 onTap: () => goToUser.fromUserSafe(context, otherSide),
-                child: Text(
-                  otherSide.originDisplayName,
-                  style: TextStyle(color: theme.accentColor),
+                child: Row(
+                  children: [
+                    if (otherSide.avatar != null)
+                      Padding(
+                        padding: const EdgeInsets.only(right: 5),
+                        child: CachedNetworkImage(
+                          imageUrl: otherSide.avatar,
+                          height: 20,
+                          width: 20,
+                          imageBuilder: (context, imageProvider) => Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: imageProvider,
+                              ),
+                            ),
+                          ),
+                          errorWidget: (_, __, ___) => const SizedBox.shrink(),
+                        ),
+                      ),
+                    Text(
+                      otherSide.originDisplayName,
+                      style: TextStyle(color: theme.accentColor),
+                    ),
+                  ],
                 ),
               ),
               const Spacer(),
