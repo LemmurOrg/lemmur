@@ -3,14 +3,14 @@ import 'dart:math' show max, min;
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-class TitleAfterScroll extends HookWidget {
+class RevealAfterScroll extends HookWidget {
   final Widget child;
   final int after;
   final int transition;
   final ScrollController scrollController;
   final bool fade;
 
-  const TitleAfterScroll({
+  const RevealAfterScroll({
     @required this.scrollController,
     @required this.child,
     this.transition = 15,

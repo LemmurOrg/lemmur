@@ -12,8 +12,8 @@ import '../util/extensions/api.dart';
 import '../util/more_icon.dart';
 import '../widgets/comment_section.dart';
 import '../widgets/post.dart';
+import '../widgets/reveal_after_scroll.dart';
 import '../widgets/save_post_button.dart';
-import '../widgets/title_after_scroll.dart';
 import '../widgets/write_comment.dart';
 
 /// Displays a post with its comment section
@@ -99,7 +99,7 @@ class FullPostPage extends HookWidget {
     return Scaffold(
         appBar: AppBar(
           centerTitle: false,
-          title: TitleAfterScroll(
+          title: RevealAfterScroll(
             scrollController: scrollController,
             after: 60,
             child: Text(

@@ -16,8 +16,8 @@ import '../widgets/bottom_modal.dart';
 import '../widgets/fullscreenable_image.dart';
 import '../widgets/info_table_popup.dart';
 import '../widgets/markdown_text.dart';
+import '../widgets/reveal_after_scroll.dart';
 import '../widgets/sortable_infinite_list.dart';
-import '../widgets/title_after_scroll.dart';
 import 'communities_list.dart';
 import 'users_list.dart';
 
@@ -111,7 +111,7 @@ class InstancePage extends HookWidget {
               expandedHeight: 250,
               pinned: true,
               backgroundColor: theme.cardColor,
-              title: TitleAfterScroll(
+              title: RevealAfterScroll(
                 after: 110,
                 scrollController: scrollController,
                 child: Text(

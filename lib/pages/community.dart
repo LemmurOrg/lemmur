@@ -19,8 +19,8 @@ import '../widgets/bottom_modal.dart';
 import '../widgets/fullscreenable_image.dart';
 import '../widgets/info_table_popup.dart';
 import '../widgets/markdown_text.dart';
+import '../widgets/reveal_after_scroll.dart';
 import '../widgets/sortable_infinite_list.dart';
-import '../widgets/title_after_scroll.dart';
 
 /// Displays posts, comments, and general info about the given community
 class CommunityPage extends HookWidget {
@@ -147,7 +147,7 @@ class CommunityPage extends HookWidget {
               expandedHeight: community.community.icon == null ? 220 : 300,
               pinned: true,
               backgroundColor: theme.cardColor,
-              title: TitleAfterScroll(
+              title: RevealAfterScroll(
                 scrollController: scrollController,
                 after: community.community.icon == null ? 110 : 190,
                 fade: true,
