@@ -36,7 +36,7 @@ class CommunitiesTab extends HookWidget {
       final futures = accountsStore.loggedInInstances
           .map(
             (instanceHost) => LemmyApiV2(instanceHost)
-                .run(GetSite())
+                .run(const GetSite())
                 .then((e) => e.siteView.site),
           )
           .toList();

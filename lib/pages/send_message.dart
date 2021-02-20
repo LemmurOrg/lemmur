@@ -64,7 +64,7 @@ class SendMessagePage extends HookWidget {
             content: bodyController.text,
           ));
           Navigator.of(context).pop(msg);
-          // TODO: send notification
+
           // ignore: avoid_catches_without_on_clauses
         } catch (e) {
           scaffoldKey.currentState.showSnackBar(SnackBar(
@@ -75,13 +75,14 @@ class SendMessagePage extends HookWidget {
       } else {
         loading.value = true;
         try {
-          final msg = await LemmyApiV2(instanceHost).run(CreatePrivateMessage(
+          await LemmyApiV2(instanceHost).run(CreatePrivateMessage(
             auth: token?.raw ?? accStore.tokenFor(instanceHost, username)?.raw,
             content: bodyController.text,
             recipientId: recipient.id,
           ));
           Navigator.of(context).pop();
-          // TODO: send notification
+          // TODO: maybe send notification so that infinite list
+          //       containing this widget adds new message?
           // ignore: avoid_catches_without_on_clauses
         } catch (e) {
           scaffoldKey.currentState.showSnackBar(SnackBar(

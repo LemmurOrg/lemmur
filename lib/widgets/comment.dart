@@ -442,7 +442,7 @@ class _MarkAsRead extends HookWidget {
   final CommentView commentView;
   final void Function(bool val) onChange;
 
-  _MarkAsRead(this.commentView, {this.onChange});
+  const _MarkAsRead(this.commentView, {this.onChange});
 
   @override
   Widget build(BuildContext context) {

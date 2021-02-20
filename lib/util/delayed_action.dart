@@ -4,7 +4,7 @@ import 'package:lemmy_api_client/v2.dart';
 
 import '../hooks/delayed_loading.dart';
 
-rq<T>(T sth) {
+void rq<T>(T sth) {
   assert(sth != null, 'required argument');
 }
 

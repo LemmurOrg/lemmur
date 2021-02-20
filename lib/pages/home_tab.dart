@@ -32,8 +32,8 @@ class HomeTab extends HookWidget {
     final theme = Theme.of(context);
     final instancesIcons = useMemoFuture(() async {
       final instances = accStore.instances.toList(growable: false);
-      final sites = await Future.wait(instances
-          .map((e) => LemmyApiV2(e).run(GetSite()).catchError((e) => null)));
+      final sites = await Future.wait(instances.map(
+          (e) => LemmyApiV2(e).run(const GetSite()).catchError((e) => null)));
 
       return {
         for (var i = 0; i < sites.length; i++)
