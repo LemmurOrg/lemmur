@@ -31,6 +31,7 @@ class CommentWidget extends HookWidget {
   final UserMentionView userMentionView;
   final bool wasVoted;
   final bool canBeMarkedAsRead;
+  final bool hideOnRead;
 
   static const colors = [
     Colors.pink,
@@ -45,19 +46,26 @@ class CommentWidget extends HookWidget {
     this.indent = 0,
     this.detached = false,
     this.canBeMarkedAsRead = false,
+    this.hideOnRead = false,
   })  : wasVoted =
             (commentTree.comment.myVote ?? VoteType.none) != VoteType.none,
         userMentionView = null;
 
-  factory CommentWidget.fromCommentView(
+  CommentWidget.fromCommentView(
     CommentView cv, {
     bool canBeMarkedAsRead,
-  }) =>
-      CommentWidget(CommentTree(cv),
-          detached: true, canBeMarkedAsRead: canBeMarkedAsRead);
+    bool hideOnRead,
+  }) : this(
+          CommentTree(cv),
+          detached: true,
+          canBeMarkedAsRead: canBeMarkedAsRead,
+          hideOnRead: hideOnRead,
+        );
 
-  CommentWidget.fromUserMentionView(this.userMentionView)
-      : commentTree =
+  CommentWidget.fromUserMentionView(
+    this.userMentionView, {
+    this.hideOnRead = false,
+  })  : commentTree =
             CommentTree(CommentView.fromJson(userMentionView.toJson())),
         indent = 0,
         wasVoted = (userMentionView.myVote ?? VoteType.none) != VoteType.none,
@@ -113,6 +121,7 @@ class CommentWidget extends HookWidget {
     final collapsed = useState(false);
     final myVote = useState(commentTree.comment.myVote ?? VoteType.none);
     final isDeleted = useState(commentTree.comment.comment.deleted);
+    final isRead = useState(commentTree.comment.comment.read);
 
     final delayedVoting = useDelayedLoading();
     final delayedDeletion = useDelayedLoading();
@@ -121,6 +130,10 @@ class CommentWidget extends HookWidget {
     final newReplies = useState(const <CommentTree>[]);
 
     final comment = commentTree.comment;
+
+    if ((hideOnRead ?? false) && isRead.value) {
+      return const SizedBox.shrink();
+    }
 
     handleDelete(Jwt token) {
       Navigator.of(context).pop();
@@ -283,7 +296,11 @@ class CommentWidget extends HookWidget {
                                 content: Text('comment copied to clipboard'))));
                   }),
             const Spacer(),
-            if (canBeMarkedAsRead) _MarkAsRead(commentTree.comment),
+            if (canBeMarkedAsRead)
+              _MarkAsRead(
+                commentTree.comment,
+                onChange: (val) => isRead.value = val,
+              ),
             if (detached)
               TileAction(
                 icon: Icons.link,
@@ -423,8 +440,9 @@ class CommentWidget extends HookWidget {
 
 class _MarkAsRead extends HookWidget {
   final CommentView commentView;
+  final void Function(bool val) onChange;
 
-  const _MarkAsRead(this.commentView);
+  _MarkAsRead(this.commentView, {this.onChange});
 
   @override
   Widget build(BuildContext context) {
@@ -449,7 +467,10 @@ class _MarkAsRead extends HookWidget {
                 ? accStore.tokenFor(instanceHost, recipient.name)?.raw
                 : accStore.tokenForId(instanceHost, post.creatorId)?.raw,
           ),
-          onSuccess: (_) => isRead.value = !isRead.value,
+          onSuccess: (_) {
+            isRead.value = !isRead.value;
+            onChange(isRead.value);
+          },
         );
 
     return TileAction(

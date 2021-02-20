@@ -34,11 +34,8 @@ class InboxPage extends HookWidget {
     final selected = useState(_SelectedAccount(
         accStore.defaultInstanceHost, accStore.defaultUsername));
     final theme = Theme.of(context);
-
-    final isc1 = useInfiniteScrollController();
-    final isc2 = useInfiniteScrollController();
-    final isc3 = useInfiniteScrollController();
-    final unreadOnly = useState(false);
+    final isc = useInfiniteScrollController();
+    final unreadOnly = useState(true);
 
     if (accStore.hasNoAccount) {
       return Scaffold(
@@ -47,15 +44,9 @@ class InboxPage extends HookWidget {
       );
     }
 
-    void clear() {
-      isc1.tryClear();
-      isc2.tryClear();
-      isc3.tryClear();
-    }
-
-    switchUnreadOnly() {
+    toggleUnreadOnly() {
       unreadOnly.value = !unreadOnly.value;
-      clear();
+      isc.tryClear();
     }
 
     return DefaultTabController(
@@ -65,7 +56,7 @@ class InboxPage extends HookWidget {
           title: RadioPicker<_SelectedAccount>(
             onChanged: (val) {
               selected.value = val;
-              clear();
+              isc.tryClear();
             },
             title: 'select account',
             groupValue: selected.value,
@@ -99,7 +90,8 @@ class InboxPage extends HookWidget {
           actions: [
             IconButton(
               icon: Icon(unreadOnly.value ? Icons.mail : Icons.mail_outline),
-              onPressed: switchUnreadOnly,
+              onPressed: toggleUnreadOnly,
+              tooltip: unreadOnly.value ? 'show all' : 'show only unread',
             )
           ],
           bottom: const TabBar(
@@ -113,7 +105,7 @@ class InboxPage extends HookWidget {
         body: TabBarView(
           children: [
             SortableInfiniteList<CommentView>(
-              controller: isc1,
+              controller: isc,
               defaultSort: SortType.new_,
               fetcher: (page, batchSize, sortType) =>
                   LemmyApiV2(selected.value.instance).run(GetReplies(
@@ -125,11 +117,14 @@ class InboxPage extends HookWidget {
                 page: page,
                 unreadOnly: unreadOnly.value,
               )),
-              itemBuilder: (cv) =>
-                  CommentWidget.fromCommentView(cv, canBeMarkedAsRead: true),
+              itemBuilder: (cv) => CommentWidget.fromCommentView(
+                cv,
+                canBeMarkedAsRead: true,
+                hideOnRead: unreadOnly.value,
+              ),
             ),
             SortableInfiniteList<UserMentionView>(
-              controller: isc2,
+              controller: isc,
               defaultSort: SortType.new_,
               fetcher: (page, batchSize, sortType) =>
                   LemmyApiV2(selected.value.instance).run(GetUserMentions(
@@ -141,12 +136,13 @@ class InboxPage extends HookWidget {
                 page: page,
                 unreadOnly: unreadOnly.value,
               )),
-              itemBuilder: (umv) => CommentWidget.fromUserMentionView(umv),
-              // builder: ,
+              itemBuilder: (umv) => CommentWidget.fromUserMentionView(
+                umv,
+                hideOnRead: unreadOnly.value,
+              ),
             ),
             InfiniteScroll<PrivateMessageView>(
-              controller: isc3,
-              // leading: ,
+              controller: isc,
               fetcher: (page, batchSize) =>
                   LemmyApiV2(selected.value.instance).run(
                 GetPrivateMessages(
@@ -158,8 +154,11 @@ class InboxPage extends HookWidget {
                   unreadOnly: unreadOnly.value,
                 ),
               ),
-              itemBuilder: (mv) =>
-                  PrivateMessageTile(msg: mv, account: selected.value),
+              itemBuilder: (mv) => PrivateMessageTile(
+                msg: mv,
+                account: selected.value,
+                hideOnRead: unreadOnly.value,
+              ),
             ),
           ],
         ),
@@ -171,8 +170,10 @@ class InboxPage extends HookWidget {
 class PrivateMessageTile extends HookWidget {
   final PrivateMessageView msg;
   final _SelectedAccount account;
+  final bool hideOnRead;
 
-  const PrivateMessageTile({@required this.msg, @required this.account});
+  const PrivateMessageTile(
+      {@required this.msg, @required this.account, this.hideOnRead = false});
   static const double _iconSize = 16;
 
   @override
@@ -266,6 +267,10 @@ class PrivateMessageTile extends HookWidget {
           // TODO: add notification for notifying parent list
           onSuccess: (_) => read.value = !read.value,
         );
+
+    if (hideOnRead && read.value) {
+      return const SizedBox.shrink();
+    }
 
     final body = raw.value
         ? selectable.value
