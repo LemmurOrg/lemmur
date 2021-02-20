@@ -44,8 +44,9 @@ dependencies:
   # utils
   timeago: ^2.0.27
   fuzzy: <1.0.0
-  lemmy_api_client: ^0.11.0
-
+  lemmy_api_client: #^0.11.0
+    git:
+      url: git://github.com/krawieck/lemmy_api_client
   matrix4_transform: ^1.1.7
 
   flutter:
