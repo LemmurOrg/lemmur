@@ -416,14 +416,13 @@ class PostWidget extends HookWidget {
         color: theme.cardColor,
         borderRadius: const BorderRadius.all(Radius.circular(20)),
       ),
-      child: Material(
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(20))),
-        child: GestureDetector(
-          onTap: fullPost
-              ? null
-              : () =>
-                  goTo(context, (context) => FullPostPage.fromPostView(post)),
+      child: GestureDetector(
+        onTap: fullPost
+            ? null
+            : () => goTo(context, (context) => FullPostPage.fromPostView(post)),
+        child: Material(
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20))),
           child: Column(
             children: [
               info(),
