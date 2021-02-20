@@ -29,14 +29,15 @@ class SortableInfiniteList<T> extends HookWidget {
     this.noItems,
     this.defaultSort = SortType.active,
   })  : assert(fetcher != null),
-        assert(itemBuilder != null);
+        assert(itemBuilder != null),
+        assert(defaultSort != null);
 
   @override
   Widget build(BuildContext context) {
     final defaultController = useInfiniteScrollController();
     final isc = controller ?? defaultController;
 
-    final sort = useState(defaultSort ?? SortType.active);
+    final sort = useState(defaultSort);
 
     void changeSorting(SortType newSort) {
       sort.value = newSort;
