@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 
 import 'bottom_modal.dart';
 
-void showInfoTablePopup(
-  BuildContext context,
-  Map<String, dynamic> table, [
+void showInfoTablePopup({
+  @required BuildContext context,
+  @required Map<String, dynamic> table,
   String title,
-]) {
+}) {
+  assert(context != null);
+  assert(table != null);
+
   showBottomModal(
     context: context,
     title: title,
@@ -24,9 +27,9 @@ void showInfoTablePopup(
                 if (e.value is Map<String, dynamic>)
                   GestureDetector(
                     onTap: () => showInfoTablePopup(
-                      context,
-                      e.value as Map<String, dynamic>,
-                      e.key,
+                      context: context,
+                      table: e.value as Map<String, dynamic>,
+                      title: e.key,
                     ),
                     child: Text(
                       '[tap to show]',

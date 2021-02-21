@@ -75,17 +75,10 @@ class PostWidget extends HookWidget {
             leading: const Icon(Icons.info_outline),
             title: const Text('Nerd stuff'),
             onTap: () {
-              showInfoTablePopup(context, {
-                'id': post.post.id,
-                'apId': post.post.apId,
-                'upvotes': post.counts.upvotes,
-                'downvotes': post.counts.downvotes,
-                'score': post.counts.score,
+              showInfoTablePopup(context: context, table: {
                 '% of upvotes':
                     '${(100 * (post.counts.upvotes / (post.counts.upvotes + post.counts.downvotes))).toInt()}%',
-                'local': post.post.local,
-                'published': post.post.published,
-                'updated': post.post.updated ?? 'never',
+                ...post.toJson(),
               });
             },
           ),

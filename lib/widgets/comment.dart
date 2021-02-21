@@ -74,31 +74,8 @@ class CommentWidget extends HookWidget {
 
   _showCommentInfo(BuildContext context) {
     final com = commentTree.comment;
-    showInfoTablePopup(context, {
-      'id': com.comment.id,
-      'creatorId': com.comment.creatorId,
-      'postId': com.comment.postId,
-      'postName': com.post.name,
-      'parentId': com.comment.parentId,
-      'removed': com.comment.removed,
-      'read': com.comment.read,
-      'published': com.comment.published,
-      'updated': com.comment.updated,
-      'deleted': com.comment.deleted,
-      'apId': com.comment.apId,
-      'local': com.comment.local,
-      'communityId': com.community.id,
-      'communityActorId': com.community.actorId,
-      'communityLocal': com.community.local,
-      'communityName': com.community.name,
-      'communityIcon': com.community.icon,
-      'banned': com.creator.banned,
-      'bannedFromCommunity': com.creatorBannedFromCommunity,
-      'creatorActirId': com.creator.actorId,
-      'userId': com.creator.id,
-      'upvotes': com.counts.upvotes,
-      'downvotes': com.counts.downvotes,
-      'score': com.counts.score,
+    showInfoTablePopup(context: context, table: {
+      ...com.toJson(),
       '% of upvotes':
           '${100 * (com.counts.upvotes / (com.counts.upvotes + com.counts.downvotes))}%',
     });

@@ -234,7 +234,7 @@ class PrivateMessageTile extends HookWidget {
                 leading: const Icon(Icons.info_outline),
                 onTap: () {
                   pop();
-                  showInfoTablePopup(context, msg.toJson());
+                  showInfoTablePopup(context: context, table: msg.toJson());
                 },
               ),
             ],

@@ -85,15 +85,7 @@ class InstancePage extends HookWidget {
               leading: const Icon(Icons.info_outline),
               title: const Text('Nerd stuff'),
               onTap: () {
-                showInfoTablePopup(context, {
-                  'url': instanceHost,
-                  'creator': '@${site.siteView.creator.name}',
-                  'version': site.version,
-                  'enableDownvotes': site.siteView.site.enableDownvotes,
-                  'enableNsfw': site.siteView.site.enableNsfw,
-                  'published': site.siteView.site.published,
-                  'updated': site.siteView.site.updated,
-                });
+                showInfoTablePopup(context: context, table: site.toJson());
               },
             ),
           ],

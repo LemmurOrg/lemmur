@@ -124,12 +124,7 @@ class CommunityPage extends HookWidget {
               leading: const Icon(Icons.info_outline),
               title: const Text('Nerd stuff'),
               onTap: () {
-                showInfoTablePopup(context, {
-                  'id': community.community.id,
-                  'actorId': community.community.actorId,
-                  'created by': '@${community.creator.name}',
-                  'published': community.community.published,
-                });
+                showInfoTablePopup(context: context, table: community.toJson());
               },
             ),
           ],
