@@ -4,34 +4,32 @@ import 'package:lemmy_api_client/v2.dart';
 
 import '../hooks/delayed_loading.dart';
 
-void rq<T>(T sth) {
-  assert(sth != null, 'required argument');
-}
-
+/// Executes an API action that uses [DelayedLoading], has a try-catch
+/// that displays a [SnackBar] on the Scaffold.of(context) when the action fails
 Future<void> delayedAction<T>({
   @required BuildContext context,
-  @required DelayedLoading del,
+  @required DelayedLoading delayedLoading,
   @required String instanceHost,
   @required LemmyApiQuery<T> query,
   Function(T) onSuccess,
   Function(T) onFailure,
   Function(T) cleanup,
 }) async {
-  rq(del);
-  rq(instanceHost);
-  rq(query);
-  rq(context);
+  assert(delayedLoading != null);
+  assert(instanceHost != null);
+  assert(query != null);
+  assert(context != null);
 
   T val;
   try {
-    del.start();
+    delayedLoading.start();
     val = await LemmyApiV2(instanceHost).run<T>(query);
-    if (onSuccess != null) onSuccess(val);
+    onSuccess?.call(val);
     // ignore: avoid_catches_without_on_clauses
   } catch (e) {
     Scaffold.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
-    if (onFailure != null) onFailure(val);
+    onFailure?.call(val);
   }
-  if (cleanup != null) cleanup(val);
-  del.cancel();
+  cleanup?.call(val);
+  delayedLoading.cancel();
 }

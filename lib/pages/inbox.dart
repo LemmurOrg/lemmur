@@ -245,7 +245,7 @@ class PrivateMessageTile extends HookWidget {
 
     handleDelete() => delayedAction<PrivateMessageView>(
           context: context,
-          del: deleteDelayed,
+          delayedLoading: deleteDelayed,
           instanceHost: account.instance,
           query: DeletePrivateMessage(
             privateMessageId: msg.privateMessage.id,
@@ -257,7 +257,7 @@ class PrivateMessageTile extends HookWidget {
 
     handleRead() => delayedAction<PrivateMessageView>(
           context: context,
-          del: readDelayed,
+          delayedLoading: readDelayed,
           instanceHost: account.instance,
           query: MarkPrivateMessageAsRead(
             privateMessageId: msg.privateMessage.id,

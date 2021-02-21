@@ -116,7 +116,7 @@ class CommentWidget extends HookWidget {
       Navigator.of(context).pop();
       delayedAction<FullCommentView>(
         context: context,
-        del: delayedDeletion,
+        delayedLoading: delayedDeletion,
         instanceHost: token.payload.iss,
         query: DeleteComment(
           commentId: comment.comment.id,
@@ -202,7 +202,7 @@ class CommentWidget extends HookWidget {
 
     vote(VoteType vote, Jwt token) => delayedAction<FullCommentView>(
           context: context,
-          del: delayedVoting,
+          delayedLoading: delayedVoting,
           instanceHost: token.payload.iss,
           query: CreateCommentLike(
             commentId: comment.comment.id,
@@ -435,7 +435,7 @@ class _MarkAsRead extends HookWidget {
 
     Future<void> handleMarkAsSeen() => delayedAction<FullCommentView>(
           context: context,
-          del: delayedRead,
+          delayedLoading: delayedRead,
           instanceHost: instanceHost,
           query: MarkCommentAsRead(
             commentId: comment.id,
@@ -473,7 +473,7 @@ class _SaveComment extends HookWidget {
 
     handleSave(Jwt token) => delayedAction<FullCommentView>(
           context: context,
-          del: delayed,
+          delayedLoading: delayed,
           instanceHost: comment.instanceHost,
           query: SaveComment(
             commentId: comment.comment.id,
