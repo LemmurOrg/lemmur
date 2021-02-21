@@ -16,7 +16,9 @@ class WriteComment extends HookWidget {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
   WriteComment.toPost(this.post) : comment = null;
-  WriteComment.toComment({this.comment, this.post});
+  WriteComment.toComment({@required this.comment, @required this.post})
+      : assert(comment != null),
+        assert(post != null);
 
   @override
   Widget build(BuildContext context) {
