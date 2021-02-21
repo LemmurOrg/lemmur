@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../hooks/delayed_loading.dart';
 
+/// [IconButton], usually at the bottom of some tile, that performs an async
+/// action that uses [DelayedLoading], has reduced size to be more compact,
+/// and has built in spinner
 class TileAction extends StatelessWidget {
   final IconData icon;
   final VoidCallback onPressed;
@@ -16,7 +19,10 @@ class TileAction extends StatelessWidget {
     @required this.icon,
     @required this.onPressed,
     @required this.tooltip,
-  }) : super(key: key);
+  })  : assert(icon != null),
+        assert(onPressed != null),
+        assert(tooltip != null),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) => IconButton(
