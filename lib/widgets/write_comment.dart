@@ -29,7 +29,7 @@ class WriteComment extends HookWidget {
 
     final preview = () {
       final body = MarkdownText(
-        comment?.content ?? post?.body ?? '',
+        comment?.content ?? post.body,
         instanceHost: post.instanceHost,
       );
 
