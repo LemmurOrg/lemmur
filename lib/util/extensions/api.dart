@@ -28,7 +28,8 @@ String _extract(String url) => urlHost(url);
 
 extension CommunityDisplayNames on CommunitySafe {
   String get displayName => '!$name';
-  String get originDisplayName => local ? displayName : '!$name@$instanceHost';
+  String get originDisplayName =>
+      local ? displayName : '!$name@$originInstanceHost';
 }
 
 extension DisplayNames on UserSafe {

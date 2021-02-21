@@ -244,9 +244,7 @@ class CommunitiesTab extends HookWidget {
                                     else
                                       const SizedBox(width: 30),
                                     const SizedBox(width: 10),
-                                    Text(
-                                      '!${comm.community.name}${comm.community.local ? '' : '@${comm.community.originInstanceHost}'}',
-                                    ),
+                                    Text(comm.community.originDisplayName),
                                   ],
                                 ),
                                 trailing: _CommunitySubscribeToggle(

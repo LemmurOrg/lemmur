@@ -147,7 +147,7 @@ class CommunityPage extends HookWidget {
                 after: community.community.icon == null ? 110 : 190,
                 fade: true,
                 child: Text(
-                  '!${community.community.name}',
+                  community.community.displayName,
                   overflow: TextOverflow.fade,
                   softWrap: false,
                 ),
