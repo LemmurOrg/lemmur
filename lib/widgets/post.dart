@@ -345,11 +345,12 @@ class PostWidget extends HookWidget {
                     Row(
                       children: [
                         Flexible(
-                            child: Text(
-                          post.post.embedDescription,
-                          maxLines: 4,
-                          overflow: TextOverflow.ellipsis,
-                        ))
+                          child: Text(
+                            post.post.embedDescription,
+                            maxLines: 4,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        )
                       ],
                     ),
                 ],
