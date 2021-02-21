@@ -4,6 +4,7 @@ import 'package:lemmy_api_client/v2.dart';
 
 import '../hooks/delayed_loading.dart';
 import '../hooks/stores.dart';
+import 'markdown_mode_icon.dart';
 import 'markdown_text.dart';
 
 /// Modal for writing a comment to a given post/comment (aka reply)
@@ -77,7 +78,7 @@ class WriteComment extends HookWidget {
         leading: const CloseButton(),
         actions: [
           IconButton(
-            icon: Icon(showFancy.value ? Icons.build : Icons.brush),
+            icon: markdownModeIcon(fancy: showFancy.value),
             onPressed: () => showFancy.value = !showFancy.value,
           ),
         ],

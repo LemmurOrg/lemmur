@@ -19,6 +19,7 @@ import '../widgets/bottom_modal.dart';
 import '../widgets/comment.dart';
 import '../widgets/infinite_scroll.dart';
 import '../widgets/info_table_popup.dart';
+import '../widgets/markdown_mode_icon.dart';
 import '../widgets/markdown_text.dart';
 import '../widgets/radio_picker.dart';
 import '../widgets/sortable_infinite_list.dart';
@@ -202,24 +203,14 @@ class PrivateMessageTile extends HookWidget {
           pop() => Navigator.of(context).pop();
           return Column(
             children: [
-              if (raw.value)
-                ListTile(
-                  title: const Text('Show fancy'),
-                  leading: const Icon(Icons.brush),
-                  onTap: () {
-                    raw.value = false;
-                    pop();
-                  },
-                )
-              else
-                ListTile(
-                  title: const Text('Show raw'),
-                  leading: const Icon(Icons.build),
-                  onTap: () {
-                    raw.value = true;
-                    pop();
-                  },
-                ),
+              ListTile(
+                title: Text(raw.value ? 'Show fancy' : 'Show raw'),
+                leading: markdownModeIcon(fancy: !raw.value),
+                onTap: () {
+                  raw.value = !raw.value;
+                  pop();
+                },
+              ),
               ListTile(
                 title: Text('Make ${selectable.value ? 'un' : ''}selectable'),
                 leading: Icon(

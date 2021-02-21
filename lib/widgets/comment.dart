@@ -19,6 +19,7 @@ import '../util/intl.dart';
 import '../util/text_color.dart';
 import 'bottom_modal.dart';
 import 'info_table_popup.dart';
+import 'markdown_mode_icon.dart';
 import 'markdown_text.dart';
 import 'tile_action.dart';
 import 'write_comment.dart';
@@ -166,7 +167,7 @@ class CommentWidget extends HookWidget {
               },
             ),
             ListTile(
-              leading: Icon(showRaw.value ? Icons.brush : Icons.build),
+              leading: markdownModeIcon(fancy: !showRaw.value),
               title: Text('Show ${showRaw.value ? 'fancy' : 'raw'} text'),
               onTap: () {
                 showRaw.value = !showRaw.value;

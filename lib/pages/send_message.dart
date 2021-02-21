@@ -1,11 +1,10 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v2.dart';
 
 import '../hooks/stores.dart';
 import '../util/extensions/api.dart';
+import '../widgets/markdown_mode_icon.dart';
 import '../widgets/markdown_text.dart';
 
 class SendMessagePage extends HookWidget {
@@ -122,12 +121,7 @@ class SendMessagePage extends HookWidget {
         leading: const CloseButton(),
         actions: [
           IconButton(
-            icon: showFancy.value
-                ? const Icon(Icons.build)
-                : Transform.rotate(
-                    angle: pi / 2,
-                    child: const Icon(Icons.brush),
-                  ),
+            icon: markdownModeIcon(fancy: showFancy.value),
             onPressed: () => showFancy.value = !showFancy.value,
           ),
         ],

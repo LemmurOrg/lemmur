@@ -15,6 +15,7 @@ import '../util/extensions/spaced.dart';
 import '../util/goto.dart';
 import '../util/pictrs.dart';
 import '../util/unawaited.dart';
+import '../widgets/markdown_mode_icon.dart';
 import '../widgets/markdown_text.dart';
 import '../widgets/radio_picker.dart';
 import 'full_post.dart';
@@ -249,7 +250,7 @@ class CreatePostPage extends HookWidget {
         leading: const CloseButton(),
         actions: [
           IconButton(
-            icon: Icon(showFancy.value ? Icons.build : Icons.brush),
+            icon: markdownModeIcon(fancy: showFancy.value),
             onPressed: () => showFancy.value = !showFancy.value,
           ),
         ],
