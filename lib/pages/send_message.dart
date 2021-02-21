@@ -13,6 +13,8 @@ class SendMessagePage extends HookWidget {
   final String instanceHost;
 
   final UserSafe recipient;
+
+  /// if it's non null then this page is used for edit
   final PrivateMessage privateMessage;
   final String content;
   final Jwt token;
@@ -24,8 +26,6 @@ class SendMessagePage extends HookWidget {
     @required this.instanceHost,
     @required this.recipient,
     this.token,
-
-    /// if it's non null then this page is used for edit
     this.privateMessage,
     this.content,
   })  : assert(username != null || token != null, 'argument required'),
