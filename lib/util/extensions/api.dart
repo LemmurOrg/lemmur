@@ -32,7 +32,7 @@ extension CommunityDisplayNames on CommunitySafe {
       local ? displayName : '!$name@$originInstanceHost';
 }
 
-extension DisplayNames on UserSafe {
+extension UserDisplayNames on UserSafe {
   String get displayName {
     if (preferredUsername != null && preferredUsername.isNotEmpty) {
       return preferredUsername;

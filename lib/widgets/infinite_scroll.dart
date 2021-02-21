@@ -8,7 +8,7 @@ import 'bottom_safe.dart';
 class InfiniteScrollController {
   VoidCallback clear;
 
-  /// [clear] for situations where this contorller may not have been initialized
+  /// [clear] for situations where this controller may not have been initialized
   VoidCallback tryClear;
 
   InfiniteScrollController() {
