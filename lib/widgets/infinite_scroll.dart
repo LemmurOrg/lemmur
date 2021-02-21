@@ -19,8 +19,8 @@ class InfiniteScrollController {
     tryClear = () {
       try {
         clear();
-        // ignore: avoid_catches_without_on_clauses
-      } catch (_) {}
+        // ignore: empty_catches
+      } on Exception {}
     };
   }
 
