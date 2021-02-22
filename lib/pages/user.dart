@@ -30,7 +30,6 @@ class UserPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final userDetailsSnap = useFuture(_userDetails);
-    final loggedInAction = useLoggedInAction(instanceHost);
 
     final body = () {
       if (userDetailsSnap.hasData) {
@@ -47,15 +46,7 @@ class UserPage extends HookWidget {
       appBar: AppBar(
         actions: [
           if (userDetailsSnap.hasData) ...[
-            IconButton(
-              icon: const Icon(Icons.email),
-              onPressed: loggedInAction((token) => showCupertinoModalPopup(
-                  context: context,
-                  builder: (_) => WriteMessagePage.send(
-                        instanceHost: instanceHost,
-                        recipient: userDetailsSnap.data.userView.user,
-                      ))),
-            ),
+            SendMessageButton(userDetailsSnap.data.userView.user),
             IconButton(
               icon: const Icon(Icons.share),
               onPressed: () => Share.text('Share user',
@@ -65,6 +56,27 @@ class UserPage extends HookWidget {
         ],
       ),
       body: body,
+    );
+  }
+}
+
+class SendMessageButton extends HookWidget {
+  final UserSafe user;
+
+  const SendMessageButton(this.user);
+
+  @override
+  Widget build(BuildContext context) {
+    final loggedInAction = useLoggedInAction(user.instanceHost);
+
+    return IconButton(
+      icon: const Icon(Icons.email),
+      onPressed: loggedInAction((token) => showCupertinoModalPopup(
+          context: context,
+          builder: (_) => WriteMessagePage.send(
+                instanceHost: user.instanceHost,
+                recipient: user,
+              ))),
     );
   }
 }
