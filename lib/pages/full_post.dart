@@ -101,7 +101,7 @@ class FullPostPage extends HookWidget {
           centerTitle: false,
           title: RevealAfterScroll(
             scrollController: scrollController,
-            after: 60,
+            after: 65,
             child: Text(
               post.community.originDisplayName,
               overflow: TextOverflow.fade,
@@ -124,7 +124,7 @@ class FullPostPage extends HookWidget {
             controller: scrollController,
             physics: const AlwaysScrollableScrollPhysics(),
             children: [
-              const SizedBox(height: 10),
+              const SizedBox(height: 15),
               PostWidget(post, fullPost: true),
               if (fullPostRefreshable.snapshot.hasData)
                 CommentSection(
