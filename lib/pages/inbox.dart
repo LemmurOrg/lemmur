@@ -101,6 +101,7 @@ class InboxPage extends HookWidget {
         body: TabBarView(
           children: [
             SortableInfiniteList<CommentView>(
+              noItems: const Text('no replies'),
               controller: isc,
               defaultSort: SortType.new_,
               fetcher: (page, batchSize, sortType) =>
@@ -118,6 +119,7 @@ class InboxPage extends HookWidget {
               ),
             ),
             SortableInfiniteList<UserMentionView>(
+              noItems: const Text('no mentions'),
               controller: isc,
               defaultSort: SortType.new_,
               fetcher: (page, batchSize, sortType) =>
@@ -134,6 +136,10 @@ class InboxPage extends HookWidget {
               ),
             ),
             InfiniteScroll<PrivateMessageView>(
+              noItems: const Padding(
+                padding: EdgeInsets.only(top: 60),
+                child: Text('no messages'),
+              ),
               controller: isc,
               fetcher: (page, batchSize) => LemmyApiV2(selected.value).run(
                 GetPrivateMessages(
