@@ -12,6 +12,7 @@ import '../util/extensions/spaced.dart';
 import '../util/goto.dart';
 import '../util/more_icon.dart';
 import '../util/text_color.dart';
+import '../widgets/avatar.dart';
 import '../widgets/bottom_modal.dart';
 import '../widgets/fullscreenable_image.dart';
 import '../widgets/info_table_popup.dart';
@@ -19,6 +20,7 @@ import '../widgets/markdown_text.dart';
 import '../widgets/reveal_after_scroll.dart';
 import '../widgets/sortable_infinite_list.dart';
 import 'communities_list.dart';
+import 'modlog_page.dart';
 import 'users_list.dart';
 
 /// Displays posts, comments, and general info about the given instance
@@ -212,10 +214,6 @@ class _AboutTab extends HookWidget {
       : assert(communitiesFuture != null),
         assert(instanceHost != null);
 
-  void goToModLog() {
-    print('GO TO MODLOG');
-  }
-
   void goToBannedUsers(BuildContext c) {
     goTo(
       c,
@@ -293,24 +291,7 @@ class _AboutTab extends HookWidget {
                   onTap: () => goToCommunity.byId(
                       context, c.instanceHost, c.community.id),
                   title: Text(c.community.name),
-                  leading: c.community.icon != null
-                      ? CachedNetworkImage(
-                          height: 50,
-                          width: 50,
-                          imageUrl: c.community.icon,
-                          errorWidget: (_, __, ___) =>
-                              const SizedBox(width: 50, height: 50),
-                          imageBuilder: (context, imageProvider) => Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: imageProvider,
-                              ),
-                            ),
-                          ),
-                        )
-                      : const SizedBox(width: 50),
+                  leading: Avatar(url: c.community.icon),
                 )
             else if (commSnap.hasError)
               Padding(
@@ -342,22 +323,7 @@ class _AboutTab extends HookWidget {
                     ? MarkdownText(u.user.bio, instanceHost: instanceHost)
                     : null,
                 onTap: () => goToUser.fromUserSafe(context, u.user),
-                leading: u.user.avatar != null
-                    ? CachedNetworkImage(
-                        height: 50,
-                        width: 50,
-                        imageUrl: u.user.avatar,
-                        errorWidget: (_, __, ___) =>
-                            const SizedBox(width: 50, height: 50),
-                        imageBuilder: (context, imageProvider) => Container(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                                fit: BoxFit.cover, image: imageProvider),
-                          ),
-                        ),
-                      )
-                    : const SizedBox(width: 50),
+                leading: Avatar(url: u.user.avatar),
               ),
             const _Divider(),
             ListTile(
@@ -366,7 +332,10 @@ class _AboutTab extends HookWidget {
             ),
             ListTile(
               title: const Center(child: Text('Modlog')),
-              onTap: goToModLog,
+              onTap: () => goTo(
+                context,
+                (context) => ModlogPage.forInstance(instanceHost: instanceHost),
+              ),
             ),
           ],
         ),
