@@ -123,19 +123,17 @@ class WriteMessagePage extends HookWidget {
             Text('to ${recipient.displayName}'),
             const SizedBox(height: 16),
             body,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                  onPressed: loading.value ? () {} : handleSubmit,
-                  child: loading.value
-                      ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator())
-                      : Text(submit),
-                )
-              ],
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton(
+                onPressed: loading.value ? () {} : handleSubmit,
+                child: loading.value
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator())
+                    : Text(submit),
+              ),
             ),
           ],
         ),
