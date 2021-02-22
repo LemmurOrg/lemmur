@@ -26,7 +26,7 @@ import 'write_comment.dart';
 
 /// A single comment that renders its replies
 class CommentWidget extends HookWidget {
-  final int indent;
+  final int depth;
   final CommentTree commentTree;
   final bool detached;
   final UserMentionView userMentionView;
@@ -44,7 +44,7 @@ class CommentWidget extends HookWidget {
 
   CommentWidget(
     this.commentTree, {
-    this.indent = 0,
+    this.depth = 0,
     this.detached = false,
     this.canBeMarkedAsRead = false,
     this.hideOnRead = false,
@@ -54,8 +54,8 @@ class CommentWidget extends HookWidget {
 
   CommentWidget.fromCommentView(
     CommentView cv, {
-    bool canBeMarkedAsRead,
-    bool hideOnRead,
+    bool canBeMarkedAsRead = false,
+    bool hideOnRead = false,
   }) : this(
           CommentTree(cv),
           detached: true,
@@ -68,7 +68,7 @@ class CommentWidget extends HookWidget {
     this.hideOnRead = false,
   })  : commentTree =
             CommentTree(CommentView.fromJson(userMentionView.toJson())),
-        indent = 0,
+        depth = 0,
         wasVoted = (userMentionView.myVote ?? VoteType.none) != VoteType.none,
         detached = true,
         canBeMarkedAsRead = true;
@@ -109,7 +109,7 @@ class CommentWidget extends HookWidget {
 
     final comment = commentTree.comment;
 
-    if ((hideOnRead ?? false) && isRead.value) {
+    if (hideOnRead && isRead.value) {
       return const SizedBox.shrink();
     }
 
@@ -277,7 +277,7 @@ class CommentWidget extends HookWidget {
             if (canBeMarkedAsRead)
               _MarkAsRead(
                 commentTree.comment,
-                onChange: (val) => isRead.value = val,
+                onChanged: (val) => isRead.value = val,
               ),
             if (detached)
               TileAction(
@@ -328,12 +328,12 @@ class CommentWidget extends HookWidget {
         children: [
           Container(
             padding: const EdgeInsets.all(10),
-            margin: EdgeInsets.only(left: indent > 1 ? (indent - 1) * 5.0 : 0),
+            margin: EdgeInsets.only(left: depth > 1 ? (depth - 1) * 5.0 : 0),
             decoration: BoxDecoration(
                 border: Border(
-                    left: indent > 0
+                    left: depth > 0
                         ? BorderSide(
-                            color: colors[indent % colors.length], width: 5)
+                            color: colors[depth % colors.length], width: 5)
                         : BorderSide.none,
                     top: const BorderSide(width: 0.2))),
             child: Column(
@@ -409,7 +409,7 @@ class CommentWidget extends HookWidget {
           ),
           if (!collapsed.value)
             for (final c in newReplies.value.followedBy(commentTree.children))
-              CommentWidget(c, indent: indent + 1),
+              CommentWidget(c, depth: depth + 1),
         ],
       ),
     );
@@ -418,9 +418,9 @@ class CommentWidget extends HookWidget {
 
 class _MarkAsRead extends HookWidget {
   final CommentView commentView;
-  final void Function(bool val) onChange;
+  final ValueChanged<bool> onChanged;
 
-  const _MarkAsRead(this.commentView, {this.onChange});
+  const _MarkAsRead(this.commentView, {this.onChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -445,9 +445,9 @@ class _MarkAsRead extends HookWidget {
                 ? accStore.tokenFor(instanceHost, recipient.name)?.raw
                 : accStore.tokenForId(instanceHost, post.creatorId)?.raw,
           ),
-          onSuccess: (_) {
-            isRead.value = !isRead.value;
-            onChange(isRead.value);
+          onSuccess: (val) {
+            isRead.value = val.commentView.comment.read;
+            onChanged?.call(isRead.value);
           },
         );
 
