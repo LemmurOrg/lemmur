@@ -341,7 +341,7 @@ class _AboutTab extends HookWidget {
                 subtitle: u.user.bio != null
                     ? MarkdownText(u.user.bio, instanceHost: instanceHost)
                     : null,
-                onTap: () => goToUser.byId(context, instanceHost, u.user.id),
+                onTap: () => goToUser.fromUserSafe(context, u.user),
                 leading: u.user.avatar != null
                     ? CachedNetworkImage(
                         height: 50,

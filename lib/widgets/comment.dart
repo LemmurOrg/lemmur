@@ -343,8 +343,8 @@ class CommentWidget extends HookWidget {
                     Padding(
                       padding: const EdgeInsets.only(right: 5),
                       child: InkWell(
-                        onTap: () => goToUser.byId(
-                            context, comment.instanceHost, comment.creator.id),
+                        onTap: () =>
+                            goToUser.fromUserSafe(context, comment.creator),
                         child: CachedNetworkImage(
                           imageUrl: comment.creator.avatar,
                           height: 20,
@@ -363,8 +363,8 @@ class CommentWidget extends HookWidget {
                       ),
                     ),
                   InkWell(
-                    onTap: () => goToUser.byId(
-                        context, comment.instanceHost, comment.creator.id),
+                    onTap: () =>
+                        goToUser.fromUserSafe(context, comment.creator),
                     child: Text(comment.creator.originDisplayName,
                         style: TextStyle(
                           color: theme.accentColor,

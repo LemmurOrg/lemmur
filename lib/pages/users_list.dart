@@ -52,7 +52,7 @@ class UsersListItem extends StatelessWidget {
                 ),
               )
             : null,
-        onTap: () => goToUser.byId(context, user.instanceHost, user.user.id),
+        onTap: () => goToUser.fromUserSafe(context, user.user),
         leading: user.user.avatar != null
             ? CachedNetworkImage(
                 height: 50,
