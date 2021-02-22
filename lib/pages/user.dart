@@ -6,7 +6,7 @@ import 'package:lemmy_api_client/v2.dart';
 
 import '../hooks/logged_in_action.dart';
 import '../widgets/user_profile.dart';
-import 'send_message.dart';
+import 'write_message.dart';
 
 /// Page showing posts, comments, and general info about a user.
 class UserPage extends HookWidget {
@@ -51,9 +51,8 @@ class UserPage extends HookWidget {
               icon: const Icon(Icons.email),
               onPressed: loggedInAction((token) => showCupertinoModalPopup(
                   context: context,
-                  builder: (_) => SendMessagePage(
+                  builder: (_) => WriteMessagePage.send(
                         instanceHost: instanceHost,
-                        token: token,
                         recipient: userDetailsSnap.data.userView.user,
                       ))),
             ),

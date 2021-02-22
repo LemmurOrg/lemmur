@@ -7,45 +7,34 @@ import '../util/extensions/api.dart';
 import '../widgets/markdown_mode_icon.dart';
 import '../widgets/markdown_text.dart';
 
-class SendMessagePage extends HookWidget {
-  final String username;
-  final String instanceHost;
-
+/// Page for writing and editing a private message
+class WriteMessagePage extends HookWidget {
   final UserSafe recipient;
+  final String instanceHost;
 
   /// if it's non null then this page is used for edit
   final PrivateMessage privateMessage;
-  final String content;
-  final Jwt token;
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
-  SendMessagePage({
-    this.username,
-    @required this.instanceHost,
+  WriteMessagePage.send({
     @required this.recipient,
-    this.token,
-    this.privateMessage,
-    this.content,
-  })  : assert(username != null || token != null, 'argument required'),
-        assert(instanceHost != null, 'argument required'),
-        assert(recipient != null, 'argument required');
+    @required this.instanceHost,
+  })  : assert(recipient != null),
+        assert(instanceHost != null),
+        privateMessage = null;
 
-  SendMessagePage.edit(
-    PrivateMessageView pmv, {
-    this.instanceHost,
-    this.username,
-    this.content,
-    this.token,
-  })  : privateMessage = pmv.privateMessage,
-        recipient = pmv.recipient;
+  WriteMessagePage.edit(PrivateMessageView pmv)
+      : privateMessage = pmv.privateMessage,
+        recipient = pmv.recipient,
+        instanceHost = pmv.instanceHost;
 
   @override
   Widget build(BuildContext context) {
     final accStore = useAccountsStore();
     final showFancy = useState(false);
     final bodyController =
-        useTextEditingController(text: content ?? privateMessage?.content);
+        useTextEditingController(text: privateMessage?.content);
     final loading = useState(false);
 
     final isEdit = privateMessage != null;
@@ -58,7 +47,7 @@ class SendMessagePage extends HookWidget {
         loading.value = true;
         try {
           final msg = await LemmyApiV2(instanceHost).run(EditPrivateMessage(
-            auth: token?.raw ?? accStore.tokenFor(instanceHost, username).raw,
+            auth: accStore.defaultTokenFor(instanceHost)?.raw,
             privateMessageId: privateMessage.id,
             content: bodyController.text,
           ));
@@ -75,7 +64,7 @@ class SendMessagePage extends HookWidget {
         loading.value = true;
         try {
           await LemmyApiV2(instanceHost).run(CreatePrivateMessage(
-            auth: token?.raw ?? accStore.tokenFor(instanceHost, username)?.raw,
+            auth: accStore.defaultTokenFor(instanceHost)?.raw,
             content: bodyController.text,
             recipientId: recipient.id,
           ));
@@ -102,7 +91,6 @@ class SendMessagePage extends HookWidget {
           maxLines: null,
           minLines: 5,
           autofocus: true,
-          // decoration: const InputDecoration(labelText: 'Body'),
         ),
         Padding(
           padding: const EdgeInsets.all(16),

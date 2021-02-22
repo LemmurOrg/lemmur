@@ -24,7 +24,7 @@ import '../widgets/markdown_text.dart';
 import '../widgets/radio_picker.dart';
 import '../widgets/sortable_infinite_list.dart';
 import '../widgets/tile_action.dart';
-import 'send_message.dart';
+import 'write_message.dart';
 
 class InboxPage extends HookWidget {
   const InboxPage();
@@ -32,8 +32,7 @@ class InboxPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final accStore = useAccountsStore();
-    final selected = useState(_SelectedAccount(
-        accStore.defaultInstanceHost, accStore.defaultUsername));
+    final selected = useState(accStore.defaultInstanceHost);
     final theme = Theme.of(context);
     final isc = useInfiniteScrollController();
     final unreadOnly = useState(true);
@@ -54,7 +53,7 @@ class InboxPage extends HookWidget {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: RadioPicker<_SelectedAccount>(
+          title: RadioPicker<String>(
             onChanged: (val) {
               selected.value = val;
               isc.tryClear();
@@ -82,11 +81,7 @@ class InboxPage extends HookWidget {
                 ],
               ),
             ),
-            values: [
-              for (final instance in accStore.loggedInInstances)
-                for (final name in accStore.usernamesFor(instance))
-                  _SelectedAccount(instance, name)
-            ],
+            values: accStore.loggedInInstances.toList(),
           ),
           actions: [
             IconButton(
@@ -109,10 +104,8 @@ class InboxPage extends HookWidget {
               controller: isc,
               defaultSort: SortType.new_,
               fetcher: (page, batchSize, sortType) =>
-                  LemmyApiV2(selected.value.instance).run(GetReplies(
-                auth: accStore
-                    .tokenFor(selected.value.instance, selected.value.name)
-                    ?.raw,
+                  LemmyApiV2(selected.value).run(GetReplies(
+                auth: accStore.defaultTokenFor(selected.value).raw,
                 sort: sortType,
                 limit: batchSize,
                 page: page,
@@ -128,10 +121,8 @@ class InboxPage extends HookWidget {
               controller: isc,
               defaultSort: SortType.new_,
               fetcher: (page, batchSize, sortType) =>
-                  LemmyApiV2(selected.value.instance).run(GetUserMentions(
-                auth: accStore
-                    .tokenFor(selected.value.instance, selected.value.name)
-                    ?.raw,
+                  LemmyApiV2(selected.value).run(GetUserMentions(
+                auth: accStore.defaultTokenFor(selected.value).raw,
                 sort: sortType,
                 limit: batchSize,
                 page: page,
@@ -144,20 +135,16 @@ class InboxPage extends HookWidget {
             ),
             InfiniteScroll<PrivateMessageView>(
               controller: isc,
-              fetcher: (page, batchSize) =>
-                  LemmyApiV2(selected.value.instance).run(
+              fetcher: (page, batchSize) => LemmyApiV2(selected.value).run(
                 GetPrivateMessages(
-                  auth: accStore
-                      .tokenFor(selected.value.instance, selected.value.name)
-                      ?.raw,
+                  auth: accStore.defaultTokenFor(selected.value).raw,
                   limit: batchSize,
                   page: page,
                   unreadOnly: unreadOnly.value,
                 ),
               ),
               itemBuilder: (mv) => PrivateMessageTile(
-                msg: mv,
-                account: selected.value,
+                privateMessageView: mv,
                 hideOnRead: unreadOnly.value,
               ),
             ),
@@ -169,12 +156,11 @@ class InboxPage extends HookWidget {
 }
 
 class PrivateMessageTile extends HookWidget {
-  final PrivateMessageView msg;
-  final _SelectedAccount account;
+  final PrivateMessageView privateMessageView;
   final bool hideOnRead;
 
   const PrivateMessageTile(
-      {@required this.msg, @required this.account, this.hideOnRead = false});
+      {@required this.privateMessageView, this.hideOnRead = false});
   static const double _iconSize = 16;
 
   @override
@@ -182,19 +168,21 @@ class PrivateMessageTile extends HookWidget {
     final accStore = useAccountsStore();
     final theme = Theme.of(context);
 
+    final pmv = useState(privateMessageView);
     final raw = useState(false);
     final selectable = useState(false);
-    final deleted = useState(msg.privateMessage.deleted);
+    final deleted = useState(pmv.value.privateMessage.deleted);
     final deleteDelayed = useDelayedLoading(const Duration(milliseconds: 250));
-    final read = useState(msg.privateMessage.read);
+    final read = useState(pmv.value.privateMessage.read);
     final readDelayed = useDelayedLoading(const Duration(milliseconds: 200));
-    final content = useState(msg.privateMessage.content);
 
-    final toMe = _SelectedAccount(
-            msg.recipient.originInstanceHost, msg.recipient.name) ==
-        account;
+    final toMe = useMemoized(() =>
+        pmv.value.recipient.originInstanceHost == pmv.value.instanceHost &&
+        pmv.value.recipient.id ==
+            accStore.defaultTokenFor(pmv.value.instanceHost)?.payload?.id);
 
-    final otherSide = toMe ? msg.creator : msg.recipient;
+    final otherSide =
+        useMemoized(() => toMe ? pmv.value.creator : pmv.value.recipient);
 
     void showMoreMenu() {
       showBottomModal(
@@ -225,7 +213,8 @@ class PrivateMessageTile extends HookWidget {
                 leading: const Icon(Icons.info_outline),
                 onTap: () {
                   pop();
-                  showInfoTablePopup(context: context, table: msg.toJson());
+                  showInfoTablePopup(
+                      context: context, table: pmv.value.toJson());
                 },
               ),
             ],
@@ -237,10 +226,10 @@ class PrivateMessageTile extends HookWidget {
     handleDelete() => delayedAction<PrivateMessageView>(
           context: context,
           delayedLoading: deleteDelayed,
-          instanceHost: account.instance,
+          instanceHost: pmv.value.instanceHost,
           query: DeletePrivateMessage(
-            privateMessageId: msg.privateMessage.id,
-            auth: accStore.tokenFor(account.instance, account.name)?.raw,
+            privateMessageId: pmv.value.privateMessage.id,
+            auth: accStore.defaultTokenFor(pmv.value.instanceHost)?.raw,
             deleted: !deleted.value,
           ),
           onSuccess: (_) => deleted.value = !deleted.value,
@@ -249,10 +238,10 @@ class PrivateMessageTile extends HookWidget {
     handleRead() => delayedAction<PrivateMessageView>(
           context: context,
           delayedLoading: readDelayed,
-          instanceHost: account.instance,
+          instanceHost: pmv.value.instanceHost,
           query: MarkPrivateMessageAsRead(
-            privateMessageId: msg.privateMessage.id,
-            auth: accStore.tokenFor(account.instance, account.name)?.raw,
+            privateMessageId: pmv.value.privateMessage.id,
+            auth: accStore.defaultTokenFor(pmv.value.instanceHost)?.raw,
             read: !read.value,
           ),
           // TODO: add notification for notifying parent list
@@ -265,11 +254,11 @@ class PrivateMessageTile extends HookWidget {
 
     final body = raw.value
         ? selectable.value
-            ? SelectableText(content.value)
-            : Text(content.value)
+            ? SelectableText(pmv.value.privateMessage.content)
+            : Text(pmv.value.privateMessage.content)
         : MarkdownText(
-            content.value,
-            instanceHost: msg.instanceHost,
+            pmv.value.privateMessage.content,
+            instanceHost: pmv.value.instanceHost,
             selectable: selectable.value,
           );
 
@@ -316,9 +305,9 @@ class PrivateMessageTile extends HookWidget {
                 ),
               ),
               const Spacer(),
-              if (msg.privateMessage.updated != null) const Text('🖊  '),
-              Text(msg.privateMessage.updated?.fancy ??
-                  msg.privateMessage.published.fancy),
+              if (pmv.value.privateMessage.updated != null) const Text('🖊  '),
+              Text(pmv.value.privateMessage.updated?.fancy ??
+                  pmv.value.privateMessage.published.fancy),
               const SizedBox(width: 5),
               Transform(
                 transform: Matrix4Transform()
@@ -335,7 +324,7 @@ class PrivateMessageTile extends HookWidget {
             ],
           ),
           const SizedBox(height: 5),
-          if (msg.privateMessage.deleted)
+          if (pmv.value.privateMessage.deleted)
             const Text('deleted by creator',
                 style: TextStyle(fontStyle: FontStyle.italic))
           else
@@ -361,9 +350,8 @@ class PrivateMessageTile extends HookWidget {
                 onPressed: () {
                   showCupertinoModalPopup(
                       context: context,
-                      builder: (_) => SendMessagePage(
-                            instanceHost: account.instance,
-                            username: account.name,
+                      builder: (_) => WriteMessagePage.send(
+                            instanceHost: pmv.value.instanceHost,
                             recipient: otherSide,
                           ));
                 },
@@ -373,15 +361,10 @@ class PrivateMessageTile extends HookWidget {
                 icon: Icons.edit,
                 tooltip: 'edit',
                 onPressed: () async {
-                  final pmv = await showCupertinoModalPopup<PrivateMessageView>(
+                  final val = await showCupertinoModalPopup<PrivateMessageView>(
                       context: context,
-                      builder: (_) => SendMessagePage.edit(
-                            msg,
-                            instanceHost: account.instance,
-                            username: account.name,
-                            content: content.value,
-                          ));
-                  if (pmv != null) content.value = pmv.privateMessage.content;
+                      builder: (_) => WriteMessagePage.edit(pmv.value));
+                  if (pmv != null) pmv.value = val;
                 },
               ),
               TileAction(
@@ -397,23 +380,4 @@ class PrivateMessageTile extends HookWidget {
       ),
     );
   }
-}
-
-@immutable
-class _SelectedAccount {
-  final String instance;
-  final String name;
-
-  const _SelectedAccount(this.instance, this.name);
-
-  String toString() => '$name@$instance';
-
-  @override
-  bool operator ==(Object other) =>
-      other is _SelectedAccount &&
-      name == other.name &&
-      instance == other.instance;
-
-  @override
-  int get hashCode => super.hashCode;
 }
