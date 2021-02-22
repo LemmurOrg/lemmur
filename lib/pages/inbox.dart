@@ -159,8 +159,11 @@ class PrivateMessageTile extends HookWidget {
   final PrivateMessageView privateMessageView;
   final bool hideOnRead;
 
-  const PrivateMessageTile(
-      {@required this.privateMessageView, this.hideOnRead = false});
+  const PrivateMessageTile({
+    @required this.privateMessageView,
+    this.hideOnRead = false,
+  })  : assert(privateMessageView != null),
+        assert(hideOnRead != null);
   static const double _iconSize = 16;
 
   @override
