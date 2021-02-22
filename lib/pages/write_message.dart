@@ -17,17 +17,21 @@ class WriteMessagePage extends HookWidget {
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
+  final bool _isEdit;
+
   WriteMessagePage.send({
     @required this.recipient,
     @required this.instanceHost,
   })  : assert(recipient != null),
         assert(instanceHost != null),
-        privateMessage = null;
+        privateMessage = null,
+        _isEdit = false;
 
   WriteMessagePage.edit(PrivateMessageView pmv)
       : privateMessage = pmv.privateMessage,
         recipient = pmv.recipient,
-        instanceHost = pmv.instanceHost;
+        instanceHost = pmv.instanceHost,
+        _isEdit = true;
 
   @override
   Widget build(BuildContext context) {
@@ -37,13 +41,11 @@ class WriteMessagePage extends HookWidget {
         useTextEditingController(text: privateMessage?.content);
     final loading = useState(false);
 
-    final isEdit = privateMessage != null;
-
-    final submit = isEdit ? 'save' : 'send';
-    final title = isEdit ? 'Edit message' : 'Send message';
+    final submit = _isEdit ? 'save' : 'send';
+    final title = _isEdit ? 'Edit message' : 'Send message';
 
     handleSubmit() async {
-      if (isEdit) {
+      if (_isEdit) {
         loading.value = true;
         try {
           final msg = await LemmyApiV2(instanceHost).run(EditPrivateMessage(
