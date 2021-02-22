@@ -58,7 +58,7 @@ class InboxPage extends HookWidget {
               selected.value = val;
               isc.clear();
             },
-            title: 'select account',
+            title: 'select instance',
             groupValue: selected.value,
             buttonBuilder: (context, displayString, onPressed) => TextButton(
               style: TextButton.styleFrom(
@@ -241,7 +241,7 @@ class PrivateMessageTile extends HookWidget {
             auth: accStore.defaultTokenFor(pmv.value.instanceHost)?.raw,
             deleted: !deleted.value,
           ),
-          onSuccess: (_) => deleted.value = !deleted.value,
+          onSuccess: (val) => deleted.value = val.privateMessage.deleted,
         );
 
     handleRead() => delayedAction<PrivateMessageView>(
@@ -254,7 +254,7 @@ class PrivateMessageTile extends HookWidget {
             read: !read.value,
           ),
           // TODO: add notification for notifying parent list
-          onSuccess: (_) => read.value = !read.value,
+          onSuccess: (val) => read.value = val.privateMessage.read,
         );
 
     if (hideOnRead && read.value) {
@@ -379,7 +379,7 @@ class PrivateMessageTile extends HookWidget {
               TileAction(
                 delayedLoading: deleteDelayed,
                 icon: deleted.value ? Icons.restore : Icons.delete,
-                tooltip: 'delete',
+                tooltip: deleted.value ? 'restore' : 'delete',
                 onPressed: handleDelete,
               ),
             ]
