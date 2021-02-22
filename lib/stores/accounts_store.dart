@@ -156,10 +156,9 @@ class AccountsStore extends ChangeNotifier {
   }
 
   /// returns token for user of a certain id
-  Jwt tokenForId(String instanceHost, int id) => _tokens[instanceHost]
-      .entries
-      .firstWhere((entry) => entry.value.payload.id == id)
-      ?.value;
+  Jwt tokenForId(String instanceHost, int userId) => _tokens[instanceHost]
+      .values
+      .firstWhere((val) => val.payload.id == userId);
 
   Jwt tokenFor(String instanceHost, String username) {
     if (!usernamesFor(instanceHost).contains(username)) {
