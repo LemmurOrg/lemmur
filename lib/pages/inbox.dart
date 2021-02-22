@@ -46,7 +46,7 @@ class InboxPage extends HookWidget {
 
     toggleUnreadOnly() {
       unreadOnly.value = !unreadOnly.value;
-      isc.tryClear();
+      isc.clear();
     }
 
     return DefaultTabController(
@@ -56,7 +56,7 @@ class InboxPage extends HookWidget {
           title: RadioPicker<String>(
             onChanged: (val) {
               selected.value = val;
-              isc.tryClear();
+              isc.clear();
             },
             title: 'select account',
             groupValue: selected.value,

@@ -8,25 +8,15 @@ import 'bottom_safe.dart';
 class InfiniteScrollController {
   VoidCallback clear;
 
-  /// [clear] for situations where this controller may not have been initialized
-  VoidCallback tryClear;
-
   InfiniteScrollController() {
     usedBeforeCreation() => throw Exception(
         'Tried to use $runtimeType before it being initialized');
 
     clear = usedBeforeCreation;
-    tryClear = () {
-      try {
-        clear();
-        // ignore: empty_catches
-      } on Exception {}
-    };
   }
 
   void dispose() {
     clear = null;
-    tryClear = null;
   }
 }
 
