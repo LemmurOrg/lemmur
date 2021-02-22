@@ -40,7 +40,7 @@ class InboxPage extends HookWidget {
     if (accStore.hasNoAccount) {
       return Scaffold(
         appBar: AppBar(),
-        body: const Text('No accounts added'),
+        body: const Center(child: Text('no accounts added')),
       );
     }
 
