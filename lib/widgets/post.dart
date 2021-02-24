@@ -401,8 +401,7 @@ class PostWidget extends HookWidget {
             ? null
             : () => goTo(context, (context) => FullPostPage.fromPostView(post)),
         child: Material(
-          shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20))),
+          type: MaterialType.transparency,
           child: Column(
             children: [
               info(),
