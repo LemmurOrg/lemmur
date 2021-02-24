@@ -12,7 +12,6 @@ Future<void> delayedAction<T>({
   @required String instanceHost,
   @required LemmyApiQuery<T> query,
   Function(T) onSuccess,
-  Function(T) onFailure,
   Function(T) cleanup,
 }) async {
   assert(delayedLoading != null);
@@ -28,7 +27,6 @@ Future<void> delayedAction<T>({
     // ignore: avoid_catches_without_on_clauses
   } catch (e) {
     Scaffold.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
-    onFailure?.call(val);
   }
   cleanup?.call(val);
   delayedLoading.cancel();
