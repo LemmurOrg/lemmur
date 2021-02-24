@@ -106,7 +106,8 @@ class InstancePage extends HookWidget {
               pinned: true,
               backgroundColor: theme.cardColor,
               title: RevealAfterScroll(
-                after: 110,
+                after: 150,
+                fade: true,
                 scrollController: scrollController,
                 child: Text(
                   site.siteView.site.name,
