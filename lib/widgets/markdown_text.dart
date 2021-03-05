@@ -31,7 +31,7 @@ class MarkdownText extends StatelessWidget {
           border: Border(left: BorderSide(width: 2, color: theme.accentColor)),
         ),
         code: theme.textTheme.bodyText1
-            // use a font from google fonts maybe? the defaults aren't very pretty
+            // TODO: use a font from google fonts maybe? the defaults aren't very pretty
             .copyWith(fontFamily: Platform.isIOS ? 'Courier' : 'monospace'),
       ),
       onTapLink: (href) {
