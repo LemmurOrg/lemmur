@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -28,6 +30,9 @@ class MarkdownText extends StatelessWidget {
           color: Colors.grey.withOpacity(0.3),
           border: Border(left: BorderSide(width: 2, color: theme.accentColor)),
         ),
+        code: theme.textTheme.bodyText1
+            // use a font from google fonts maybe? the defaults aren't very pretty
+            .copyWith(fontFamily: Platform.isIOS ? 'Courier' : 'monospace'),
       ),
       onTapLink: (href) {
         linkLauncher(context: context, url: href, instanceHost: instanceHost)
