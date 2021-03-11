@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -170,61 +171,64 @@ class CommunitiesTab extends HookWidget {
             ? const Center(
                 child: Text('You are not logged in to any instances'),
               )
-            : ListView(
-                children: [
-                  for (var i = 0; i < amountOfDisplayInstances; i++)
-                    Column(
-                      children: [
-                        ListTile(
-                          onTap: () => goToInstance(context,
-                              accountsStore.loggedInInstances.elementAt(i)),
-                          onLongPress: () => toggleCollapse(i),
-                          leading: Avatar(url: instances[i].icon),
-                          title: Text(
-                            instances[i].name,
-                            style: theme.textTheme.headline6,
+            : CupertinoScrollbar(
+                child: ListView(
+                  children: [
+                    for (var i = 0; i < amountOfDisplayInstances; i++)
+                      Column(
+                        children: [
+                          ListTile(
+                            onTap: () => goToInstance(context,
+                                accountsStore.loggedInInstances.elementAt(i)),
+                            onLongPress: () => toggleCollapse(i),
+                            leading: Avatar(url: instances[i].icon),
+                            title: Text(
+                              instances[i].name,
+                              style: theme.textTheme.headline6,
+                            ),
+                            trailing: IconButton(
+                              icon: Icon(isCollapsed.value[i]
+                                  ? Icons.keyboard_arrow_up
+                                  : Icons.keyboard_arrow_down),
+                              onPressed: () => toggleCollapse(i),
+                            ),
                           ),
-                          trailing: IconButton(
-                            icon: Icon(isCollapsed.value[i]
-                                ? Icons.keyboard_arrow_up
-                                : Icons.keyboard_arrow_down),
-                            onPressed: () => toggleCollapse(i),
-                          ),
-                        ),
-                        if (!isCollapsed.value[i])
-                          for (final comm in filterCommunities(communities[i]))
-                            Padding(
-                              padding: const EdgeInsets.only(left: 17),
-                              child: ListTile(
-                                onTap: () => goToCommunity.byId(
-                                    context,
-                                    accountsStore.loggedInInstances
-                                        .elementAt(i),
-                                    comm.community.id),
-                                dense: true,
-                                leading: VerticalDivider(
-                                  color: theme.hintColor,
+                          if (!isCollapsed.value[i])
+                            for (final comm
+                                in filterCommunities(communities[i]))
+                              Padding(
+                                padding: const EdgeInsets.only(left: 17),
+                                child: ListTile(
+                                  onTap: () => goToCommunity.byId(
+                                      context,
+                                      accountsStore.loggedInInstances
+                                          .elementAt(i),
+                                      comm.community.id),
+                                  dense: true,
+                                  leading: VerticalDivider(
+                                    color: theme.hintColor,
+                                  ),
+                                  title: Row(
+                                    children: [
+                                      Avatar(
+                                        radius: 15,
+                                        url: comm.community.icon,
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Text(comm.community.originDisplayName),
+                                    ],
+                                  ),
+                                  trailing: _CommunitySubscribeToggle(
+                                    key: ValueKey(comm.community.id),
+                                    instanceHost: comm.instanceHost,
+                                    communityId: comm.community.id,
+                                  ),
                                 ),
-                                title: Row(
-                                  children: [
-                                    Avatar(
-                                      radius: 15,
-                                      url: comm.community.icon,
-                                    ),
-                                    const SizedBox(width: 10),
-                                    Text(comm.community.originDisplayName),
-                                  ],
-                                ),
-                                trailing: _CommunitySubscribeToggle(
-                                  key: ValueKey(comm.community.id),
-                                  instanceHost: comm.instanceHost,
-                                  communityId: comm.community.id,
-                                ),
-                              ),
-                            )
-                      ],
-                    ),
-                ],
+                              )
+                        ],
+                      ),
+                  ],
+                ),
               ),
       ),
     );

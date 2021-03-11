@@ -250,102 +250,107 @@ class _AboutTab extends HookWidget {
       );
     }
 
-    return SingleChildScrollView(
-      child: SafeArea(
-        top: false,
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-              child: MarkdownText(
-                site.siteView.site.description,
-                instanceHost: instanceHost,
-              ),
-            ),
-            const _Divider(),
-            SizedBox(
-              height: 32,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                children: [
-                  Chip(
-                      label: Text(L10n.of(context)
-                          .number_of_users_online(site.online))),
-                  Chip(
-                      label: Text(L10n.of(context)
-                          .number_of_users(site.siteView.counts.users))),
-                  Chip(
-                      label: Text(
-                          '${site.siteView.counts.communities} communities')),
-                  Chip(label: Text('${site.siteView.counts.posts} posts')),
-                  Chip(
-                      label: Text('${site.siteView.counts.comments} comments')),
-                ].spaced(8),
-              ),
-            ),
-            const _Divider(),
-            ListTile(
-              title: Center(
-                child: Text(
-                  'Trending communities:',
-                  style: theme.textTheme.headline6.copyWith(fontSize: 18),
-                ),
-              ),
-            ),
-            if (commSnap.hasData)
-              for (final c in commSnap.data)
-                ListTile(
-                  onTap: () => goToCommunity.byId(
-                      context, c.instanceHost, c.community.id),
-                  title: Text(c.community.name),
-                  leading: Avatar(url: c.community.icon),
-                )
-            else if (commSnap.hasError)
+    return CupertinoScrollbar(
+      child: SingleChildScrollView(
+        child: SafeArea(
+          top: false,
+          child: Column(
+            children: [
               Padding(
-                padding: const EdgeInsets.all(8),
-                child: Text("Can't load communities, ${commSnap.error}"),
-              )
-            else
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 10),
-                child: CircularProgressIndicator(),
-              ),
-            ListTile(
-              title: const Center(child: Text('See all')),
-              onTap: goToCommunities,
-            ),
-            const _Divider(),
-            ListTile(
-              title: Center(
-                child: Text(
-                  'Admins:',
-                  style: theme.textTheme.headline6.copyWith(fontSize: 18),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                child: MarkdownText(
+                  site.siteView.site.description,
+                  instanceHost: instanceHost,
                 ),
               ),
-            ),
-            for (final u in site.admins)
+              const _Divider(),
+              SizedBox(
+                height: 32,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  children: [
+                    Chip(
+                        label: Text(L10n.of(context)
+                            .number_of_users_online(site.online))),
+                    Chip(
+                        label: Text(L10n.of(context)
+                            .number_of_users(site.siteView.counts.users))),
+                    Chip(
+                        label: Text(
+                            '${site.siteView.counts.communities} communities')),
+                    Chip(label: Text('${site.siteView.counts.posts} posts')),
+                    Chip(
+                        label:
+                            Text('${site.siteView.counts.comments} comments')),
+                  ].spaced(8),
+                ),
+              ),
+              const _Divider(),
               ListTile(
-                title: Text(u.user.originDisplayName),
-                subtitle: u.user.bio != null
-                    ? MarkdownText(u.user.bio, instanceHost: instanceHost)
-                    : null,
-                onTap: () => goToUser.fromUserSafe(context, u.user),
-                leading: Avatar(url: u.user.avatar),
+                title: Center(
+                  child: Text(
+                    'Trending communities:',
+                    style: theme.textTheme.headline6.copyWith(fontSize: 18),
+                  ),
+                ),
               ),
-            const _Divider(),
-            ListTile(
-              title: Center(child: Text(L10n.of(context).banned_users)),
-              onTap: () => goToBannedUsers(context),
-            ),
-            ListTile(
-              title: Center(child: Text(L10n.of(context).modlog)),
-              onTap: () => goTo(
-                context,
-                (context) => ModlogPage.forInstance(instanceHost: instanceHost),
+              if (commSnap.hasData)
+                for (final c in commSnap.data)
+                  ListTile(
+                    onTap: () => goToCommunity.byId(
+                        context, c.instanceHost, c.community.id),
+                    title: Text(c.community.name),
+                    leading: Avatar(url: c.community.icon),
+                  )
+              else if (commSnap.hasError)
+                Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Text("Can't load communities, ${commSnap.error}"),
+                )
+              else
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  child: CircularProgressIndicator(),
+                ),
+              ListTile(
+                title: const Center(child: Text('See all')),
+                onTap: goToCommunities,
               ),
-            ),
-          ],
+              const _Divider(),
+              ListTile(
+                title: Center(
+                  child: Text(
+                    'Admins:',
+                    style: theme.textTheme.headline6.copyWith(fontSize: 18),
+                  ),
+                ),
+              ),
+              for (final u in site.admins)
+                ListTile(
+                  title: Text(u.user.originDisplayName),
+                  subtitle: u.user.bio != null
+                      ? MarkdownText(u.user.bio, instanceHost: instanceHost)
+                      : null,
+                  onTap: () => goToUser.fromUserSafe(context, u.user),
+                  leading: Avatar(url: u.user.avatar),
+                ),
+              const _Divider(),
+              ListTile(
+                title: Center(child: Text(L10n.of(context).banned_users)),
+                onTap: () => goToBannedUsers(context),
+              ),
+              ListTile(
+                title: Center(child: Text(L10n.of(context).modlog)),
+                onTap: () => goTo(
+                  context,
+                  (context) =>
+                      ModlogPage.forInstance(instanceHost: instanceHost),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

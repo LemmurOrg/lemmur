@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:esys_flutter_share/esys_flutter_share.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -381,76 +382,78 @@ class _AboutTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return ListView(
-      padding: const EdgeInsets.only(top: 20),
-      children: [
-        if (community.community.description != null) ...[
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: MarkdownText(community.community.description,
-                instanceHost: community.instanceHost),
+    return CupertinoScrollbar(
+      child: ListView(
+        padding: const EdgeInsets.only(top: 20),
+        children: [
+          if (community.community.description != null) ...[
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: MarkdownText(community.community.description,
+                  instanceHost: community.instanceHost),
+            ),
+            const _Divider(),
+          ],
+          SizedBox(
+            height: 32,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              children: [
+                Chip(
+                    label: Text(L10n.of(context)
+                        .number_of_users_online(onlineUsers ?? 0))),
+                Chip(
+                    label: Text(L10n.of(context)
+                        .number_of_subscribers(community.counts.subscribers))),
+                Chip(
+                    label: Text(
+                        '${community.counts.posts} post${pluralS(community.counts.posts)}')),
+                Chip(
+                    label: Text(
+                        '${community.counts.comments} comment${pluralS(community.counts.comments)}')),
+              ].spaced(8),
+            ),
           ),
           const _Divider(),
-        ],
-        SizedBox(
-          height: 32,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            children: [
-              Chip(
-                  label: Text(L10n.of(context)
-                      .number_of_users_online(onlineUsers ?? 0))),
-              Chip(
-                  label: Text(L10n.of(context)
-                      .number_of_subscribers(community.counts.subscribers))),
-              Chip(
-                  label: Text(
-                      '${community.counts.posts} post${pluralS(community.counts.posts)}')),
-              Chip(
-                  label: Text(
-                      '${community.counts.comments} comment${pluralS(community.counts.comments)}')),
-            ].spaced(8),
-          ),
-        ),
-        const _Divider(),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: OutlinedButton(
-            onPressed: goToCategories,
-            child: Text(community.category.name),
-          ),
-        ),
-        const _Divider(),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: OutlinedButton(
-            onPressed: () => goTo(
-              context,
-              (context) => ModlogPage.forCommunity(
-                instanceHost: community.instanceHost,
-                communityId: community.community.id,
-                communityName: community.community.name,
-              ),
-            ),
-            child: Text(L10n.of(context).modlog),
-          ),
-        ),
-        const _Divider(),
-        if (moderators != null && moderators.isNotEmpty) ...[
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: Text('Mods:', style: theme.textTheme.subtitle2),
-          ),
-          for (final mod in moderators)
-            // TODO: add user picture, maybe make it into reusable component
-            ListTile(
-              title: Text(
-                  mod.moderator.preferredUsername ?? '@${mod.moderator.name}'),
-              onTap: () => goToUser.fromUserSafe(context, mod.moderator),
+            child: OutlinedButton(
+              onPressed: goToCategories,
+              child: Text(community.category.name),
             ),
-        ]
-      ],
+          ),
+          const _Divider(),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: OutlinedButton(
+              onPressed: () => goTo(
+                context,
+                (context) => ModlogPage.forCommunity(
+                  instanceHost: community.instanceHost,
+                  communityId: community.community.id,
+                  communityName: community.community.name,
+                ),
+              ),
+              child: Text(L10n.of(context).modlog),
+            ),
+          ),
+          const _Divider(),
+          if (moderators != null && moderators.isNotEmpty) ...[
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: Text('Mods:', style: theme.textTheme.subtitle2),
+            ),
+            for (final mod in moderators)
+              // TODO: add user picture, maybe make it into reusable component
+              ListTile(
+                title: Text(mod.moderator.preferredUsername ??
+                    '@${mod.moderator.name}'),
+                onTap: () => goToUser.fromUserSafe(context, mod.moderator),
+              ),
+          ]
+        ],
+      ),
     );
   }
 }

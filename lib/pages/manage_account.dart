@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:image_picker/image_picker.dart';
@@ -201,151 +202,153 @@ class _ManageAccount extends HookWidget {
       }
     }
 
-    return ListView(
-      padding: const EdgeInsets.symmetric(horizontal: 15),
-      children: [
-        _ImagePicker(
-          user: user,
-          name: L10n.of(context).avatar,
-          initialUrl: avatar.current,
-          onChange: (value) => avatar.current = value,
-          informAcceptedRef: informAcceptedAvatarRef,
-        ),
-        const SizedBox(height: 8),
-        _ImagePicker(
-          user: user,
-          name: L10n.of(context).banner,
-          initialUrl: banner.current,
-          onChange: (value) => banner.current = value,
-          informAcceptedRef: informAcceptedBannerRef,
-        ),
-        const SizedBox(height: 8),
-        Text(L10n.of(context).display_name, style: theme.textTheme.headline6),
-        TextField(controller: displayNameController),
-        const SizedBox(height: 8),
-        Text(L10n.of(context).bio, style: theme.textTheme.headline6),
-        TextField(
-          controller: bioController,
-          minLines: 4,
-          maxLines: 10,
-        ),
-        const SizedBox(height: 8),
-        Text(L10n.of(context).email, style: theme.textTheme.headline6),
-        TextField(controller: emailController),
-        const SizedBox(height: 8),
-        Text(L10n.of(context).matrix_user, style: theme.textTheme.headline6),
-        TextField(controller: matrixUserController),
-        const SizedBox(height: 8),
-        Text(L10n.of(context).new_password, style: theme.textTheme.headline6),
-        TextField(
-          controller: newPasswordController,
-          obscureText: true,
-        ),
-        const SizedBox(height: 8),
-        Text(L10n.of(context).verify_password,
-            style: theme.textTheme.headline6),
-        TextField(
-          controller: newPasswordVerifyController,
-          obscureText: true,
-        ),
-        const SizedBox(height: 8),
-        Text(L10n.of(context).old_password, style: theme.textTheme.headline6),
-        TextField(
-          controller: oldPasswordController,
-          obscureText: true,
-        ),
-        const SizedBox(height: 8),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(L10n.of(context).type),
-                const Text(
-                  'This has currently no effect on lemmur',
-                  style: TextStyle(fontSize: 10),
-                )
-              ],
-            ),
-            RadioPicker<PostListingType>(
-              values: const [
-                PostListingType.all,
-                PostListingType.local,
-                PostListingType.subscribed,
-              ],
-              groupValue: defaultListingType.value,
-              onChanged: (value) => defaultListingType.value = value,
-              mapValueToString: (value) => value.value,
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(L10n.of(context).sort_type),
-                const Text(
-                  'This has currently no effect on lemmur',
-                  style: TextStyle(fontSize: 10),
-                )
-              ],
-            ),
-            RadioPicker<SortType>(
-              values: SortType.values,
-              groupValue: defaultSortType.value,
-              onChanged: (value) => defaultSortType.value = value,
-              mapValueToString: (value) => value.value,
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        CheckboxListTile(
-          value: showAvatars.value,
-          onChanged: (checked) => showAvatars.value = checked,
-          title: Text(L10n.of(context).show_avatars),
-          subtitle: const Text('This has currently no effect on lemmur'),
-          dense: true,
-        ),
-        const SizedBox(height: 8),
-        CheckboxListTile(
-          value: showNsfw.value,
-          onChanged: (checked) => showNsfw.value = checked,
-          title: Text(L10n.of(context).show_nsfw),
-          subtitle: const Text('This has currently no effect on lemmur'),
-          dense: true,
-        ),
-        const SizedBox(height: 8),
-        CheckboxListTile(
-          value: sendNotificationsToEmail.value,
-          onChanged: (checked) => sendNotificationsToEmail.value = checked,
-          title: Text(L10n.of(context).send_notifications_to_email),
-          dense: true,
-        ),
-        const SizedBox(height: 8),
-        ElevatedButton(
-          onPressed: saveDelayedLoading.loading ? null : handleSubmit,
-          child: saveDelayedLoading.loading
-              ? const SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(),
-                )
-              : Text(L10n.of(context).save),
-        ),
-        const SizedBox(height: 8),
-        ElevatedButton(
-          onPressed: deleteAccountDialog,
-          style: ElevatedButton.styleFrom(
-            primary: Colors.red,
+    return CupertinoScrollbar(
+      child: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        children: [
+          _ImagePicker(
+            user: user,
+            name: L10n.of(context).avatar,
+            initialUrl: avatar.current,
+            onChange: (value) => avatar.current = value,
+            informAcceptedRef: informAcceptedAvatarRef,
           ),
-          child: Text(L10n.of(context).delete_account.toUpperCase()),
-        ),
-        const BottomSafe(),
-      ],
+          const SizedBox(height: 8),
+          _ImagePicker(
+            user: user,
+            name: L10n.of(context).banner,
+            initialUrl: banner.current,
+            onChange: (value) => banner.current = value,
+            informAcceptedRef: informAcceptedBannerRef,
+          ),
+          const SizedBox(height: 8),
+          Text(L10n.of(context).display_name, style: theme.textTheme.headline6),
+          TextField(controller: displayNameController),
+          const SizedBox(height: 8),
+          Text(L10n.of(context).bio, style: theme.textTheme.headline6),
+          TextField(
+            controller: bioController,
+            minLines: 4,
+            maxLines: 10,
+          ),
+          const SizedBox(height: 8),
+          Text(L10n.of(context).email, style: theme.textTheme.headline6),
+          TextField(controller: emailController),
+          const SizedBox(height: 8),
+          Text(L10n.of(context).matrix_user, style: theme.textTheme.headline6),
+          TextField(controller: matrixUserController),
+          const SizedBox(height: 8),
+          Text(L10n.of(context).new_password, style: theme.textTheme.headline6),
+          TextField(
+            controller: newPasswordController,
+            obscureText: true,
+          ),
+          const SizedBox(height: 8),
+          Text(L10n.of(context).verify_password,
+              style: theme.textTheme.headline6),
+          TextField(
+            controller: newPasswordVerifyController,
+            obscureText: true,
+          ),
+          const SizedBox(height: 8),
+          Text(L10n.of(context).old_password, style: theme.textTheme.headline6),
+          TextField(
+            controller: oldPasswordController,
+            obscureText: true,
+          ),
+          const SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(L10n.of(context).type),
+                  const Text(
+                    'This has currently no effect on lemmur',
+                    style: TextStyle(fontSize: 10),
+                  )
+                ],
+              ),
+              RadioPicker<PostListingType>(
+                values: const [
+                  PostListingType.all,
+                  PostListingType.local,
+                  PostListingType.subscribed,
+                ],
+                groupValue: defaultListingType.value,
+                onChanged: (value) => defaultListingType.value = value,
+                mapValueToString: (value) => value.value,
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(L10n.of(context).sort_type),
+                  const Text(
+                    'This has currently no effect on lemmur',
+                    style: TextStyle(fontSize: 10),
+                  )
+                ],
+              ),
+              RadioPicker<SortType>(
+                values: SortType.values,
+                groupValue: defaultSortType.value,
+                onChanged: (value) => defaultSortType.value = value,
+                mapValueToString: (value) => value.value,
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          CheckboxListTile(
+            value: showAvatars.value,
+            onChanged: (checked) => showAvatars.value = checked,
+            title: Text(L10n.of(context).show_avatars),
+            subtitle: const Text('This has currently no effect on lemmur'),
+            dense: true,
+          ),
+          const SizedBox(height: 8),
+          CheckboxListTile(
+            value: showNsfw.value,
+            onChanged: (checked) => showNsfw.value = checked,
+            title: Text(L10n.of(context).show_nsfw),
+            subtitle: const Text('This has currently no effect on lemmur'),
+            dense: true,
+          ),
+          const SizedBox(height: 8),
+          CheckboxListTile(
+            value: sendNotificationsToEmail.value,
+            onChanged: (checked) => sendNotificationsToEmail.value = checked,
+            title: Text(L10n.of(context).send_notifications_to_email),
+            dense: true,
+          ),
+          const SizedBox(height: 8),
+          ElevatedButton(
+            onPressed: saveDelayedLoading.loading ? null : handleSubmit,
+            child: saveDelayedLoading.loading
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(),
+                  )
+                : Text(L10n.of(context).save),
+          ),
+          const SizedBox(height: 8),
+          ElevatedButton(
+            onPressed: deleteAccountDialog,
+            style: ElevatedButton.styleFrom(
+              primary: Colors.red,
+            ),
+            child: Text(L10n.of(context).delete_account.toUpperCase()),
+          ),
+          const BottomSafe(),
+        ],
+      ),
     );
   }
 }

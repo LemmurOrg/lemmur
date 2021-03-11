@@ -118,35 +118,37 @@ class FullPostPage extends HookWidget {
         floatingActionButton: FloatingActionButton(
             onPressed: loggedInAction((_) => comment()),
             child: const Icon(Icons.comment)),
-        body: RefreshIndicator(
-          onRefresh: refresh,
-          child: ListView(
-            controller: scrollController,
-            physics: const AlwaysScrollableScrollPhysics(),
-            children: [
-              const SizedBox(height: 15),
-              PostWidget(post, fullPost: true),
-              if (fullPostRefreshable.snapshot.hasData)
-                CommentSection(
-                    newComments.value.followedBy(fullPost.comments).toList(),
-                    postCreatorId: fullPost.postView.creator.id)
-              else if (fullPostRefreshable.snapshot.hasError)
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
-                  child: Column(
-                    children: [
-                      const Icon(Icons.error),
-                      Text('Error: ${fullPostRefreshable.snapshot.error}')
-                    ],
+        body: CupertinoScrollbar(
+          child: RefreshIndicator(
+            onRefresh: refresh,
+            child: ListView(
+              controller: scrollController,
+              physics: const AlwaysScrollableScrollPhysics(),
+              children: [
+                const SizedBox(height: 15),
+                PostWidget(post, fullPost: true),
+                if (fullPostRefreshable.snapshot.hasData)
+                  CommentSection(
+                      newComments.value.followedBy(fullPost.comments).toList(),
+                      postCreatorId: fullPost.postView.creator.id)
+                else if (fullPostRefreshable.snapshot.hasError)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 30),
+                    child: Column(
+                      children: [
+                        const Icon(Icons.error),
+                        Text('Error: ${fullPostRefreshable.snapshot.error}')
+                      ],
+                    ),
+                  )
+                else
+                  const Padding(
+                    padding: EdgeInsets.only(top: 40),
+                    child: Center(child: CircularProgressIndicator()),
                   ),
-                )
-              else
-                const Padding(
-                  padding: EdgeInsets.only(top: 40),
-                  child: Center(child: CircularProgressIndicator()),
-                ),
-            ],
+              ],
+            ),
           ),
         ));
   }

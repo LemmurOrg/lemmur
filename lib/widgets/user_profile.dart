@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
@@ -67,60 +68,62 @@ class UserProfile extends HookWidget {
 
     return DefaultTabController(
       length: 3,
-      child: NestedScrollView(
-        headerSliverBuilder: (_, __) => [
-          SliverAppBar(
-            pinned: true,
-            expandedHeight: 300,
-            toolbarHeight: 0,
-            forceElevated: true,
-            backgroundColor: theme.cardColor,
-            flexibleSpace:
-                FlexibleSpaceBar(background: _UserOverview(userView)),
-            bottom: PreferredSize(
-              preferredSize: const TabBar(tabs: []).preferredSize,
-              child: Material(
-                color: theme.cardColor,
-                child: TabBar(
-                  tabs: [
-                    Tab(text: L10n.of(context).posts),
-                    Tab(text: L10n.of(context).comments),
-                    const Tab(text: 'About'),
-                  ],
+      child: CupertinoScrollbar(
+        child: NestedScrollView(
+          headerSliverBuilder: (_, __) => [
+            SliverAppBar(
+              pinned: true,
+              expandedHeight: 300,
+              toolbarHeight: 0,
+              forceElevated: true,
+              backgroundColor: theme.cardColor,
+              flexibleSpace:
+                  FlexibleSpaceBar(background: _UserOverview(userView)),
+              bottom: PreferredSize(
+                preferredSize: const TabBar(tabs: []).preferredSize,
+                child: Material(
+                  color: theme.cardColor,
+                  child: TabBar(
+                    tabs: [
+                      Tab(text: L10n.of(context).posts),
+                      Tab(text: L10n.of(context).comments),
+                      const Tab(text: 'About'),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
-        body: TabBarView(children: [
-          // TODO: first batch is already fetched on render
-          // TODO: comment and post come from the same endpoint, could be shared
-          InfinitePostList(
-            fetcher: (page, batchSize, sort) => LemmyApiV2(instanceHost)
-                .run(GetUserDetails(
-                  userId: userView.user.id,
-                  savedOnly: false,
-                  sort: SortType.active,
-                  page: page,
-                  limit: batchSize,
-                  auth: accountsStore.defaultTokenFor(instanceHost)?.raw,
-                ))
-                .then((val) => val.posts),
-          ),
-          InfiniteCommentList(
-            fetcher: (page, batchSize, sort) => LemmyApiV2(instanceHost)
-                .run(GetUserDetails(
-                  userId: userView.user.id,
-                  savedOnly: false,
-                  sort: SortType.active,
-                  page: page,
-                  limit: batchSize,
-                  auth: accountsStore.defaultTokenFor(instanceHost)?.raw,
-                ))
-                .then((val) => val.comments),
-          ),
-          _AboutTab(userDetailsSnap.data),
-        ]),
+          ],
+          body: TabBarView(children: [
+            // TODO: first batch is already fetched on render
+            // TODO: comment and post come from the same endpoint, could be shared
+            InfinitePostList(
+              fetcher: (page, batchSize, sort) => LemmyApiV2(instanceHost)
+                  .run(GetUserDetails(
+                    userId: userView.user.id,
+                    savedOnly: false,
+                    sort: SortType.active,
+                    page: page,
+                    limit: batchSize,
+                    auth: accountsStore.defaultTokenFor(instanceHost)?.raw,
+                  ))
+                  .then((val) => val.posts),
+            ),
+            InfiniteCommentList(
+              fetcher: (page, batchSize, sort) => LemmyApiV2(instanceHost)
+                  .run(GetUserDetails(
+                    userId: userView.user.id,
+                    savedOnly: false,
+                    sort: SortType.active,
+                    page: page,
+                    limit: batchSize,
+                    auth: accountsStore.defaultTokenFor(instanceHost)?.raw,
+                  ))
+                  .then((val) => val.comments),
+            ),
+            _AboutTab(userDetailsSnap.data),
+          ]),
+        ),
       ),
     );
   }
