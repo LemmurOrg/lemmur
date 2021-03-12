@@ -1,5 +1,9 @@
 ## Unreleased
 
+### Added
+
+- Scrollbars
+
 ### Fixed
 
 - Quote blocks in posts and comments are now much prettier
