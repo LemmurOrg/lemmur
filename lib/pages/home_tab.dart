@@ -291,6 +291,7 @@ class InfiniteHomeList extends HookWidget {
             sort: sort,
             page: page,
             limit: limit,
+            savedOnly: false,
             auth: accStore.defaultTokenFor(instanceHost)?.raw,
           ))
       ];
@@ -313,6 +314,7 @@ class InfiniteHomeList extends HookWidget {
               sort: sort,
               page: page,
               limit: batchSize,
+              savedOnly: false,
               auth: accStore.defaultTokenFor(instanceHost)?.raw,
             ));
 

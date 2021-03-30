@@ -95,7 +95,10 @@ class CommentWidget extends HookWidget {
     final accStore = useAccountsStore();
 
     final isMine = commentTree.comment.comment.creatorId ==
-        accStore.defaultTokenFor(commentTree.comment.instanceHost)?.payload?.id;
+        accStore
+            .defaultTokenFor(commentTree.comment.instanceHost)
+            ?.payload
+            ?.sub;
     final selectable = useState(false);
     final showRaw = useState(false);
     final collapsed = useState(false);

@@ -189,7 +189,7 @@ class PrivateMessageTile extends HookWidget {
     final toMe = useMemoized(() =>
         pmv.value.recipient.originInstanceHost == pmv.value.instanceHost &&
         pmv.value.recipient.id ==
-            accStore.defaultTokenFor(pmv.value.instanceHost)?.payload?.id);
+            accStore.defaultTokenFor(pmv.value.instanceHost)?.payload?.sub);
 
     final otherSide =
         useMemoized(() => toMe ? pmv.value.creator : pmv.value.recipient);

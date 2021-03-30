@@ -192,6 +192,7 @@ class CommunityPage extends HookWidget {
                   communityId: community.community.id,
                   page: page,
                   limit: batchSize,
+                  savedOnly: false,
                 )),
               ),
               InfiniteCommentList(
@@ -205,6 +206,7 @@ class CommunityPage extends HookWidget {
                         sort: sortType,
                         limit: batchSize,
                         page: page,
+                        savedOnly: false,
                       ))),
               _AboutTab(
                 community: community,

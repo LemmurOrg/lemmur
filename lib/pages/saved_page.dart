@@ -32,7 +32,7 @@ class SavedPage extends HookWidget {
                   LemmyApiV3(accountStore.defaultInstanceHost)
                       .run(
                         GetPersonDetails(
-                          personId: accountStore.defaultToken.payload.id,
+                          personId: accountStore.defaultToken.payload.sub,
                           sort: sortType,
                           savedOnly: true,
                           page: page,
@@ -47,7 +47,7 @@ class SavedPage extends HookWidget {
                   LemmyApiV3(accountStore.defaultInstanceHost)
                       .run(
                         GetPersonDetails(
-                          personId: accountStore.defaultToken.payload.id,
+                          personId: accountStore.defaultToken.payload.sub,
                           sort: sortType,
                           savedOnly: true,
                           page: page,

@@ -39,7 +39,7 @@ class InstancePage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final siteSnap = useFuture(siteFuture);
+    final siteSnap = useFuture(siteFuture, initialData: null);
     final colorOnCard = textColorBasedOnBackground(theme.cardColor);
     final accStore = useAccountsStore();
     final scrollController = useScrollController();
@@ -183,6 +183,7 @@ class InstancePage extends HookWidget {
                         sort: sort,
                         limit: batchSize,
                         page: page,
+                        savedOnly: false,
                         auth: accStore.defaultTokenFor(instanceHost)?.raw,
                       ))),
               InfiniteCommentList(
@@ -192,6 +193,7 @@ class InstancePage extends HookWidget {
                         sort: sort,
                         limit: batchSize,
                         page: page,
+                        savedOnly: false,
                         auth: accStore.defaultTokenFor(instanceHost)?.raw,
                       ))),
               _AboutTab(site,
@@ -228,7 +230,7 @@ class _AboutTab extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final commSnap = useFuture(communitiesFuture);
+    final commSnap = useFuture(communitiesFuture, initialData: null);
     final accStore = useAccountsStore();
 
     void goToCommunities() {
