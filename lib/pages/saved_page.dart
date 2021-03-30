@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:lemmy_api_client/v2.dart';
+import 'package:lemmy_api_client/v3.dart';
 
 import '../hooks/stores.dart';
 import '../l10n/l10n.dart';
@@ -29,10 +29,10 @@ class SavedPage extends HookWidget {
           children: [
             InfinitePostList(
               fetcher: (page, batchSize, sortType) =>
-                  LemmyApiV2(accountStore.defaultInstanceHost)
+                  LemmyApiV3(accountStore.defaultInstanceHost)
                       .run(
-                        GetUserDetails(
-                          userId: accountStore.defaultToken.payload.id,
+                        GetPersonDetails(
+                          personId: accountStore.defaultToken.payload.id,
                           sort: sortType,
                           savedOnly: true,
                           page: page,
@@ -44,10 +44,10 @@ class SavedPage extends HookWidget {
             ),
             InfiniteCommentList(
               fetcher: (page, batchSize, sortType) =>
-                  LemmyApiV2(accountStore.defaultInstanceHost)
+                  LemmyApiV3(accountStore.defaultInstanceHost)
                       .run(
-                        GetUserDetails(
-                          userId: accountStore.defaultToken.payload.id,
+                        GetPersonDetails(
+                          personId: accountStore.defaultToken.payload.id,
                           sort: sortType,
                           savedOnly: true,
                           page: page,

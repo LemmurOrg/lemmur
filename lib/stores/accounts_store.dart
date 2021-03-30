@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:lemmy_api_client/v2.dart';
+import 'package:lemmy_api_client/v3.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../util/unawaited.dart';
@@ -198,7 +198,7 @@ class AccountsStore extends ChangeNotifier {
       throw Exception('No such instance was added');
     }
 
-    final lemmy = LemmyApiV2(instanceHost);
+    final lemmy = LemmyApiV3(instanceHost);
     final token = await lemmy.run(Login(
       usernameOrEmail: usernameOrEmail,
       password: password,
@@ -206,7 +206,7 @@ class AccountsStore extends ChangeNotifier {
     final userData =
         await lemmy.run(GetSite(auth: token.raw)).then((value) => value.myUser);
 
-    tokens[instanceHost][userData.name] = token;
+    tokens[instanceHost][userData.person.name] = token;
 
     _assignDefaultAccounts();
     notifyListeners();
@@ -226,7 +226,7 @@ class AccountsStore extends ChangeNotifier {
 
     if (!assumeValid) {
       try {
-        await LemmyApiV2(instanceHost).run(const GetSite());
+        await LemmyApiV3(instanceHost).run(const GetSite());
         // ignore: avoid_catches_without_on_clauses
       } catch (_) {
         throw Exception('This instance seems to not exist');

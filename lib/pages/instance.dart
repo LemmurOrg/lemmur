@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:lemmy_api_client/v2.dart';
+import 'package:lemmy_api_client/v3.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../hooks/stores.dart';
@@ -32,8 +32,8 @@ class InstancePage extends HookWidget {
 
   InstancePage({@required this.instanceHost})
       : assert(instanceHost != null),
-        siteFuture = LemmyApiV2(instanceHost).run(const GetSite()),
-        communitiesFuture = LemmyApiV2(instanceHost).run(const ListCommunities(
+        siteFuture = LemmyApiV3(instanceHost).run(const GetSite()),
+        communitiesFuture = LemmyApiV3(instanceHost).run(const ListCommunities(
             type: PostListingType.local, sort: SortType.hot, limit: 6));
 
   @override
@@ -177,7 +177,7 @@ class InstancePage extends HookWidget {
             children: [
               InfinitePostList(
                   fetcher: (page, batchSize, sort) =>
-                      LemmyApiV2(instanceHost).run(GetPosts(
+                      LemmyApiV3(instanceHost).run(GetPosts(
                         // TODO: switch between all and subscribed
                         type: PostListingType.all,
                         sort: sort,
@@ -187,7 +187,7 @@ class InstancePage extends HookWidget {
                       ))),
               InfiniteCommentList(
                   fetcher: (page, batchSize, sort) =>
-                      LemmyApiV2(instanceHost).run(GetComments(
+                      LemmyApiV3(instanceHost).run(GetComments(
                         type: CommentListingType.all,
                         sort: sort,
                         limit: batchSize,
@@ -235,7 +235,7 @@ class _AboutTab extends HookWidget {
       goTo(
         context,
         (_) => CommunitiesListPage(
-          fetcher: (page, batchSize, sortType) => LemmyApiV2(instanceHost).run(
+          fetcher: (page, batchSize, sortType) => LemmyApiV3(instanceHost).run(
             ListCommunities(
               type: PostListingType.local,
               sort: sortType,
@@ -325,12 +325,12 @@ class _AboutTab extends HookWidget {
             ),
             for (final u in site.admins)
               ListTile(
-                title: Text(u.user.originDisplayName),
-                subtitle: u.user.bio != null
-                    ? MarkdownText(u.user.bio, instanceHost: instanceHost)
+                title: Text(u.person.originDisplayName),
+                subtitle: u.person.bio != null
+                    ? MarkdownText(u.person.bio, instanceHost: instanceHost)
                     : null,
-                onTap: () => goToUser.fromUserSafe(context, u.user),
-                leading: Avatar(url: u.user.avatar),
+                onTap: () => goToUser.fromUserSafe(context, u.person),
+                leading: Avatar(url: u.person.avatar),
               ),
             const _Divider(),
             ListTile(
