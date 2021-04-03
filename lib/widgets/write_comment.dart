@@ -28,12 +28,11 @@ class WriteComment extends HookWidget {
     final accStore = useAccountsStore();
 
     final preview = () {
-      final text = comment?.content ?? post.body;
-      if (text == null) return null;
-      final body = MarkdownText(
-        comment?.content ?? post.body,
-        instanceHost: post.instanceHost,
-      );
+      final body = () {
+        final text = comment?.content ?? post.body;
+        if (text == null) return const SizedBox.shrink();
+        return MarkdownText(text, instanceHost: post.instanceHost);
+      }();
 
       if (post != null) {
         return Column(
