@@ -28,6 +28,8 @@ class WriteComment extends HookWidget {
     final accStore = useAccountsStore();
 
     final preview = () {
+      final text = comment?.content ?? post.body;
+      if (text == null) return null;
       final body = MarkdownText(
         comment?.content ?? post.body,
         instanceHost: post.instanceHost,
@@ -83,15 +85,17 @@ class WriteComment extends HookWidget {
       ),
       body: ListView(
         children: [
-          ConstrainedBox(
-            constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height * .35),
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(8),
-              child: preview,
+          if (preview != null) ...[
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height * .35),
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(8),
+                child: preview,
+              ),
             ),
-          ),
-          const Divider(),
+            const Divider(),
+          ],
           IndexedStack(
             index: showFancy.value ? 1 : 0,
             children: [
