@@ -374,10 +374,6 @@ class _AboutTab extends StatelessWidget {
     @required this.onlineUsers,
   }) : super(key: key);
 
-  void goToCategories() {
-    print('GO TO CATEGORIES');
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
