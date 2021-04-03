@@ -409,12 +409,10 @@ packages:
   lemmy_api_client:
     dependency: "direct main"
     description:
-      path: "."
-      ref: api-v3
-      resolved-ref: "651050470b53dbcf6b2c335a80069bbde2b606d3"
-      url: "git://github.com/krawieck/lemmy_api_client.git"
-    source: git
-    version: "0.12.0"
+      name: lemmy_api_client
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.13.0"
   logging:
     dependency: transitive
     description:
