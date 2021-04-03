@@ -29,33 +29,30 @@ class SavedPage extends HookWidget {
           children: [
             InfinitePostList(
               fetcher: (page, batchSize, sortType) =>
-                  LemmyApiV3(accountStore.defaultInstanceHost)
-                      .run(
-                        GetPersonDetails(
-                          personId: accountStore.defaultToken.payload.sub,
-                          sort: sortType,
-                          savedOnly: true,
-                          page: page,
-                          limit: batchSize,
-                          auth: accountStore.defaultToken.raw,
-                        ),
-                      )
-                      .then((value) => value.posts),
+                  LemmyApiV3(accountStore.defaultInstanceHost).run(
+                GetPosts(
+                  type: PostListingType.all,
+                  sort: sortType,
+                  savedOnly: true,
+                  page: page,
+                  limit: batchSize,
+                  auth: accountStore.defaultToken.raw,
+                ),
+              ),
             ),
             InfiniteCommentList(
               fetcher: (page, batchSize, sortType) =>
-                  LemmyApiV3(accountStore.defaultInstanceHost)
-                      .run(
-                        GetPersonDetails(
-                          personId: accountStore.defaultToken.payload.sub,
-                          sort: sortType,
-                          savedOnly: true,
-                          page: page,
-                          limit: batchSize,
-                          auth: accountStore.defaultToken.raw,
-                        ),
-                      )
-                      .then((value) => value.comments),
+                  LemmyApiV3(accountStore.defaultInstanceHost).run(
+                GetComments(
+                  type: CommentListingType.all,
+                  // personId: accountStore.defaultToken.payload.sub,
+                  sort: sortType,
+                  savedOnly: true,
+                  page: page,
+                  limit: batchSize,
+                  auth: accountStore.defaultToken.raw,
+                ),
+              ),
             ),
           ],
         ),
