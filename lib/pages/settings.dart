@@ -151,7 +151,7 @@ class AccountsConfigPage extends HookWidget {
             ),
           ) ??
           false) {
-        accountsStore.removeAccount(instanceHost, username);
+        return accountsStore.removeAccount(instanceHost, username);
       }
     }
 
