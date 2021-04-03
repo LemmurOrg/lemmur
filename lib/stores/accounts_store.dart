@@ -13,7 +13,7 @@ part 'accounts_store.g.dart';
 /// Store that manages all accounts
 @JsonSerializable()
 class AccountsStore extends ChangeNotifier {
-  static const prefsKey = 'v1:AccountsStore';
+  static const prefsKey = 'v2:AccountsStore';
   static final _prefs = SharedPreferences.getInstance();
 
   /// Map containing JWT tokens of specific users.
