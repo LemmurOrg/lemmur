@@ -249,11 +249,11 @@ class AccountsStore extends ChangeNotifier {
     save();
   }
 
-  void removeAccount(String instanceHost, String username) {
+  Future<void> removeAccount(String instanceHost, String username) {
     tokens[instanceHost].remove(username);
 
     _assignDefaultAccounts();
     notifyListeners();
-    save();
+    return save();
   }
 }
