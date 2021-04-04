@@ -191,7 +191,7 @@ class PostWidget extends HookWidget {
                                   style: const TextStyle(
                                       fontWeight: FontWeight.w600),
                                   recognizer: TapGestureRecognizer()
-                                    ..onTap = () => goToUser.fromUserSafe(
+                                    ..onTap = () => goToUser.fromPersonSafe(
                                           context,
                                           post.creator,
                                         ),

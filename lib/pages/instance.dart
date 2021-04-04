@@ -331,7 +331,7 @@ class _AboutTab extends HookWidget {
                 subtitle: u.person.bio != null
                     ? MarkdownText(u.person.bio, instanceHost: instanceHost)
                     : null,
-                onTap: () => goToUser.fromUserSafe(context, u.person),
+                onTap: () => goToUser.fromPersonSafe(context, u.person),
                 leading: Avatar(url: u.person.avatar),
               ),
             const _Divider(),

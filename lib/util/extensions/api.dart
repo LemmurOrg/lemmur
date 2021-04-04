@@ -12,7 +12,7 @@ extension GetOriginInstanceCommunitySafe on CommunitySafe {
   String get originInstanceHost => _extract(actorId);
 }
 
-extension GetOriginInstanceUserSafe on PersonSafe {
+extension GetOriginInstancePersonSafe on PersonSafe {
   String get originInstanceHost => _extract(actorId);
 }
 

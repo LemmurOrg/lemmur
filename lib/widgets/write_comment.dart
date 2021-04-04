@@ -84,17 +84,15 @@ class WriteComment extends HookWidget {
       ),
       body: ListView(
         children: [
-          if (preview != null) ...[
-            ConstrainedBox(
-              constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height * .35),
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(8),
-                child: preview,
-              ),
+          ConstrainedBox(
+            constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height * .35),
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(8),
+              child: preview,
             ),
-            const Divider(),
-          ],
+          ),
+          const Divider(),
           IndexedStack(
             index: showFancy.value ? 1 : 0,
             children: [

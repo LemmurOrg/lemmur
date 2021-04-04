@@ -33,7 +33,7 @@ class UserPage extends HookWidget {
 
     final body = () {
       if (userDetailsSnap.hasData) {
-        return UserProfile.fromFullUserView(userDetailsSnap.data);
+        return UserProfile.fromFullPersonView(userDetailsSnap.data);
       } else if (userDetailsSnap.hasError) {
         return const Center(child: Text('Could not find that user.'));
       } else {

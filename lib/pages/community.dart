@@ -436,7 +436,7 @@ class _AboutTab extends StatelessWidget {
             ListTile(
               title: Text(
                   mod.moderator.preferredUsername ?? '@${mod.moderator.name}'),
-              onTap: () => goToUser.fromUserSafe(context, mod.moderator),
+              onTap: () => goToUser.fromPersonSafe(context, mod.moderator),
             ),
         ]
       ],

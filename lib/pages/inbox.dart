@@ -131,7 +131,7 @@ class InboxPage extends HookWidget {
                 page: page,
                 unreadOnly: unreadOnly.value,
               )),
-              itemBuilder: (umv) => CommentWidget.fromUserMentionView(
+              itemBuilder: (umv) => CommentWidget.fromPersonMentionView(
                 umv,
                 hideOnRead: unreadOnly.value,
               ),
@@ -285,7 +285,7 @@ class PrivateMessageTile extends HookWidget {
               ),
               InkWell(
                 borderRadius: BorderRadius.circular(10),
-                onTap: () => goToUser.fromUserSafe(context, otherSide),
+                onTap: () => goToUser.fromPersonSafe(context, otherSide),
                 child: Row(
                   children: [
                     if (otherSide.avatar != null)

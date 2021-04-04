@@ -64,7 +64,7 @@ class CommentWidget extends HookWidget {
           hideOnRead: hideOnRead,
         );
 
-  CommentWidget.fromUserMentionView(
+  CommentWidget.fromPersonMentionView(
     PersonMentionView userMentionView, {
     bool hideOnRead = false,
   }) : this(
@@ -348,7 +348,7 @@ class CommentWidget extends HookWidget {
                       padding: const EdgeInsets.only(right: 5),
                       child: InkWell(
                         onTap: () =>
-                            goToUser.fromUserSafe(context, comment.creator),
+                            goToUser.fromPersonSafe(context, comment.creator),
                         child: Avatar(
                           url: comment.creator.avatar,
                           radius: 10,
@@ -358,7 +358,7 @@ class CommentWidget extends HookWidget {
                     ),
                   InkWell(
                     onTap: () =>
-                        goToUser.fromUserSafe(context, comment.creator),
+                        goToUser.fromPersonSafe(context, comment.creator),
                     child: Text(comment.creator.originDisplayName,
                         style: TextStyle(
                           color: theme.accentColor,

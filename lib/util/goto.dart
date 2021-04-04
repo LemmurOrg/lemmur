@@ -59,7 +59,7 @@ abstract class goToUser {
           BuildContext context, String instanceHost, String userName) =>
       throw UnimplementedError('need to create UserProfile constructor first');
 
-  static void fromUserSafe(BuildContext context, PersonSafe personSafe) =>
+  static void fromPersonSafe(BuildContext context, PersonSafe personSafe) =>
       goToUser.byId(context, personSafe.instanceHost, personSafe.id);
 }
 

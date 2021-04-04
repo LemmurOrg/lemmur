@@ -29,7 +29,7 @@ class UserProfile extends HookWidget {
         assert(instanceHost != null),
         _fullUserView = null;
 
-  UserProfile.fromFullUserView(this._fullUserView)
+  UserProfile.fromFullPersonView(this._fullUserView)
       : assert(_fullUserView != null),
         userId = _fullUserView.personView.person.id,
         instanceHost = _fullUserView.instanceHost;

@@ -52,7 +52,7 @@ class UsersListItem extends StatelessWidget {
                 ),
               )
             : null,
-        onTap: () => goToUser.fromUserSafe(context, user.person),
+        onTap: () => goToUser.fromPersonSafe(context, user.person),
         leading: Avatar(url: user.person.avatar),
       );
 }

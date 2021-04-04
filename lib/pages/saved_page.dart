@@ -45,7 +45,6 @@ class SavedPage extends HookWidget {
                   LemmyApiV3(accountStore.defaultInstanceHost).run(
                 GetComments(
                   type: CommentListingType.all,
-                  // personId: accountStore.defaultToken.payload.sub,
                   sort: sortType,
                   savedOnly: true,
                   page: page,
