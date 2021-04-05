@@ -6,8 +6,6 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:lemmy_api_client/v3.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../util/unawaited.dart';
-
 part 'accounts_store.g.dart';
 
 /// Store that manages all accounts
@@ -147,19 +145,19 @@ class AccountsStore extends ChangeNotifier {
   }
 
   /// sets globally default account
-  void setDefaultAccount(String instanceHost, String username) {
+  Future<void> setDefaultAccount(String instanceHost, String username) {
     defaultAccount = '$username@$instanceHost';
 
     notifyListeners();
-    save();
+    return save();
   }
 
   /// sets default account for given instance
-  void setDefaultAccountFor(String instanceHost, String username) {
+  Future<void> setDefaultAccountFor(String instanceHost, String username) {
     defaultAccounts[instanceHost] = username;
 
     notifyListeners();
-    save();
+    return save();
   }
 
   /// An instance is considered anonymous if it was not
@@ -210,7 +208,7 @@ class AccountsStore extends ChangeNotifier {
 
     _assignDefaultAccounts();
     notifyListeners();
-    unawaited(save());
+    return save();
   }
 
   /// adds a new instance with no accounts associated with it.
@@ -237,16 +235,16 @@ class AccountsStore extends ChangeNotifier {
 
     _assignDefaultAccounts();
     notifyListeners();
-    unawaited(save());
+    return save();
   }
 
   /// This also removes all accounts assigned to this instance
-  void removeInstance(String instanceHost) {
+  Future<void> removeInstance(String instanceHost) {
     tokens.remove(instanceHost);
 
     _assignDefaultAccounts();
     notifyListeners();
-    save();
+    return save();
   }
 
   Future<void> removeAccount(String instanceHost, String username) {

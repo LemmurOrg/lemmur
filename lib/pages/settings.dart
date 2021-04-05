@@ -8,6 +8,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import '../hooks/stores.dart';
 import '../l10n/l10n.dart';
 import '../util/goto.dart';
+import '../util/unawaited.dart';
 import '../widgets/about_tile.dart';
 import '../widgets/radio_picker.dart';
 import 'add_account.dart';
@@ -127,7 +128,7 @@ class AccountsConfigPage extends HookWidget {
             ),
           ) ??
           false) {
-        accountsStore.removeInstance(instanceHost);
+        unawaited(accountsStore.removeInstance(instanceHost));
       }
     }
 
