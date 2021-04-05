@@ -11,7 +11,6 @@ import '../hooks/ref.dart';
 import '../hooks/stores.dart';
 import '../l10n/l10n.dart';
 import '../util/pictrs.dart';
-import '../util/unawaited.dart';
 import '../widgets/bottom_safe.dart';
 import '../widgets/radio_picker.dart';
 
@@ -190,8 +189,8 @@ class _ManageAccount extends HookWidget {
             auth: token.raw,
           ));
 
-          unawaited(
-              accountsStore.removeAccount(user.instanceHost, user.person.name));
+          await accountsStore.removeAccount(
+              user.instanceHost, user.person.name);
           Navigator.of(context).pop();
         } on Exception catch (err) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
