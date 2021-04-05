@@ -48,7 +48,7 @@ class AccountsStore extends ChangeNotifier {
   }
 
   /// automatically sets default accounts
-  void _assignDefaultAccounts() {
+  Future<void> _assignDefaultAccounts() async {
     // remove dangling defaults
     defaultAccounts.entries
         .map((dft) {
@@ -78,7 +78,8 @@ class AccountsStore extends ChangeNotifier {
       if (!defaultAccounts.containsKey(instanceHost)) {
         // select first account in this instance, if any
         if (!isAnonymousFor(instanceHost)) {
-          setDefaultAccountFor(instanceHost, usernamesFor(instanceHost).first);
+          await setDefaultAccountFor(
+              instanceHost, usernamesFor(instanceHost).first);
         }
       }
     }
@@ -89,7 +90,8 @@ class AccountsStore extends ChangeNotifier {
       for (final instanceHost in instances) {
         // select first account in this instance, if any
         if (!isAnonymousFor(instanceHost)) {
-          setDefaultAccount(instanceHost, usernamesFor(instanceHost).first);
+          await setDefaultAccount(
+              instanceHost, usernamesFor(instanceHost).first);
         }
       }
     }
@@ -206,7 +208,7 @@ class AccountsStore extends ChangeNotifier {
 
     tokens[instanceHost][userData.person.name] = token;
 
-    _assignDefaultAccounts();
+    await _assignDefaultAccounts();
     notifyListeners();
     return save();
   }
@@ -233,24 +235,24 @@ class AccountsStore extends ChangeNotifier {
 
     tokens[instanceHost] = HashMap();
 
-    _assignDefaultAccounts();
+    await _assignDefaultAccounts();
     notifyListeners();
     return save();
   }
 
   /// This also removes all accounts assigned to this instance
-  Future<void> removeInstance(String instanceHost) {
+  Future<void> removeInstance(String instanceHost) async {
     tokens.remove(instanceHost);
 
-    _assignDefaultAccounts();
+    await _assignDefaultAccounts();
     notifyListeners();
     return save();
   }
 
-  Future<void> removeAccount(String instanceHost, String username) {
+  Future<void> removeAccount(String instanceHost, String username) async {
     tokens[instanceHost].remove(username);
 
-    _assignDefaultAccounts();
+    await _assignDefaultAccounts();
     notifyListeners();
     return save();
   }
