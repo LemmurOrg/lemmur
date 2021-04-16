@@ -15,6 +15,7 @@ import 'pages/profile_tab.dart';
 import 'pages/search_tab.dart';
 import 'stores/accounts_store.dart';
 import 'stores/config_store.dart';
+import 'stores/lemmy_settings_store.dart';
 import 'theme.dart';
 import 'util/extensions/brightness.dart';
 
@@ -23,12 +24,14 @@ Future<void> main() async {
 
   final configStore = await ConfigStore.load();
   final accountsStore = await AccountsStore.load();
+  final userSettingsStore = await LemmySettingsStore.load(accountsStore);
 
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: configStore),
         ChangeNotifierProvider.value(value: accountsStore),
+        ChangeNotifierProvider.value(value: userSettingsStore),
       ],
       child: const MyApp(),
     ),
