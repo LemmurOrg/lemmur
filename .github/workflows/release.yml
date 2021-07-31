@@ -108,6 +108,35 @@ jobs:
           name: linux-build
           path: build/linux/x64/release/bundle/lemmur-*.tar.gz
 
+  macos-build:
+    name: Macos build
+    needs: get-vars
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: "stable"
+
+      - name: Enable macos support
+        run: |
+          flutter config --enable-macos-desktop
+
+      - name: Build
+        run: |
+          flutter build macos --release --target lib/main_prod.dart
+
+      - name: Archive
+        working-directory: build/macos/Build/Products/Release
+        run: |
+          zip -r lemmur-${{ needs.get-vars.outputs.tag }}-macos.zip lemmur.app
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: macos-build
+          path: build/macos/Build/Products/Release/lemmur-*-macos.zip
+
   windows-build:
     name: Windows build
     needs: get-vars
@@ -163,6 +192,7 @@ jobs:
           files: |
             android-build/*
             linux-build/*
+            macos-build/*
             windows-build/*
           draft: true
           body_path: current-changelog.txt
