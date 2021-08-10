@@ -20,6 +20,7 @@ A mobile client for [Lemmy](https://github.com/LemmyNet/lemmy) - a federated red
   - [Build from source](#build-from-source)
     - [Prerequisites](#prerequisites)
     - [Android](#android)
+    - [iOS](#ios)
     - [Linux](#linux)
     - [Windows](#windows)
   - [FAQ](#faq)
@@ -39,6 +40,18 @@ A mobile client for [Lemmy](https://github.com/LemmyNet/lemmy) - a federated red
 1. Build: `flutter build apk`
 
 The apk will be in `build/app/outputs/flutter-apk/app-release.apk`
+
+### iOS
+
+If the Apple account on this machine has apple developer license purchased, then:
+
+1. Build: `flutter build ipa`
+2. The file will be in `build/ios/archive/Runner.xcarchive`
+
+Otherwise it cannot be built, it can only be installed directly on device:
+
+1. Plug iOS device into your Mac
+2. Run command: `flutter run --release`
 
 ### Linux
 
@@ -61,6 +74,7 @@ The executable will be in `build/linux/release/bundle/lemmur` (be aware, however
 3. Build: `flutter build windows`
 
 The executable will be in `build\windows\runner\Release\lemmur.exe` (be aware, however, that this executable is not standalone)
+
 
 ## FAQ
 
