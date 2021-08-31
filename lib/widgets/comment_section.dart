@@ -6,7 +6,7 @@ import '../comment_tree.dart';
 import '../l10n/l10n.dart';
 import 'bottom_modal.dart';
 import 'bottom_safe.dart';
-import 'comment.dart';
+import 'comment/comment.dart';
 
 /// Manages comments section, sorts them
 class CommentSection extends HookWidget {
