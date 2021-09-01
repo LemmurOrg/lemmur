@@ -118,11 +118,57 @@ mixin _$CommentStore on _CommentStore, Store {
     });
   }
 
+  final _$savingLoadingAtom = Atom(name: '_CommentStore.savingLoading');
+
+  @override
+  bool get savingLoading {
+    _$savingLoadingAtom.reportRead();
+    return super.savingLoading;
+  }
+
+  @override
+  set savingLoading(bool value) {
+    _$savingLoadingAtom.reportWrite(value, super.savingLoading, () {
+      super.savingLoading = value;
+    });
+  }
+
+  final _$markingAsReadLoadingAtom =
+      Atom(name: '_CommentStore.markingAsReadLoading');
+
+  @override
+  bool get markingAsReadLoading {
+    _$markingAsReadLoadingAtom.reportRead();
+    return super.markingAsReadLoading;
+  }
+
+  @override
+  set markingAsReadLoading(bool value) {
+    _$markingAsReadLoadingAtom.reportWrite(value, super.markingAsReadLoading,
+        () {
+      super.markingAsReadLoading = value;
+    });
+  }
+
   final _$deleteAsyncAction = AsyncAction('_CommentStore.delete');
 
   @override
   Future<void> delete(Jwt token) {
     return _$deleteAsyncAction.run(() => super.delete(token));
+  }
+
+  final _$saveAsyncAction = AsyncAction('_CommentStore.save');
+
+  @override
+  Future<void> save(Jwt token) {
+    return _$saveAsyncAction.run(() => super.save(token));
+  }
+
+  final _$markAsReadAsyncAction = AsyncAction('_CommentStore.markAsRead');
+
+  @override
+  Future<void> markAsRead(Jwt token) {
+    return _$markAsReadAsyncAction.run(() => super.markAsRead(token));
   }
 
   final _$_voteAsyncAction = AsyncAction('_CommentStore._vote');
@@ -202,6 +248,8 @@ collapsed: ${collapsed},
 showRaw: ${showRaw},
 votingLoading: ${votingLoading},
 deletingLoading: ${deletingLoading},
+savingLoading: ${savingLoading},
+markingAsReadLoading: ${markingAsReadLoading},
 isMine: ${isMine},
 myVote: ${myVote},
 isOP: ${isOP}

@@ -14,6 +14,8 @@ abstract class _CommentStore with Store {
 
   final ObservableList<CommentTree> children;
 
+  final int? userMentionId;
+
   @observable
   bool selectable = false;
 
@@ -29,6 +31,12 @@ abstract class _CommentStore with Store {
   @observable
   bool deletingLoading = false;
 
+  @observable
+  bool savingLoading = false;
+
+  @observable
+  bool markingAsReadLoading = false;
+
   @computed
   bool get isMine =>
       comment.comment.creatorId ==
@@ -42,8 +50,11 @@ abstract class _CommentStore with Store {
 
   final AccountsStore _accountsStore;
 
-  _CommentStore(CommentTree commentTree, this._accountsStore)
-      : comment = commentTree.comment,
+  _CommentStore(
+    this._accountsStore, {
+    required CommentTree commentTree,
+    this.userMentionId,
+  })  : comment = commentTree.comment,
         children = commentTree.children.asObservable();
 
   @action
@@ -81,6 +92,64 @@ abstract class _CommentStore with Store {
       print('catchall error');
     } finally {
       deletingLoading = false;
+    }
+  }
+
+  // TODO: error state
+  // TODO: delayed loading
+  @action
+  Future<void> save(Jwt token) async {
+    try {
+      savingLoading = true;
+
+      final result = await LemmyApiV3(comment.instanceHost).run(
+        SaveComment(
+          commentId: comment.comment.id,
+          save: !comment.saved,
+          auth: token.raw,
+        ),
+      );
+
+      comment = result.commentView;
+    } catch (err) {
+      print('catchall error');
+    } finally {
+      savingLoading = false;
+    }
+  }
+
+  // TODO: error state
+  // TODO: delayed loading
+  @action
+  Future<void> markAsRead(Jwt token) async {
+    try {
+      markingAsReadLoading = true;
+
+      if (userMentionId != null) {
+        final result = await LemmyApiV3(comment.instanceHost).run(
+          MarkPersonMentionAsRead(
+            personMentionId: userMentionId!,
+            read: !comment.comment.read,
+            auth: token.raw,
+          ),
+        );
+
+        comment = comment.copyWith(comment: result.comment);
+      } else {
+        final result = await LemmyApiV3(comment.instanceHost).run(
+          MarkCommentAsRead(
+            commentId: comment.comment.id,
+            read: !comment.comment.read,
+            auth: token.raw,
+          ),
+        );
+
+        comment = result.commentView;
+      }
+    } catch (err) {
+      print('catchall error');
+    } finally {
+      markingAsReadLoading = false;
     }
   }
 
