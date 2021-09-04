@@ -3,6 +3,8 @@
 ### Added
 
 - Support for Lemmy v0.12.0
+- Blocking of users and communities
+- Blocking section in settings
 
 ## v0.5.0 - 2021-04-29
 
