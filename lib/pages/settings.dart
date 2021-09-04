@@ -13,44 +13,56 @@ import '../widgets/bottom_modal.dart';
 import '../widgets/radio_picker.dart';
 import 'add_account.dart';
 import 'add_instance.dart';
+import 'blocks.dart';
 import 'manage_account.dart';
 
 /// Page with a list of different settings sections
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends HookWidget {
   const SettingsPage();
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: Text(L10n.of(context)!.settings),
-        ),
-        body: ListView(
-          children: [
+  Widget build(BuildContext context) {
+    final hasNoAccount = useAccountsStoreSelect((store) => store.hasNoAccount);
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(L10n.of(context)!.settings),
+      ),
+      body: ListView(
+        children: [
+          ListTile(
+            leading: const Icon(Icons.settings),
+            title: const Text('General'),
+            onTap: () {
+              goTo(context, (_) => const GeneralConfigPage());
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.person),
+            title: const Text('Accounts'),
+            onTap: () {
+              goTo(context, (_) => AccountsConfigPage());
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.color_lens),
+            title: const Text('Appearance'),
+            onTap: () {
+              goTo(context, (_) => const AppearanceConfigPage());
+            },
+          ),
+          if (!hasNoAccount)
             ListTile(
-              leading: const Icon(Icons.settings),
-              title: const Text('General'),
+              leading: const Icon(Icons.block),
+              title: const Text('Blocks'),
               onTap: () {
-                goTo(context, (_) => const GeneralConfigPage());
+                goTo(context, (_) => const BlocksPage());
               },
             ),
-            ListTile(
-              leading: const Icon(Icons.person),
-              title: const Text('Accounts'),
-              onTap: () {
-                goTo(context, (_) => AccountsConfigPage());
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.color_lens),
-              title: const Text('Appearance'),
-              onTap: () {
-                goTo(context, (_) => const AppearanceConfigPage());
-              },
-            ),
-            const AboutTile()
-          ],
-        ),
-      );
+          const AboutTile()
+        ],
+      ),
+    );
+  }
 }
 
 /// Settings for theme color, AMOLED switch
