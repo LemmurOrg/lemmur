@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:lemmur/hooks/stores.dart';
 import 'package:lemmy_api_client/v3.dart';
+
+import '../hooks/stores.dart';
 
 class BlockUserTile extends HookWidget {
   final String instanceHost;
@@ -34,6 +35,7 @@ class BlockUserTile extends HookWidget {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(isBlocked ? 'User unblocked' : 'User blocked'),
         ));
+        // ignore: avoid_catches_without_on_clauses
       } catch (e) {
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
