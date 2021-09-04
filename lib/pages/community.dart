@@ -83,6 +83,10 @@ class CommunityPage extends HookWidget {
 
     final isBlocked = useState(community?.blocked);
 
+    useMemoized(() {
+      isBlocked.value = community?.blocked;
+    }, [community?.blocked]);
+
     // FALLBACK
 
     if (community == null) {
