@@ -19,6 +19,7 @@ import '../util/intl.dart';
 import '../util/share.dart';
 import '../util/text_color.dart';
 import 'avatar.dart';
+import 'block_user_tile.dart';
 import 'bottom_modal.dart';
 import 'info_table_popup.dart';
 import 'markdown_mode_icon.dart';
@@ -113,6 +114,7 @@ class CommentWidget extends HookWidget {
     final newReplies = useState(const <CommentTree>[]);
 
     final comment = commentTree.comment;
+    final isBlocked = useState(comment.creatorBlocked);
 
     if (hideOnRead && isRead.value) {
       return const SizedBox.shrink();
@@ -208,6 +210,15 @@ class CommentWidget extends HookWidget {
                 title: Text(isDeleted.value ? 'Restore' : 'Delete'),
                 onTap: loggedInAction(handleDelete),
               ),
+            BlockUserTile(
+              instanceHost: comment.instanceHost,
+              isBlocked: isBlocked.value,
+              personId: comment.creator.id,
+              onDone: (blocked) {
+                isBlocked.value = blocked;
+                pop();
+              },
+            ),
             ListTile(
               leading: const Icon(Icons.info_outline),
               title: const Text('Nerd stuff'),

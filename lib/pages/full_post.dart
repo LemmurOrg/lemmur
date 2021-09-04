@@ -40,6 +40,23 @@ class FullPostPage extends HookWidget {
             )));
     final loggedInAction = useLoggedInAction(instanceHost);
     final newComments = useState(const <CommentView>[]);
+    final communityBlocked =
+        useState(fullPostRefreshable.snapshot.data?.communityView.blocked);
+    final creatorBlocked = useState(this.post?.creatorBlocked ??
+        fullPostRefreshable.snapshot.data?.postView.creatorBlocked);
+
+    useMemoized(() {
+      if (fullPostRefreshable.snapshot.hasData) {
+        creatorBlocked.value =
+            fullPostRefreshable.snapshot.data!.postView.creatorBlocked;
+      }
+    }, [fullPostRefreshable.snapshot.data?.postView.creatorBlocked]);
+    useMemoized(() {
+      if (fullPostRefreshable.snapshot.hasData) {
+        communityBlocked.value =
+            fullPostRefreshable.snapshot.data?.communityView.blocked;
+      }
+    }, [fullPostRefreshable.snapshot.data?.communityView.blocked]);
 
     // FALLBACK VIEW
     if (!fullPostRefreshable.snapshot.hasData && this.post == null) {
@@ -111,6 +128,8 @@ class FullPostPage extends HookWidget {
             IconButton(
               icon: Icon(moreIcon),
               onPressed: () => PostWidget.showMoreMenu(
+                communityBlocked: communityBlocked,
+                creatorBlocked: creatorBlocked,
                 context: context,
                 post: post,
                 fullPost: true,
