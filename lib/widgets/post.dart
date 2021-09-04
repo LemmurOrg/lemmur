@@ -23,6 +23,8 @@ import '../util/goto.dart';
 import '../util/more_icon.dart';
 import '../util/share.dart';
 import 'avatar.dart';
+import 'block_community_tile.dart';
+import 'block_user_tile.dart';
 import 'bottom_modal.dart';
 import 'fullscreenable_image.dart';
 import 'info_table_popup.dart';
@@ -67,6 +69,8 @@ class PostWidget extends HookWidget {
   static void showMoreMenu({
     required BuildContext context,
     required PostView post,
+    required ValueNotifier<bool?> creatorBlocked,
+    ValueNotifier<bool?>? communityBlocked,
     bool fullPost = false,
   }) {
     final isMine = context
@@ -98,6 +102,24 @@ class PostWidget extends HookWidget {
               });
             },
           ),
+          if (creatorBlocked.value != null)
+            BlockUserTile(
+                instanceHost: post.instanceHost,
+                isBlocked: creatorBlocked.value!,
+                personId: post.creator.id,
+                onDone: (blocked) {
+                  creatorBlocked.value = blocked;
+                  Navigator.of(context).pop();
+                }),
+          if (communityBlocked?.value != null)
+            BlockCommunityTile(
+                instanceHost: post.instanceHost,
+                isBlocked: communityBlocked!.value!,
+                communityId: post.community.id,
+                onDone: (blocked) {
+                  communityBlocked.value = blocked;
+                  Navigator.of(context).pop();
+                }),
           if (isMine)
             ListTile(
               leading: const Icon(Icons.edit),
@@ -134,6 +156,7 @@ class PostWidget extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final creatorBlocked = useState(post.creatorBlocked);
 
     void _openLink(String url) =>
         linkLauncher(context: context, url: url, instanceHost: instanceHost);
@@ -267,8 +290,11 @@ class PostWidget extends HookWidget {
                     Column(
                       children: [
                         IconButton(
-                          onPressed: () =>
-                              showMoreMenu(context: context, post: post),
+                          onPressed: () => showMoreMenu(
+                            context: context,
+                            post: post,
+                            creatorBlocked: creatorBlocked,
+                          ),
                           icon: Icon(moreIcon),
                           padding: const EdgeInsets.all(0),
                           visualDensity: VisualDensity.compact,

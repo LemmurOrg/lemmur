@@ -17,6 +17,7 @@ import '../util/intl.dart';
 import '../util/more_icon.dart';
 import '../util/share.dart';
 import '../widgets/avatar.dart';
+import '../widgets/block_community_tile.dart';
 import '../widgets/bottom_modal.dart';
 import '../widgets/fullscreenable_image.dart';
 import '../widgets/info_table_popup.dart';
@@ -80,6 +81,8 @@ class CommunityPage extends HookWidget {
       }
     }();
 
+    final isBlocked = useState(community?.blocked);
+
     // FALLBACK
 
     if (community == null) {
@@ -119,6 +122,16 @@ class CommunityPage extends HookWidget {
                   : ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text("can't open in browser"))),
             ),
+            if (isBlocked.value != null)
+              BlockCommunityTile(
+                instanceHost: community.instanceHost,
+                isBlocked: isBlocked.value!,
+                communityId: community.community.id,
+                onDone: (blocked) {
+                  isBlocked.value = blocked;
+                  Navigator.of(context).pop();
+                },
+              ),
             ListTile(
               leading: const Icon(Icons.info_outline),
               title: const Text('Nerd stuff'),
