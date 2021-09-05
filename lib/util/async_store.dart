@@ -16,7 +16,7 @@ abstract class _AsyncStore<T> with Store {
   AsyncState<T> asyncState = const AsyncState.initial();
 
   @computed
-  bool get isLoading => AsyncState is AsyncStateLoading;
+  bool get isLoading => asyncState is AsyncStateLoading;
 
   @computed
   String? get errorTerm => asyncState.maybeWhen(
