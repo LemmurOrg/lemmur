@@ -1,13 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:lemmur/stores/config_store.dart';
-// ignore: prefer_relative_imports
-import 'package:lemmur/widgets/comment/comment_actions.dart';
 import 'package:lemmy_api_client/v3.dart';
 import 'package:provider/provider.dart';
 
 import '../../comment_tree.dart';
 import '../../l10n/l10n.dart';
+import '../../stores/config_store.dart';
+import '../../util/async_store_listener.dart';
 import '../../util/extensions/api.dart';
 import '../../util/extensions/cake_day.dart';
 import '../../util/extensions/datetime.dart';
@@ -18,6 +17,7 @@ import '../../util/text_color.dart';
 import '../avatar.dart';
 import '../info_table_popup.dart';
 import '../markdown_text.dart';
+import 'comment_actions.dart';
 import 'comment_store.dart';
 
 /// A single comment that renders its replies
@@ -81,7 +81,16 @@ class CommentWidget extends _CommentWidget {
         commentTree: commentTree,
         userMentionId: userMentionId,
       ),
-      builder: (context, child) => super.build(context),
+      builder: (context, child) => AsyncStoreListener(
+        asyncState: context.read<CommentStore>().votingState,
+        child: AsyncStoreListener(
+          asyncState: context.read<CommentStore>().deletingState,
+          child: AsyncStoreListener(
+            asyncState: context.read<CommentStore>().savingState,
+            child: super.build(context),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -242,7 +251,7 @@ class _CommentWidget extends StatelessWidget {
                         ),
                         child: Row(
                           children: [
-                            if (store.votingLoading)
+                            if (store.votingState.isLoading)
                               SizedBox.fromSize(
                                 size: const Size.square(16),
                                 child: const CircularProgressIndicator(),

@@ -3,6 +3,7 @@ import 'package:mobx/mobx.dart';
 
 import '../../comment_tree.dart';
 import '../../stores/accounts_store.dart';
+import '../../util/async_store.dart';
 
 part 'comment_store.g.dart';
 
@@ -25,14 +26,9 @@ abstract class _CommentStore with Store {
   @observable
   bool showRaw = false;
 
-  @observable
-  bool votingLoading = false;
-
-  @observable
-  bool deletingLoading = false;
-
-  @observable
-  bool savingLoading = false;
+  final votingState = AsyncStore<FullCommentView>();
+  final deletingState = AsyncStore<FullCommentView>();
+  final savingState = AsyncStore<FullCommentView>();
 
   @observable
   bool markingAsReadLoading = false;
@@ -72,54 +68,35 @@ abstract class _CommentStore with Store {
     collapsed = !collapsed;
   }
 
-  // TODO: error state
-  // TODO: delayed loading
   @action
   Future<void> delete(Jwt token) async {
-    try {
-      deletingLoading = true;
+    final result = await deletingState.runLemmy(
+      comment.instanceHost,
+      DeleteComment(
+        commentId: comment.comment.id,
+        deleted: !comment.comment.deleted,
+        auth: token.raw,
+      ),
+    );
 
-      final result = await LemmyApiV3(comment.instanceHost).run(
-        DeleteComment(
-          commentId: comment.comment.id,
-          deleted: !comment.comment.deleted,
-          auth: token.raw,
-        ),
-      );
-
-      comment = result.commentView;
-    } catch (err) {
-      print('catchall error');
-    } finally {
-      deletingLoading = false;
-    }
+    if (result != null) comment = result.commentView;
   }
 
-  // TODO: error state
-  // TODO: delayed loading
   @action
   Future<void> save(Jwt token) async {
-    try {
-      savingLoading = true;
+    final result = await savingState.runLemmy(
+      comment.instanceHost,
+      SaveComment(
+        commentId: comment.comment.id,
+        save: !comment.saved,
+        auth: token.raw,
+      ),
+    );
 
-      final result = await LemmyApiV3(comment.instanceHost).run(
-        SaveComment(
-          commentId: comment.comment.id,
-          save: !comment.saved,
-          auth: token.raw,
-        ),
-      );
-
-      comment = result.commentView;
-    } catch (err) {
-      print('catchall error');
-    } finally {
-      savingLoading = false;
-    }
+    if (result != null) comment = result.commentView;
   }
 
   // TODO: error state
-  // TODO: delayed loading
   @action
   Future<void> markAsRead(Jwt token) async {
     try {
@@ -153,27 +130,18 @@ abstract class _CommentStore with Store {
     }
   }
 
-  // TODO: error state
-  // TODO: delayed loading
   @action
   Future<void> _vote(VoteType voteType, Jwt token) async {
-    try {
-      votingLoading = true;
+    final result = await votingState.runLemmy(
+      comment.instanceHost,
+      CreateCommentLike(
+        commentId: comment.comment.id,
+        score: voteType,
+        auth: token.raw,
+      ),
+    );
 
-      final result = await LemmyApiV3(comment.instanceHost).run(
-        CreateCommentLike(
-          commentId: comment.comment.id,
-          score: voteType,
-          auth: token.raw,
-        ),
-      );
-
-      comment = result.commentView;
-    } catch (err) {
-      print('catchall error');
-    } finally {
-      votingLoading = false;
-    }
+    if (result != null) comment = result.commentView;
   }
 
   @action

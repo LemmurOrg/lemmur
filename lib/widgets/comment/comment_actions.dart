@@ -91,7 +91,7 @@ class CommentActions extends HookWidget {
             TileAction(
               // TODO: remove delayed loading
               delayedLoading: DelayedLoading(
-                loading: store.savingLoading,
+                loading: store.savingState.isLoading,
                 start: () {},
                 cancel: () {},
                 pending: false,

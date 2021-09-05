@@ -5,6 +5,7 @@ import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 
 typedef MobxBuilder<T extends Store> = Widget Function(BuildContext, T);
+typedef MobxListener<T extends Store> = void Function(BuildContext, T);
 
 class ObserverBuilder<T extends Store> extends StatelessWidget {
   const ObserverBuilder({
@@ -38,7 +39,7 @@ class ObserverListener<T extends Store> extends HookWidget {
   }) : super(key: key);
 
   final T? store;
-  final MobxBuilder<T> listener;
+  final MobxListener<T> listener;
   final Widget child;
 
   @override

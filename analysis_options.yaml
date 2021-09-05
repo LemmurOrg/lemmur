@@ -111,6 +111,7 @@ linter:
 analyzer:
   exclude:
     - "**/*.g.dart"
+    - "**/*.freezed.dart"
     - "lib/gen/assets.gen.dart"
   strong-mode:
     # TODO: remove after migrating to null safety, this is already turned off by default

@@ -88,51 +88,6 @@ mixin _$CommentStore on _CommentStore, Store {
     });
   }
 
-  final _$votingLoadingAtom = Atom(name: '_CommentStore.votingLoading');
-
-  @override
-  bool get votingLoading {
-    _$votingLoadingAtom.reportRead();
-    return super.votingLoading;
-  }
-
-  @override
-  set votingLoading(bool value) {
-    _$votingLoadingAtom.reportWrite(value, super.votingLoading, () {
-      super.votingLoading = value;
-    });
-  }
-
-  final _$deletingLoadingAtom = Atom(name: '_CommentStore.deletingLoading');
-
-  @override
-  bool get deletingLoading {
-    _$deletingLoadingAtom.reportRead();
-    return super.deletingLoading;
-  }
-
-  @override
-  set deletingLoading(bool value) {
-    _$deletingLoadingAtom.reportWrite(value, super.deletingLoading, () {
-      super.deletingLoading = value;
-    });
-  }
-
-  final _$savingLoadingAtom = Atom(name: '_CommentStore.savingLoading');
-
-  @override
-  bool get savingLoading {
-    _$savingLoadingAtom.reportRead();
-    return super.savingLoading;
-  }
-
-  @override
-  set savingLoading(bool value) {
-    _$savingLoadingAtom.reportWrite(value, super.savingLoading, () {
-      super.savingLoading = value;
-    });
-  }
-
   final _$markingAsReadLoadingAtom =
       Atom(name: '_CommentStore.markingAsReadLoading');
 
@@ -246,9 +201,6 @@ comment: ${comment},
 selectable: ${selectable},
 collapsed: ${collapsed},
 showRaw: ${showRaw},
-votingLoading: ${votingLoading},
-deletingLoading: ${deletingLoading},
-savingLoading: ${savingLoading},
 markingAsReadLoading: ${markingAsReadLoading},
 isMine: ${isMine},
 myVote: ${myVote},

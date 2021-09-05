@@ -59,6 +59,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   mobx: ^2.0.4
   flutter_mobx: ^2.0.2
+  freezed_annotation: ^0.14.2
 
 dev_dependencies:
   flutter_test:
@@ -67,6 +68,7 @@ dev_dependencies:
   json_serializable: ^4.1.0
   build_runner: ^1.11.1
   mobx_codegen: ^2.0.2
+  freezed: ^0.14.1+2
 
 flutter_icons:
   android: true

@@ -34,7 +34,7 @@ class CommentMoreMenu extends HookWidget {
           },
           // TODO: remove delayed loading
           delayedLoading: DelayedLoading(
-            loading: store.deletingLoading,
+            loading: store.deletingState.isLoading,
             start: () {},
             cancel: () {},
             pending: false,
