@@ -16,6 +16,10 @@ abstract class _CommentStore with Store {
   final ObservableList<CommentTree> children;
 
   final int? userMentionId;
+  final int depth;
+  final bool canBeMarkedAsRead;
+  final bool detached;
+  final bool hideOnRead;
 
   @observable
   bool selectable = false;
@@ -50,6 +54,10 @@ abstract class _CommentStore with Store {
     this._accountsStore, {
     required CommentTree commentTree,
     this.userMentionId,
+    required this.depth,
+    required this.canBeMarkedAsRead,
+    required this.detached,
+    required this.hideOnRead,
   })  : comment = commentTree.comment,
         children = commentTree.children.asObservable();
 

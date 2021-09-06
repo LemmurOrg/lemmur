@@ -15,14 +15,7 @@ import 'comment_more_menu.dart';
 import 'comment_store.dart';
 
 class CommentActions extends HookWidget {
-  final bool canBeMarkedAsRead;
-  final bool detached;
-
-  const CommentActions({
-    Key? key,
-    required this.canBeMarkedAsRead,
-    required this.detached,
-  }) : super(key: key);
+  const CommentActions({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +62,7 @@ class CommentActions extends HookWidget {
                 },
               ),
             const Spacer(),
-            if (canBeMarkedAsRead)
+            if (store.canBeMarkedAsRead)
               TileAction(
                 icon: Icons.check,
                 onPressed: loggedInAction(store.markAsRead),
@@ -78,7 +71,7 @@ class CommentActions extends HookWidget {
                     ? L10n.of(context)!.mark_as_unread
                     : L10n.of(context)!.mark_as_read,
               ),
-            if (detached)
+            if (store.detached)
               TileAction(
                 icon: Icons.link,
                 onPressed: () =>

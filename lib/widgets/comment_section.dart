@@ -93,9 +93,18 @@ class CommentSection extends HookWidget {
           ),
         )
       else if (sorting.value == CommentSortType.chat)
-        for (final com in rawComments) CommentWidget.fromCommentView(com)
+        for (final com in rawComments)
+          CommentWidget.fromCommentView(
+            com,
+            detached: false,
+            key: ValueKey(com),
+          )
       else
-        for (final com in comments) CommentWidget(com),
+        for (final com in comments)
+          CommentWidget(
+            com,
+            key: ValueKey(com),
+          ),
       const BottomSafe(kMinInteractiveDimension + kFloatingActionButtonMargin),
     ]);
   }

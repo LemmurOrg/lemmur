@@ -23,44 +23,49 @@ import 'comment_actions.dart';
 import 'comment_store.dart';
 
 /// A single comment that renders its replies
-class CommentWidget extends _CommentWidget {
+class CommentWidget extends StatelessWidget {
   final CommentTree commentTree;
   final int? userMentionId;
+  final int depth;
+  final bool canBeMarkedAsRead;
+  final bool detached;
+  final bool hideOnRead;
 
   const CommentWidget(
     this.commentTree, {
-    int depth = 0,
-    bool detached = false,
-    bool canBeMarkedAsRead = false,
-    bool hideOnRead = false,
+    this.depth = 0,
+    this.detached = false,
+    this.canBeMarkedAsRead = false,
+    this.hideOnRead = false,
     this.userMentionId,
-  }) : super(
-          depth: depth,
-          detached: detached,
-          canBeMarkedAsRead: canBeMarkedAsRead,
-          hideOnRead: hideOnRead,
-        );
+    Key? key,
+  }) : super(key: key);
 
   CommentWidget.fromCommentView(
     CommentView cv, {
     bool canBeMarkedAsRead = false,
     bool hideOnRead = false,
+    bool detached = true,
+    Key? key,
   }) : this(
           CommentTree(cv),
-          detached: true,
+          detached: detached,
           canBeMarkedAsRead: canBeMarkedAsRead,
           hideOnRead: hideOnRead,
+          key: key,
         );
 
   CommentWidget.fromPersonMentionView(
     PersonMentionView userMentionView, {
     bool hideOnRead = false,
+    Key? key,
   }) : this(
           CommentTree(CommentView.fromJson(userMentionView.toJson())),
           hideOnRead: hideOnRead,
           canBeMarkedAsRead: true,
           detached: true,
           userMentionId: userMentionView.personMention.id,
+          key: key,
         );
 
   static void showCommentInfo(BuildContext context, CommentView commentView) {
@@ -77,11 +82,14 @@ class CommentWidget extends _CommentWidget {
   @override
   Widget build(BuildContext context) {
     return Provider(
-      key: ValueKey(commentTree),
       create: (context) => CommentStore(
         context.read(),
         commentTree: commentTree,
         userMentionId: userMentionId,
+        depth: depth,
+        canBeMarkedAsRead: canBeMarkedAsRead,
+        detached: detached,
+        hideOnRead: hideOnRead,
       ),
       builder: (context, child) => AsyncStoreListener(
         asyncStore: context.read<CommentStore>().votingState,
@@ -89,7 +97,7 @@ class CommentWidget extends _CommentWidget {
           asyncStore: context.read<CommentStore>().deletingState,
           child: AsyncStoreListener(
             asyncStore: context.read<CommentStore>().savingState,
-            child: super.build(context),
+            child: const _CommentWidget(),
           ),
         ),
       ),
@@ -98,11 +106,6 @@ class CommentWidget extends _CommentWidget {
 }
 
 class _CommentWidget extends StatelessWidget {
-  final int depth;
-  final bool detached;
-  final bool canBeMarkedAsRead;
-  final bool hideOnRead;
-
   static const colors = [
     Colors.pink,
     Colors.green,
@@ -113,24 +116,11 @@ class _CommentWidget extends StatelessWidget {
 
   static const indentWidth = 5.0;
 
-  const _CommentWidget({
-    this.depth = 0,
-    this.detached = false,
-    this.canBeMarkedAsRead = false,
-    this.hideOnRead = false,
-  });
+  const _CommentWidget();
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
-    final isRead = context.select<CommentStore, bool>(
-      (store) => store.comment.comment.read,
-    );
-
-    if (hideOnRead && isRead) {
-      return const SizedBox();
-    }
 
     final body = ObserverBuilder<CommentStore>(
       builder: (context, store) {
@@ -174,6 +164,10 @@ class _CommentWidget extends StatelessWidget {
 
     return ObserverBuilder<CommentStore>(
       builder: (context, store) {
+        if (store.hideOnRead && store.comment.comment.read) {
+          return const SizedBox();
+        }
+
         final comment = store.comment.comment;
         final creator = store.comment.creator;
 
@@ -183,13 +177,14 @@ class _CommentWidget extends StatelessWidget {
             children: [
               Container(
                 padding: const EdgeInsets.all(10),
-                margin:
-                    EdgeInsets.only(left: max((depth - 1) * indentWidth, 0)),
+                margin: EdgeInsets.only(
+                  left: max((store.depth - 1) * indentWidth, 0),
+                ),
                 decoration: BoxDecoration(
                   border: Border(
-                    left: depth > 0
+                    left: store.depth > 0
                         ? BorderSide(
-                            color: colors[depth % colors.length],
+                            color: colors[store.depth % colors.length],
                             width: indentWidth,
                           )
                         : BorderSide.none,
@@ -273,16 +268,13 @@ class _CommentWidget extends StatelessWidget {
                     const SizedBox(height: 10),
                     body,
                     const SizedBox(height: 5),
-                    CommentActions(
-                      detached: detached,
-                      canBeMarkedAsRead: canBeMarkedAsRead,
-                    ),
+                    const CommentActions(),
                   ],
                 ),
               ),
               if (!store.collapsed)
                 for (final c in store.children)
-                  CommentWidget(c, depth: depth + 1),
+                  CommentWidget(c, depth: store.depth + 1),
             ],
           ),
         );
