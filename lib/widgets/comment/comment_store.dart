@@ -33,9 +33,8 @@ abstract class _CommentStore with Store {
   final votingState = AsyncStore<FullCommentView>();
   final deletingState = AsyncStore<FullCommentView>();
   final savingState = AsyncStore<FullCommentView>();
-
-  @observable
-  bool markingAsReadLoading = false;
+  final markPersonMentionAsReadState = AsyncStore<PersonMentionView>();
+  final markAsReadState = AsyncStore<FullCommentView>();
 
   @computed
   bool get isMine =>
@@ -104,37 +103,32 @@ abstract class _CommentStore with Store {
     if (result != null) comment = result.commentView;
   }
 
-  // TODO: error state
   @action
   Future<void> markAsRead(Jwt token) async {
-    try {
-      markingAsReadLoading = true;
+    if (userMentionId != null) {
+      final result = await markPersonMentionAsReadState.runLemmy(
+        comment.instanceHost,
+        MarkPersonMentionAsRead(
+          personMentionId: userMentionId!,
+          read: !comment.comment.read,
+          auth: token.raw,
+        ),
+      );
 
-      if (userMentionId != null) {
-        final result = await LemmyApiV3(comment.instanceHost).run(
-          MarkPersonMentionAsRead(
-            personMentionId: userMentionId!,
-            read: !comment.comment.read,
-            auth: token.raw,
-          ),
-        );
-
+      if (result != null) {
         comment = comment.copyWith(comment: result.comment);
-      } else {
-        final result = await LemmyApiV3(comment.instanceHost).run(
-          MarkCommentAsRead(
-            commentId: comment.comment.id,
-            read: !comment.comment.read,
-            auth: token.raw,
-          ),
-        );
-
-        comment = result.commentView;
       }
-    } catch (err) {
-      print('catchall error');
-    } finally {
-      markingAsReadLoading = false;
+    } else {
+      final result = await markAsReadState.runLemmy(
+        comment.instanceHost,
+        MarkCommentAsRead(
+          commentId: comment.comment.id,
+          read: !comment.comment.read,
+          auth: token.raw,
+        ),
+      );
+
+      if (result != null) comment = result.commentView;
     }
   }
 

@@ -88,23 +88,6 @@ mixin _$CommentStore on _CommentStore, Store {
     });
   }
 
-  final _$markingAsReadLoadingAtom =
-      Atom(name: '_CommentStore.markingAsReadLoading');
-
-  @override
-  bool get markingAsReadLoading {
-    _$markingAsReadLoadingAtom.reportRead();
-    return super.markingAsReadLoading;
-  }
-
-  @override
-  set markingAsReadLoading(bool value) {
-    _$markingAsReadLoadingAtom.reportWrite(value, super.markingAsReadLoading,
-        () {
-      super.markingAsReadLoading = value;
-    });
-  }
-
   final _$deleteAsyncAction = AsyncAction('_CommentStore.delete');
 
   @override
@@ -201,7 +184,6 @@ comment: ${comment},
 selectable: ${selectable},
 collapsed: ${collapsed},
 showRaw: ${showRaw},
-markingAsReadLoading: ${markingAsReadLoading},
 isMine: ${isMine},
 myVote: ${myVote},
 isOP: ${isOP}
