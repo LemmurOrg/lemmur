@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lemmy_api_client/v3.dart';
@@ -109,6 +111,8 @@ class _CommentWidget extends StatelessWidget {
     Colors.indigo,
   ];
 
+  static const indentWidth = 5.0;
+
   const _CommentWidget({
     this.depth = 0,
     this.detached = false,
@@ -119,10 +123,6 @@ class _CommentWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
-    final showScores = context.select<ConfigStore, bool>(
-      (config) => config.showScores,
-    );
 
     final isRead = context.select<CommentStore, bool>(
       (store) => store.comment.comment.read,
@@ -137,28 +137,22 @@ class _CommentWidget extends StatelessWidget {
         final comment = store.comment.comment;
 
         if (comment.deleted) {
-          return Flexible(
-            child: Text(
-              L10n.of(context)!.deleted_by_creator,
-              style: const TextStyle(fontStyle: FontStyle.italic),
-            ),
+          return Text(
+            L10n.of(context)!.deleted_by_creator,
+            style: const TextStyle(fontStyle: FontStyle.italic),
           );
         } else if (comment.removed) {
-          return const Flexible(
-            child: Text(
-              'comment deleted by moderator',
-              style: TextStyle(fontStyle: FontStyle.italic),
-            ),
+          return const Text(
+            'comment deleted by moderator',
+            style: TextStyle(fontStyle: FontStyle.italic),
           );
         } else if (store.collapsed) {
-          return Flexible(
-            child: Opacity(
-              opacity: 0.3,
-              child: Text(
-                comment.content,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
+          return Opacity(
+            opacity: 0.3,
+            child: Text(
+              comment.content,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           );
         }
@@ -166,17 +160,15 @@ class _CommentWidget extends StatelessWidget {
         // TODO: bug, the text is selectable even when disabled after following
         //       these steps:
         //       make selectable > show raw > show fancy > make unselectable
-        return Flexible(
-          child: store.showRaw
-              ? store.selectable
-                  ? SelectableText(comment.content)
-                  : Text(comment.content)
-              : MarkdownText(
-                  comment.content,
-                  instanceHost: comment.instanceHost,
-                  selectable: store.selectable,
-                ),
-        );
+        return store.showRaw
+            ? store.selectable
+                ? SelectableText(comment.content)
+                : Text(comment.content)
+            : MarkdownText(
+                comment.content,
+                instanceHost: comment.instanceHost,
+                selectable: store.selectable,
+              );
       },
     );
 
@@ -192,17 +184,20 @@ class _CommentWidget extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(10),
                 margin:
-                    EdgeInsets.only(left: depth > 1 ? (depth - 1) * 5.0 : 0),
+                    EdgeInsets.only(left: max((depth - 1) * indentWidth, 0)),
                 decoration: BoxDecoration(
                   border: Border(
                     left: depth > 0
                         ? BorderSide(
-                            color: colors[depth % colors.length], width: 5)
+                            color: colors[depth % colors.length],
+                            width: indentWidth,
+                          )
                         : BorderSide.none,
                     top: const BorderSide(width: 0.2),
                   ),
                 ),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(children: [
                       if (creator.avatar != null)
@@ -240,8 +235,10 @@ class _CommentWidget extends StatelessWidget {
                         const _CommentTag('BANNED FROM COMMUNITY', Colors.red),
                       const Spacer(),
                       if (store.collapsed && store.children.isNotEmpty) ...[
-                        _CommentTag('+${store.children.length}',
-                            Theme.of(context).accentColor),
+                        _CommentTag(
+                          '+${store.children.length}',
+                          Theme.of(context).accentColor,
+                        ),
                         const SizedBox(width: 7),
                       ],
                       InkWell(
@@ -249,30 +246,32 @@ class _CommentWidget extends StatelessWidget {
                           context,
                           store.comment,
                         ),
-                        child: Row(
-                          children: [
-                            if (store.votingState.isLoading)
-                              SizedBox.fromSize(
-                                size: const Size.square(16),
-                                child: const CircularProgressIndicator(),
-                              )
-                            else if (showScores)
-                              Text(
-                                compactNumber(
-                                  store.comment.counts.score,
+                        child: Consumer<ConfigStore>(
+                          builder: (context, configStore, child) => Row(
+                            children: [
+                              if (store.votingState.isLoading)
+                                SizedBox.fromSize(
+                                  size: const Size.square(16),
+                                  child: const CircularProgressIndicator(),
+                                )
+                              else if (configStore.showScores)
+                                Text(
+                                  compactNumber(
+                                    store.comment.counts.score,
+                                  ),
                                 ),
-                              ),
-                            if (showScores)
-                              const Text(' · ')
-                            else
-                              const SizedBox(width: 4),
-                            Text(comment.published.fancy),
-                          ],
+                              if (configStore.showScores)
+                                const Text(' · ')
+                              else
+                                const SizedBox(width: 4),
+                              Text(comment.published.fancy),
+                            ],
+                          ),
                         ),
                       )
                     ]),
                     const SizedBox(height: 10),
-                    Row(children: [body]),
+                    body,
                     const SizedBox(height: 5),
                     CommentActions(
                       detached: detached,
