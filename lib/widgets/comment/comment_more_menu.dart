@@ -4,7 +4,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
-import '../../hooks/delayed_loading.dart';
 import '../../hooks/logged_in_action.dart';
 import '../../l10n/l10n.dart';
 import '../../util/extensions/api.dart';
@@ -32,13 +31,7 @@ class CommentMoreMenu extends HookWidget {
               builder: (context) => _CommentMoreMenuPopup(store: store),
             );
           },
-          // TODO: remove delayed loading
-          delayedLoading: DelayedLoading(
-            loading: store.deletingState.isLoading,
-            start: () {},
-            cancel: () {},
-            pending: false,
-          ),
+          loading: store.deletingState.isLoading,
           tooltip: L10n.of(context)!.more,
         );
       },

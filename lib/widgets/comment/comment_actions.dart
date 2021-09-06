@@ -5,7 +5,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
 import 'package:provider/provider.dart';
 
-import '../../hooks/delayed_loading.dart';
 import '../../hooks/logged_in_action.dart';
 import '../../l10n/l10n.dart';
 import '../../util/goto.dart';
@@ -60,12 +59,11 @@ class CommentActions extends HookWidget {
               TileAction(
                 icon: Icons.content_copy,
                 tooltip: 'copy',
-                onPressed: () {
-                  Clipboard.setData(ClipboardData(text: comment.content)).then(
-                    (_) => ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('comment copied to clipboard'),
-                      ),
+                onPressed: () async {
+                  await Clipboard.setData(ClipboardData(text: comment.content));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('comment copied to clipboard'),
                     ),
                   );
                 },
@@ -89,13 +87,7 @@ class CommentActions extends HookWidget {
               ),
             const CommentMoreMenu(),
             TileAction(
-              // TODO: remove delayed loading
-              delayedLoading: DelayedLoading(
-                loading: store.savingState.isLoading,
-                start: () {},
-                cancel: () {},
-                pending: false,
-              ),
+              loading: store.savingState.isLoading,
               icon:
                   store.comment.saved ? Icons.bookmark : Icons.bookmark_border,
               onPressed: loggedInAction(store.save),
