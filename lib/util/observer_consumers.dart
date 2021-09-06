@@ -8,14 +8,14 @@ typedef MobxBuilder<T extends Store> = Widget Function(BuildContext, T);
 typedef MobxListener<T extends Store> = void Function(BuildContext, T);
 
 class ObserverBuilder<T extends Store> extends StatelessWidget {
+  final T? store;
+  final MobxBuilder<T> builder;
+
   const ObserverBuilder({
     Key? key,
     this.store,
     required this.builder,
   }) : super(key: key);
-
-  final T? store;
-  final MobxBuilder<T> builder;
 
   @override
   Widget build(BuildContext context) {
@@ -31,16 +31,16 @@ class ObserverBuilder<T extends Store> extends StatelessWidget {
 }
 
 class ObserverListener<T extends Store> extends HookWidget {
+  final T? store;
+  final MobxListener<T> listener;
+  final Widget child;
+
   const ObserverListener({
     Key? key,
     this.store,
     required this.listener,
     required this.child,
   }) : super(key: key);
-
-  final T? store;
-  final MobxListener<T> listener;
-  final Widget child;
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +57,10 @@ class ObserverListener<T extends Store> extends HookWidget {
 }
 
 class ObserverConsumer<T extends Store> extends HookWidget {
+  final T? store;
+  final MobxListener<T> listener;
+  final MobxBuilder<T> builder;
+
   const ObserverConsumer({
     Key? key,
     this.store,
@@ -64,20 +68,11 @@ class ObserverConsumer<T extends Store> extends HookWidget {
     required this.builder,
   }) : super(key: key);
 
-  final T? store;
-  final MobxBuilder<T> listener;
-  final MobxBuilder<T> builder;
-
   @override
   Widget build(BuildContext context) {
-    useEffect(() {
-      final disposer = autorun(
-        (_) => listener(context, store ?? context.read<T>()),
-      );
-
-      return disposer;
-    }, []);
-
-    return ObserverBuilder(store: store, builder: builder);
+    return ObserverListener(
+      listener: listener,
+      child: ObserverBuilder(store: store, builder: builder),
+    );
   }
 }

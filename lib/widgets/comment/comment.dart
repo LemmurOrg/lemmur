@@ -84,11 +84,11 @@ class CommentWidget extends _CommentWidget {
         userMentionId: userMentionId,
       ),
       builder: (context, child) => AsyncStoreListener(
-        asyncState: context.read<CommentStore>().votingState,
+        asyncStore: context.read<CommentStore>().votingState,
         child: AsyncStoreListener(
-          asyncState: context.read<CommentStore>().deletingState,
+          asyncStore: context.read<CommentStore>().deletingState,
           child: AsyncStoreListener(
-            asyncState: context.read<CommentStore>().savingState,
+            asyncStore: context.read<CommentStore>().savingState,
             child: super.build(context),
           ),
         ),

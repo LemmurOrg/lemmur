@@ -40,12 +40,12 @@ class CommentMoreMenu extends HookWidget {
 }
 
 class _CommentMoreMenuPopup extends HookWidget {
+  final CommentStore store;
+
   const _CommentMoreMenuPopup({
     Key? key,
     required this.store,
   }) : super(key: key);
-
-  final CommentStore store;
 
   @override
   Widget build(BuildContext context) {

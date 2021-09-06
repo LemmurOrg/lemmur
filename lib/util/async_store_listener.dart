@@ -6,21 +6,21 @@ import 'async_store.dart';
 import 'observer_consumers.dart';
 
 class AsyncStoreListener extends StatelessWidget {
+  final AsyncStore asyncStore;
+  final String? successMessage;
+  final Widget child;
+
   const AsyncStoreListener({
     Key? key,
-    required this.asyncState,
+    required this.asyncStore,
     this.successMessage,
     required this.child,
   }) : super(key: key);
 
-  final AsyncStore asyncState;
-  final String? successMessage;
-  final Widget child;
-
   @override
   Widget build(BuildContext context) {
     return ObserverListener<AsyncStore>(
-      store: asyncState,
+      store: asyncStore,
       listener: (context, store) {
         final errorTerm = store.errorTerm;
 
