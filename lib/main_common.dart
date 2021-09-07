@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 
 import 'app.dart';
 import 'app_config.dart';
+import 'pages/logger_console.dart';
 import 'stores/accounts_store.dart';
 import 'stores/config_store.dart';
 
@@ -31,10 +32,10 @@ Future<void> mainCommon(AppConfig appConfig) async {
 void _setupLogger(AppConfig appConfig) {
   Logger.root.level = Level.ALL;
 
-  Logger.root.onRecord.listen((logEvent) {
+  Logger.root.onRecord.listen((logRecord) {
     // ignore: avoid_print
-    print(logEvent);
-    // TODO: add to global log registery
+    print(logRecord);
+    LoggerConsole.addRecord(logRecord);
   });
 
   final flutterErrorLogger = Logger('FlutterError');

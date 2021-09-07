@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:logging/logging.dart';
 
 import '../util/extensions/brightness.dart';
 import 'communities_tab.dart';
@@ -37,8 +36,6 @@ class HomePage extends HookWidget {
     }, [theme.scaffoldBackgroundColor]);
 
     var tabCounter = 0;
-
-    Logger('asd').warning('hello');
 
     tabButton(IconData icon) {
       final tabNum = tabCounter++;
