@@ -47,11 +47,15 @@ android {
     signingConfigs {
         dev { }
 
-        prod {
-            keyAlias System.getenv("ANDROID_KEY_ALIAS")
-            keyPassword System.getenv("ANDROID_KEY_PASSWORD")
-            storeFile file(System.getenv("ANDROID_STORE_PATH"))
-            storePassword System.getenv("ANDROID_STORE_PASSWORD")
+        if (System.getenv("ANDROID_STORE_PATH")) {
+            prod {
+                keyAlias System.getenv("ANDROID_KEY_ALIAS")
+                keyPassword System.getenv("ANDROID_KEY_PASSWORD")
+                storeFile file(System.getenv("ANDROID_STORE_PATH"))
+                storePassword System.getenv("ANDROID_STORE_PASSWORD")
+            }
+        } else {
+            prod { }
         }
     }
 
