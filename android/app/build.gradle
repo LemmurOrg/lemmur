@@ -51,21 +51,51 @@ android {
     }
 
     signingConfigs {
-        release {
+        dev { }
+
+        prod {
             keyAlias keystoreProperties['keyAlias']
             keyPassword keystoreProperties['keyPassword']
             storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
             storePassword keystoreProperties['storePassword']
         }
-   }
+    }
+
+    flavorDimensions "app"
+
+    productFlavors {
+        dev {
+            dimension "app"
+            applicationIdSuffix ".dev"
+            versionNameSuffix "-dev"
+            manifestPlaceholders = [
+                appName: "lemmur DEV"
+            ]
+            signingConfig signingConfigs.debug
+        }
+
+        prod {
+            dimension "app"
+            manifestPlaceholders = [
+                appName: "lemmur"
+            ]
+            signingConfig signingConfigs.prod
+        }
+    }
 
     buildTypes {
+        debug {
+            testCoverageEnabled true
+            debuggable true
+            minifyEnabled false
+            signingConfig null
+        }
+
         release {
-            if (keystorePropertiesFile.exists()) {
-                signingConfig signingConfigs.release
-            } else {
-                signingConfig signingConfigs.debug
-            }
+            debuggable false
+            minifyEnabled true
+            shrinkResources false
+            zipAlignEnabled true
         }
     }
 }
