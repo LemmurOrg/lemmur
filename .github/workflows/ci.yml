@@ -93,7 +93,7 @@ jobs:
 
       - name: Build
         run: |
-          flutter build linux --release --target lib/main_prod.dart --flavor prod
+          flutter build linux --release --target lib/main_prod.dart
 
   windows:
     name: Windows
@@ -112,4 +112,4 @@ jobs:
 
       - name: Build
         run: |
-          flutter build windows --release --target lib/main_prod.dart --flavor prod
+          flutter build windows --release --target lib/main_prod.dart

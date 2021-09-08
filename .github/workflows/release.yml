@@ -92,7 +92,7 @@ jobs:
 
       - name: Build
         run: |
-          flutter build linux --release --target lib/main_prod.dart --flavor prod
+          flutter build linux --release --target lib/main_prod.dart
 
       - name: Archive
         working-directory: build/linux/release/bundle
@@ -121,7 +121,7 @@ jobs:
 
       - name: Build
         run: |
-          flutter build windows --release --target lib/main_prod.dart --flavor prod
+          flutter build windows --release --target lib/main_prod.dart
 
       - name: Archive
         working-directory: build/windows/runner/Release
