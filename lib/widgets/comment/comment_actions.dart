@@ -11,7 +11,7 @@ import '../../util/goto.dart';
 import '../../util/observer_consumers.dart';
 import '../tile_action.dart';
 import '../write_comment.dart';
-import 'comment_more_menu.dart';
+import 'comment_more_menu_button.dart';
 import 'comment_store.dart';
 
 class CommentActions extends HookWidget {
@@ -78,7 +78,7 @@ class CommentActions extends HookWidget {
                     goToPost(context, comment.instanceHost, post.id),
                 tooltip: 'go to post',
               ),
-            const CommentMoreMenu(),
+            const CommentMoreMenuButton(),
             TileAction(
               loading: store.savingState.isLoading,
               icon:
