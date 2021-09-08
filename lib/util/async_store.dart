@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:lemmy_api_client/v3.dart';
 import 'package:mobx/mobx.dart';
@@ -41,7 +40,8 @@ abstract class _AsyncStore<T> with Store {
 
       return result;
     } on SocketException {
-      asyncState = const AsyncState.error('no internet');
+      // TODO: use an existing l10n key
+      asyncState = const AsyncState.error('network_error');
     } catch (err) {
       asyncState = AsyncState.error(err.toString());
       rethrow;
