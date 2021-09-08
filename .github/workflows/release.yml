@@ -37,16 +37,16 @@ jobs:
         run: flutter pub get
 
       - name: Inject keystore
-        working-directory: android
+        working-directory: android/app
+        run: |
+          echo "${{ secrets.SIGNING_KEY }}" | base64 -d | tee key.jks >/dev/null
+
+      - name: Generate appbundle
         env:
           ANDROID_KEY_ALIAS: ${{ secrets.ALIAS }}
           ANDROID_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           ANDROID_STORE_PATH: key.jks
           ANDROID_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
-        run: |
-          echo "${{ secrets.SIGNING_KEY }}" | base64 -d | tee app/$ANDROID_STORE_PATH >/dev/null
-
-      - name: Generate appbundle
         run: flutter build appbundle --release --target lib/main_prod.dart --flavor prod
 
       - uses: actions/upload-artifact@v2
@@ -56,7 +56,12 @@ jobs:
             build/app/outputs/bundle/prodRelease/app-prod-release.aab
 
       - name: Android build
-        run: |
+        env:
+          ANDROID_KEY_ALIAS: ${{ secrets.ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          ANDROID_STORE_PATH: key.jks
+          ANDROID_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
+        run:
           flutter build apk --split-per-abi --release --target lib/main_prod.dart --flavor prod
 
           mv build/app/outputs/flutter-apk/app-arm64-v8a-prod-release.apk lemmur-${{ needs.get-vars.outputs.tag }}-arm64-v8a-android.apk
