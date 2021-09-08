@@ -82,21 +82,33 @@ class _CommentMoreMenuPopup extends HookWidget {
             ListTile(
               leading: const Icon(Icons.open_in_browser),
               title: const Text('Open in browser'),
-              onTap: () async => await ul.canLaunch(comment.link)
-                  ? ul.launch(comment.link)
-                  : ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("can't open in browser")),
-                    ),
+              onTap: () async {
+                if (await ul.canLaunch(comment.link)) {
+                  await ul.launch(comment.link);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("can't open in browser")),
+                  );
+                }
+
+                Navigator.of(context).pop();
+              },
             ),
             ListTile(
               leading: const Icon(Icons.share),
               title: const Text('Share url'),
-              onTap: () => share(comment.link, context: context),
+              onTap: () {
+                share(comment.link, context: context);
+                Navigator.of(context).pop();
+              },
             ),
             ListTile(
               leading: const Icon(Icons.share),
               title: const Text('Share text'),
-              onTap: () => share(comment.content, context: context),
+              onTap: () {
+                share(comment.content, context: context);
+                Navigator.of(context).pop();
+              },
             ),
             ListTile(
               leading: Icon(
@@ -133,10 +145,13 @@ class _CommentMoreMenuPopup extends HookWidget {
             ListTile(
               leading: const Icon(Icons.info_outline),
               title: const Text('Nerd stuff'),
-              onTap: () => CommentWidget.showCommentInfo(
-                context,
-                store.comment,
-              ),
+              onTap: () {
+                Navigator.of(context).pop();
+                CommentWidget.showCommentInfo(
+                  context,
+                  store.comment,
+                );
+              },
             ),
           ],
         );
