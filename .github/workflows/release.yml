@@ -41,11 +41,10 @@ jobs:
         env:
           ANDROID_KEY_ALIAS: ${{ secrets.ALIAS }}
           ANDROID_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-          ANDROID_STORE_PATH: ./key.jks
+          ANDROID_STORE_PATH: key.jks
           ANDROID_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
-          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
         run: |
-          echo $SIGNING_KEY | base64 -d | tee $ANDROID_STORE_PATH >/dev/null
+          echo ${{ secrets.SIGNING_KEY }} | base64 -d | tee app/$ANDROID_STORE_PATH >/dev/null
 
       - name: Generate appbundle
         run: flutter build appbundle --release --target lib/main_prod.dart --flavor prod
