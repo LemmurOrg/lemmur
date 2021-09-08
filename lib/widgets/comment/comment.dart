@@ -242,26 +242,30 @@ class _CommentWidget extends StatelessWidget {
                           store.comment,
                         ),
                         child: Consumer<ConfigStore>(
-                          builder: (context, configStore, child) => Row(
-                            children: [
-                              if (store.votingState.isLoading)
-                                SizedBox.fromSize(
-                                  size: const Size.square(16),
-                                  child: const CircularProgressIndicator(),
-                                )
-                              else if (configStore.showScores)
-                                Text(
-                                  compactNumber(
-                                    store.comment.counts.score,
-                                  ),
-                                ),
-                              if (configStore.showScores)
-                                const Text(' · ')
-                              else
-                                const SizedBox(width: 4),
-                              Text(comment.published.fancy),
-                            ],
-                          ),
+                          builder: (context, configStore, child) {
+                            return ObserverBuilder<CommentStore>(
+                              builder: (context, store) => Row(
+                                children: [
+                                  if (store.votingState.isLoading)
+                                    SizedBox.fromSize(
+                                      size: const Size.square(16),
+                                      child: const CircularProgressIndicator(),
+                                    )
+                                  else if (configStore.showScores)
+                                    Text(
+                                      compactNumber(
+                                        store.comment.counts.score,
+                                      ),
+                                    ),
+                                  if (configStore.showScores)
+                                    const Text(' · ')
+                                  else
+                                    const SizedBox(width: 4),
+                                  Text(comment.published.fancy),
+                                ],
+                              ),
+                            );
+                          },
                         ),
                       )
                     ]),
