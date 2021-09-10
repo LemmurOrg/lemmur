@@ -32,14 +32,15 @@ ThemeData _themeFactory({bool dark = false, bool amoled = false}) {
       labelColor: theme.colorScheme.onSurface,
     ),
     chipTheme: ChipThemeData(
-      backgroundColor: theme.accentColor,
+      backgroundColor: theme.colorScheme.secondary,
       disabledColor: Colors.amber,
       selectedColor: Colors.amber,
       secondarySelectedColor: Colors.amber,
       padding: EdgeInsets.zero,
       shape: const StadiumBorder(),
-      labelStyle:
-          TextStyle(color: textColorBasedOnBackground(theme.accentColor)),
+      labelStyle: TextStyle(
+        color: textColorBasedOnBackground(theme.colorScheme.secondary),
+      ),
       secondaryLabelStyle: const TextStyle(color: Colors.amber),
       brightness: theme.brightness,
       labelPadding: const EdgeInsets.symmetric(horizontal: 12),
@@ -53,8 +54,8 @@ ThemeData _themeFactory({bool dark = false, bool amoled = false}) {
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        primary: theme.accentColor,
-        onPrimary: textColorBasedOnBackground(theme.accentColor),
+        primary: theme.colorScheme.secondary,
+        onPrimary: textColorBasedOnBackground(theme.colorScheme.secondary),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
