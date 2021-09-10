@@ -19,6 +19,15 @@ class LogConsole extends StatelessWidget {
           builder: (context, store) {
             final logStrings = store.stringified();
 
+            if (store.logs.isEmpty) {
+              return const Center(
+                child: Text(
+                  'no logs',
+                  style: TextStyle(fontStyle: FontStyle.italic),
+                ),
+              );
+            }
+
             return ListView.separated(
               padding: const EdgeInsets.all(8)
                   .copyWith(bottom: BottomSafe.fabPadding + 8),

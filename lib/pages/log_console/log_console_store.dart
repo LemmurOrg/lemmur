@@ -22,11 +22,11 @@ abstract class _LogConsoleStore with Store {
   List<String> stringified() {
     return logs.map(
       (log) {
-        if (log.stackTrace != null) {
-          return '$log\n${log.stackTrace}';
-        }
+        var str = '${log.time} $log';
 
-        return '$log';
+        if (log.stackTrace != null) str += '\n${log.stackTrace}';
+
+        return str;
       },
     ).toList();
   }
