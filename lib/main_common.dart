@@ -6,14 +6,16 @@ import 'package:provider/provider.dart';
 
 import 'app.dart';
 import 'app_config.dart';
-import 'pages/logger_console.dart';
+import 'pages/log_console/log_console_store.dart';
 import 'stores/accounts_store.dart';
 import 'stores/config_store.dart';
 
 Future<void> mainCommon(AppConfig appConfig) async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  _setupLogger(appConfig);
+  final logConsoleStore = LogConsoleStore();
+
+  _setupLogger(appConfig, logConsoleStore);
 
   final configStore = await ConfigStore.load();
   final accountsStore = await AccountsStore.load();
@@ -23,19 +25,20 @@ Future<void> mainCommon(AppConfig appConfig) async {
       providers: [
         ChangeNotifierProvider.value(value: configStore),
         ChangeNotifierProvider.value(value: accountsStore),
+        Provider.value(value: logConsoleStore),
       ],
       child: const MyApp(),
     ),
   );
 }
 
-void _setupLogger(AppConfig appConfig) {
+void _setupLogger(AppConfig appConfig, LogConsoleStore logConsoleStore) {
   Logger.root.level = Level.ALL;
 
   Logger.root.onRecord.listen((logRecord) {
     // ignore: avoid_print
     print(logRecord);
-    LoggerConsole.addRecord(logRecord);
+    logConsoleStore.addLog(logRecord);
   });
 
   final flutterErrorLogger = Logger('FlutterError');
