@@ -577,10 +577,12 @@ packages:
   photo_view:
     dependency: "direct main"
     description:
-      name: photo_view
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.11.1"
+      path: "."
+      ref: "bugfix/flutter-2.5-update"
+      resolved-ref: "6c9aee42e1d6d7be7fbd53e9df47e46d3efc81b6"
+      url: "https://github.com/karvulf/photo_view"
+    source: git
+    version: "0.12.0"
   platform:
     dependency: transitive
     description:
