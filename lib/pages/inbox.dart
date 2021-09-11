@@ -75,7 +75,7 @@ class InboxPage extends HookWidget {
                   Flexible(
                     child: Text(
                       displayString,
-                      style: theme.appBarTheme.textTheme?.headline6,
+                      style: theme.appBarTheme.titleTextStyle,
                       overflow: TextOverflow.fade,
                       softWrap: false,
                     ),

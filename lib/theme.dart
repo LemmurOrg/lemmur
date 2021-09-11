@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'util/text_color.dart';
 
@@ -17,15 +18,15 @@ ThemeData _themeFactory({bool dark = false, bool amoled = false}) {
     visualDensity: VisualDensity.adaptivePlatformDensity,
     appBarTheme: AppBarTheme(
       elevation: 0,
-      brightness: theme.brightness,
+      systemOverlayStyle: theme.brightness == Brightness.dark
+          ? SystemUiOverlayStyle.light
+          : SystemUiOverlayStyle.dark,
       color: Colors.transparent,
       shadowColor: Colors.transparent,
       centerTitle: true,
       iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
-      textTheme: TextTheme(
-        headline6: theme.textTheme.headline6
-            ?.copyWith(fontSize: 20, fontWeight: FontWeight.w500),
-      ),
+      titleTextStyle: theme.textTheme.headline6
+          ?.copyWith(fontSize: 20, fontWeight: FontWeight.w500),
     ),
     tabBarTheme: TabBarTheme(
       unselectedLabelColor: Colors.grey,
