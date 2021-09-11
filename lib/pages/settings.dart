@@ -324,12 +324,10 @@ class AccountsConfigPage extends HookWidget {
         animatedIcon: AnimatedIcons.menu_close, // TODO: change to + => x
         curve: Curves.bounceIn,
         tooltip: 'Add account or instance',
-        overlayColor: theme.canvasColor,
         children: [
           SpeedDialChild(
             child: const Icon(Icons.person_add),
             label: 'Add account',
-            labelBackgroundColor: theme.canvasColor,
             onTap: () => showCupertinoModalPopup(
                 context: context,
                 builder: (_) =>
@@ -337,7 +335,6 @@ class AccountsConfigPage extends HookWidget {
           ),
           SpeedDialChild(
             child: const Icon(Icons.dns),
-            labelBackgroundColor: theme.canvasColor,
             label: 'Add instance',
             onTap: () => showCupertinoModalPopup(
                 context: context, builder: (_) => const AddInstancePage()),

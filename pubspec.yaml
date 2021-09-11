@@ -22,7 +22,7 @@ environment:
 
 dependencies:
   # widgets
-  flutter_speed_dial: ^3.0.5
+  flutter_speed_dial: ^4.3.0
   # TODO: bring back to pub hosted when fix is released
   photo_view:
     git:
@@ -34,7 +34,7 @@ dependencies:
   modal_bottom_sheet: ^2.0.0
 
   # native
-  share: ^2.0.1
+  share_plus: ^2.1.4
   url_launcher: ^6.0.3
   shared_preferences: ^2.0.5
   package_info_plus: ^1.0.6
