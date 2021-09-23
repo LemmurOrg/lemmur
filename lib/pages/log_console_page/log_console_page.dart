@@ -13,7 +13,7 @@ class LogConsolePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(title: const Text('Logs')),
       body: SafeArea(
         child: ObserverBuilder<LogConsolePageStore>(
           builder: (context, store) {
