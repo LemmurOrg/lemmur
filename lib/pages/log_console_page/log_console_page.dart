@@ -8,7 +8,7 @@ import '../../widgets/bottom_safe.dart';
 import 'log_console_page_store.dart';
 
 class LogConsolePage extends StatelessWidget {
-  const LogConsolePage({Key? key}) : super(key: key);
+  const LogConsolePage();
 
   @override
   Widget build(BuildContext context) {
