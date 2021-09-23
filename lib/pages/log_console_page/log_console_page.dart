@@ -5,17 +5,17 @@ import 'package:provider/provider.dart';
 
 import '../../util/observer_consumers.dart';
 import '../../widgets/bottom_safe.dart';
-import 'log_console_store.dart';
+import 'log_console_page_store.dart';
 
-class LogConsole extends StatelessWidget {
-  const LogConsole({Key? key}) : super(key: key);
+class LogConsolePage extends StatelessWidget {
+  const LogConsolePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
       body: SafeArea(
-        child: ObserverBuilder<LogConsoleStore>(
+        child: ObserverBuilder<LogConsolePageStore>(
           builder: (context, store) {
             final logStrings = store.stringified();
 
@@ -43,7 +43,7 @@ class LogConsole extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          final data = context.read<LogConsoleStore>().stringified();
+          final data = context.read<LogConsolePageStore>().stringified();
 
           await Clipboard.setData(ClipboardData(text: data.join('\n')));
 
@@ -78,7 +78,7 @@ extension on Level {
 class LogConsoleRoute extends MaterialPageRoute {
   LogConsoleRoute()
       : super(
-          builder: (context) => const LogConsole(),
+          builder: (context) => const LogConsolePage(),
           fullscreenDialog: true,
         );
 }

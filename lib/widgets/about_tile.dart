@@ -6,7 +6,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 
 import '../gen/assets.gen.dart';
 import '../hooks/memo_future.dart';
-import '../pages/log_console/log_console.dart';
+import '../pages/log_console_page/log_console_page.dart';
 import '../url_launcher.dart';
 import 'bottom_modal.dart';
 

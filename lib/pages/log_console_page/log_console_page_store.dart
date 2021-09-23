@@ -1,11 +1,11 @@
 import 'package:logging/logging.dart';
 import 'package:mobx/mobx.dart';
 
-part 'log_console_store.g.dart';
+part 'log_console_page_store.g.dart';
 
-class LogConsoleStore = _LogConsoleStore with _$LogConsoleStore;
+class LogConsolePageStore = _LogConsolePageStore with _$LogConsolePageStore;
 
-abstract class _LogConsoleStore with Store {
+abstract class _LogConsolePageStore with Store {
   // TODO: implement as an ObservableDeque
   final logs = ObservableList<LogRecord>();
   static const _bufferSize = 200;

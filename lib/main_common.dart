@@ -6,14 +6,14 @@ import 'package:provider/provider.dart';
 
 import 'app.dart';
 import 'app_config.dart';
-import 'pages/log_console/log_console_store.dart';
+import 'pages/log_console_page/log_console_page_store.dart';
 import 'stores/accounts_store.dart';
 import 'stores/config_store.dart';
 
 Future<void> mainCommon(AppConfig appConfig) async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final logConsoleStore = LogConsoleStore();
+  final logConsoleStore = LogConsolePageStore();
 
   _setupLogger(appConfig, logConsoleStore);
 
@@ -32,7 +32,7 @@ Future<void> mainCommon(AppConfig appConfig) async {
   );
 }
 
-void _setupLogger(AppConfig appConfig, LogConsoleStore logConsoleStore) {
+void _setupLogger(AppConfig appConfig, LogConsolePageStore logConsoleStore) {
   Logger.root.level = Level.ALL;
 
   Logger.root.onRecord.listen((logRecord) {
