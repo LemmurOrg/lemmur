@@ -58,6 +58,11 @@ class LogConsolePage extends StatelessWidget {
       ),
     );
   }
+
+  static Route route() => MaterialPageRoute(
+        builder: (context) => const LogConsolePage(),
+        fullscreenDialog: true,
+      );
 }
 
 extension on Level {
@@ -73,12 +78,4 @@ extension on Level {
 
     throw StateError('unreachable');
   }
-}
-
-class LogConsoleRoute extends MaterialPageRoute {
-  LogConsoleRoute()
-      : super(
-          builder: (context) => const LogConsolePage(),
-          fullscreenDialog: true,
-        );
 }

@@ -79,7 +79,7 @@ class AboutTile extends HookWidget {
           icon: const Icon(Icons.list_alt),
           label: const Text('logs'),
           onPressed: () {
-            Navigator.of(context).push(LogConsoleRoute());
+            Navigator.of(context).push(LogConsolePage.route());
           },
         ),
       ],
