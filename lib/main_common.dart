@@ -23,7 +23,7 @@ Future<void> mainCommon(AppConfig appConfig) async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider.value(value: configStore),
+        Provider.value(value: configStore),
         ChangeNotifierProvider.value(value: accountsStore),
         Provider.value(value: logConsoleStore),
       ],

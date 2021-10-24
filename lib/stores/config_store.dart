@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:lemmy_api_client/v3.dart';
+import 'package:mobx/mobx.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../l10n/l10n.dart';
@@ -12,78 +12,71 @@ part 'config_store.g.dart';
 
 /// Store managing user-level configuration such as theme or language
 @JsonSerializable()
-class ConfigStore extends ChangeNotifier {
-  static const prefsKey = 'v1:ConfigStore';
-  static final _prefs = SharedPreferences.getInstance();
+@LocaleConverter()
+class ConfigStore extends _ConfigStore with _$ConfigStore {
+  static Future<ConfigStore> load() async {
+    final prefs = await _ConfigStore._sharedPrefs;
 
-  late ThemeMode _theme;
+    return _$ConfigStoreFromJson(
+      jsonDecode(prefs.getString(_ConfigStore._prefsKey) ?? '{}')
+          as Map<String, dynamic>,
+    );
+  }
+}
+
+abstract class _ConfigStore with Store {
+  static const _prefsKey = 'v1:ConfigStore';
+  static final _sharedPrefs = SharedPreferences.getInstance();
+
+  late final ReactionDisposer _saveDisposer;
+
+  _ConfigStore() {
+    _saveDisposer = reaction(
+      (_) => [
+        theme,
+        amoledDarkMode,
+        locale,
+        showAvatars,
+        showScores,
+        defaultSortType,
+        defaultListingType,
+      ],
+      (_) => save(),
+    );
+  }
+
+  @observable
   @JsonKey(defaultValue: ThemeMode.system)
-  ThemeMode get theme => _theme;
-  set theme(ThemeMode theme) {
-    _theme = theme;
-    notifyListeners();
-    save();
-  }
+  ThemeMode theme = ThemeMode.system;
 
-  late bool _amoledDarkMode;
+  @observable
   @JsonKey(defaultValue: false)
-  bool get amoledDarkMode => _amoledDarkMode;
-  set amoledDarkMode(bool amoledDarkMode) {
-    _amoledDarkMode = amoledDarkMode;
-    notifyListeners();
-    save();
-  }
+  bool amoledDarkMode = false;
 
-  late Locale _locale;
-  // default value is set in the `LocaleSerde.fromJson` method because json_serializable does
-  // not accept non-literals as defaultValue
-  @JsonKey(fromJson: LocaleSerde.fromJson, toJson: LocaleSerde.toJson)
-  Locale get locale => _locale;
-  set locale(Locale locale) {
-    _locale = locale;
-    notifyListeners();
-    save();
-  }
+  // default value is set in the `LocaleConverter.fromJson`
+  @observable
+  Locale locale = const Locale('en');
 
-  late bool _showAvatars;
+  @observable
   @JsonKey(defaultValue: true)
-  bool get showAvatars => _showAvatars;
-  set showAvatars(bool showAvatars) {
-    _showAvatars = showAvatars;
-    notifyListeners();
-    save();
-  }
+  bool showAvatars = true;
 
-  late bool _showScores;
+  @observable
   @JsonKey(defaultValue: true)
-  bool get showScores => _showScores;
-  set showScores(bool showScores) {
-    _showScores = showScores;
-    notifyListeners();
-    save();
-  }
+  bool showScores = true;
 
-  late SortType _defaultSortType;
   // default is set in fromJson
+  @observable
   @JsonKey(fromJson: _sortTypeFromJson)
-  SortType get defaultSortType => _defaultSortType;
-  set defaultSortType(SortType defaultSortType) {
-    _defaultSortType = defaultSortType;
-    notifyListeners();
-    save();
-  }
+  SortType defaultSortType = SortType.hot;
 
-  late PostListingType _defaultListingType;
   // default is set in fromJson
+  @observable
   @JsonKey(fromJson: _postListingTypeFromJson)
-  PostListingType get defaultListingType => _defaultListingType;
-  set defaultListingType(PostListingType defaultListingType) {
-    _defaultListingType = defaultListingType;
-    notifyListeners();
-    save();
-  }
+  PostListingType defaultListingType = PostListingType.all;
 
   /// Copies over settings from lemmy to [ConfigStore]
+  @action
   void copyLemmyUserSettings(LocalUserSettings localUserSettings) {
     // themes from lemmy-ui that are dark mode
     const darkModeLemmyUiThemes = {
@@ -94,8 +87,8 @@ class ConfigStore extends ChangeNotifier {
       'i386',
     };
 
-    _showAvatars = localUserSettings.showAvatars;
-    _theme = () {
+    showAvatars = localUserSettings.showAvatars;
+    theme = () {
       if (localUserSettings.theme == 'browser') return ThemeMode.system;
 
       if (darkModeLemmyUiThemes.contains(localUserSettings.theme)) {
@@ -104,15 +97,14 @@ class ConfigStore extends ChangeNotifier {
 
       return ThemeMode.light;
     }();
-    _locale = L10n.supportedLocales.contains(Locale(localUserSettings.lang))
-        ? Locale(localUserSettings.lang)
-        : _locale;
-    _showScores = localUserSettings.showScores;
-    _defaultSortType = localUserSettings.defaultSortType;
-    _defaultListingType = localUserSettings.defaultListingType;
 
-    notifyListeners();
-    save();
+    if (L10n.supportedLocales.contains(Locale(localUserSettings.lang))) {
+      locale = Locale(localUserSettings.lang);
+    }
+
+    showScores = localUserSettings.showScores;
+    defaultSortType = localUserSettings.defaultSortType;
+    defaultListingType = localUserSettings.defaultListingType;
   }
 
   /// Fetches [LocalUserSettings] and imports them with [.copyLemmyUserSettings]
@@ -122,18 +114,17 @@ class ConfigStore extends ChangeNotifier {
     copyLemmyUserSettings(site.myUser!.localUserView.localUser);
   }
 
-  static Future<ConfigStore> load() async {
-    final prefs = await _prefs;
+  Future<void> save() async {
+    final prefs = await _sharedPrefs;
 
-    return _$ConfigStoreFromJson(
-      jsonDecode(prefs.getString(prefsKey) ?? '{}') as Map<String, dynamic>,
+    await prefs.setString(
+      _prefsKey,
+      jsonEncode(_$ConfigStoreToJson(this as ConfigStore)),
     );
   }
 
-  Future<void> save() async {
-    final prefs = await _prefs;
-
-    await prefs.setString(prefsKey, jsonEncode(_$ConfigStoreToJson(this)));
+  void dispose() {
+    _saveDisposer();
   }
 }
 
