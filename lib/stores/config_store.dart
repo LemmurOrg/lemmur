@@ -7,6 +7,7 @@ import 'package:mobx/mobx.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../l10n/l10n.dart';
+import '../util/async_store.dart';
 
 part 'config_store.g.dart';
 
@@ -75,6 +76,8 @@ abstract class _ConfigStore with Store {
   @JsonKey(fromJson: _postListingTypeFromJson)
   PostListingType defaultListingType = PostListingType.all;
 
+  final lemmyImportState = AsyncStore<FullSiteView>();
+
   /// Copies over settings from lemmy to [ConfigStore]
   @action
   void copyLemmyUserSettings(LocalUserSettings localUserSettings) {
@@ -108,10 +111,16 @@ abstract class _ConfigStore with Store {
   }
 
   /// Fetches [LocalUserSettings] and imports them with [.copyLemmyUserSettings]
+  @action
   Future<void> importLemmyUserSettings(Jwt token) async {
-    final site =
-        await LemmyApiV3(token.payload.iss).run(GetSite(auth: token.raw));
-    copyLemmyUserSettings(site.myUser!.localUserView.localUser);
+    final site = await lemmyImportState.runLemmy(
+      token.payload.iss,
+      GetSite(auth: token.raw),
+    );
+
+    if (site != null) {
+      copyLemmyUserSettings(site.myUser!.localUserView.localUser);
+    }
   }
 
   Future<void> save() async {

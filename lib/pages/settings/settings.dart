@@ -7,6 +7,7 @@ import 'package:lemmy_api_client/v3.dart';
 import '../../hooks/stores.dart';
 import '../../l10n/l10n.dart';
 import '../../stores/config_store.dart';
+import '../../util/async_store_listener.dart';
 import '../../util/goto.dart';
 import '../../util/observer_consumers.dart';
 import '../../widgets/about_tile.dart';
@@ -193,7 +194,6 @@ class _AccountOptions extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final accountsStore = useAccountsStore();
-    final importLoading = useState(false);
 
     Future<void> removeUserDialog(String instanceHost, String username) async {
       if (await showDialog<bool>(
@@ -236,35 +236,28 @@ class _AccountOptions extends HookWidget {
           title: const Text('Remove account'),
           onTap: () => removeUserDialog(instanceHost, username),
         ),
-        ListTile(
-            leading: importLoading.value
-                ? const SizedBox(
-                    height: 25,
-                    width: 25,
-                    child: CircularProgressIndicator.adaptive(),
-                  )
-                : const Icon(Icons.cloud_download),
-            title: const Text('Import settings to lemmur'),
-            onTap: () async {
-              importLoading.value = true;
-
-              try {
+        AsyncStoreListener(
+          asyncStore: context.read<ConfigStore>().lemmyImportState,
+          successMessageBuilder: (context, data) => 'Import successful',
+          child: ObserverBuilder<ConfigStore>(
+            builder: (context, store) => ListTile(
+              leading: store.lemmyImportState.isLoading
+                  ? const SizedBox(
+                      height: 25,
+                      width: 25,
+                      child: CircularProgressIndicator.adaptive(),
+                    )
+                  : const Icon(Icons.cloud_download),
+              title: const Text('Import settings to lemmur'),
+              onTap: () async {
                 await context.read<ConfigStore>().importLemmyUserSettings(
                       accountsStore.userDataFor(instanceHost, username)!.jwt,
                     );
-
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text('Import successful'),
-                ));
-              } on Exception catch (err) {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text(err.toString()),
-                ));
-              } finally {
                 Navigator.of(context).pop();
-                importLoading.value = false;
-              }
-            }),
+              },
+            ),
+          ),
+        ),
       ],
     );
   }

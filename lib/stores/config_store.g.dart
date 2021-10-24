@@ -147,6 +147,15 @@ mixin _$ConfigStore on _ConfigStore, Store {
     });
   }
 
+  final _$importLemmyUserSettingsAsyncAction =
+      AsyncAction('_ConfigStore.importLemmyUserSettings');
+
+  @override
+  Future<void> importLemmyUserSettings(Jwt token) {
+    return _$importLemmyUserSettingsAsyncAction
+        .run(() => super.importLemmyUserSettings(token));
+  }
+
   final _$_ConfigStoreActionController = ActionController(name: '_ConfigStore');
 
   @override
