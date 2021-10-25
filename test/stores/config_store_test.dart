@@ -4,7 +4,7 @@ import 'package:lemmur/stores/config_store.dart';
 import 'package:lemmy_api_client/v3.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-final _lemmyUserSettings = LocalUserSettings(
+const _lemmyUserSettings = LocalUserSettings(
   id: 1,
   personId: 1,
   showNsfw: true,
