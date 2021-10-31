@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app.dart';
 import 'app_config.dart';
@@ -14,10 +15,11 @@ Future<void> mainCommon(AppConfig appConfig) async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final logConsoleStore = LogConsolePageStore();
+  final sharedPrefs = await SharedPreferences.getInstance();
 
   _setupLogger(appConfig, logConsoleStore);
 
-  final configStore = await ConfigStore.load();
+  final configStore = ConfigStore.load(sharedPrefs);
   final accountsStore = await AccountsStore.load();
 
   runApp(

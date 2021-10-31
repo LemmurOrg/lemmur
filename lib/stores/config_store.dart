@@ -15,37 +15,36 @@ part 'config_store.g.dart';
 @JsonSerializable()
 @LocaleConverter()
 class ConfigStore extends _ConfigStore with _$ConfigStore {
-  static Future<ConfigStore> load() async {
-    final prefs = await _ConfigStore._sharedPrefs;
+  static const _prefsKey = 'v1:ConfigStore';
+  late final SharedPreferences _sharedPrefs;
+  late final ReactionDisposer _saveDisposer;
 
-    return _$ConfigStoreFromJson(
-      jsonDecode(prefs.getString(_ConfigStore._prefsKey) ?? '{}')
+  @visibleForTesting
+  ConfigStore();
+
+  factory ConfigStore.load(SharedPreferences sharedPrefs) {
+    final store = _$ConfigStoreFromJson(
+      jsonDecode(sharedPrefs.getString(_prefsKey) ?? '{}')
           as Map<String, dynamic>,
-    );
+    ).._sharedPrefs = sharedPrefs;
+
+    store._saveDisposer = autorun((_) => store.save());
+
+    return store;
+  }
+
+  Future<void> save() async {
+    final serialized = jsonEncode(_$ConfigStoreToJson(this));
+
+    await _sharedPrefs.setString(_prefsKey, serialized);
+  }
+
+  void dispose() {
+    _saveDisposer();
   }
 }
 
 abstract class _ConfigStore with Store {
-  static const _prefsKey = 'v1:ConfigStore';
-  static final _sharedPrefs = SharedPreferences.getInstance();
-
-  late final ReactionDisposer _saveDisposer;
-
-  _ConfigStore() {
-    _saveDisposer = reaction(
-      (_) => [
-        theme,
-        amoledDarkMode,
-        locale,
-        showAvatars,
-        showScores,
-        defaultSortType,
-        defaultListingType,
-      ],
-      (_) => save(),
-    );
-  }
-
   @observable
   @JsonKey(defaultValue: ThemeMode.system)
   ThemeMode theme = ThemeMode.system;
@@ -121,19 +120,6 @@ abstract class _ConfigStore with Store {
     if (site != null) {
       copyLemmyUserSettings(site.myUser!.localUserView.localUser);
     }
-  }
-
-  Future<void> save() async {
-    final prefs = await _sharedPrefs;
-
-    await prefs.setString(
-      _prefsKey,
-      jsonEncode(_$ConfigStoreToJson(this as ConfigStore)),
-    );
-  }
-
-  void dispose() {
-    _saveDisposer();
   }
 }
 

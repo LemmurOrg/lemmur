@@ -32,13 +32,13 @@ void main() {
     });
 
     setUp(() async {
-      store = ConfigStore();
+      store = ConfigStore.load(prefs);
       await prefs.clear();
     });
 
-    test('Store defaults match json defaults', () async {
+    test('Store defaults match json defaults', () {
       final store = ConfigStore();
-      final loaded = await ConfigStore.load();
+      final loaded = ConfigStore.load(prefs);
 
       expect(store.theme, loaded.theme);
       expect(store.amoledDarkMode, loaded.amoledDarkMode);
@@ -49,30 +49,30 @@ void main() {
       expect(store.defaultListingType, loaded.defaultListingType);
     });
 
-    test('Changes are saved', () async {
+    test('Changes are saved', () {
       store.amoledDarkMode = false;
-      var loaded = await ConfigStore.load();
+      var loaded = ConfigStore.load(prefs);
       expect(loaded.amoledDarkMode, false);
 
       store.amoledDarkMode = true;
-      loaded = await ConfigStore.load();
+      loaded = ConfigStore.load(prefs);
       expect(loaded.amoledDarkMode, true);
     });
 
-    test('Changes are not saved after disposing', () async {
+    test('Changes are not saved after disposing', () {
       store.amoledDarkMode = false;
-      var loaded = await ConfigStore.load();
+      var loaded = ConfigStore.load(prefs);
       expect(loaded.amoledDarkMode, false);
 
       store
         ..dispose()
         ..amoledDarkMode = true;
-      loaded = await ConfigStore.load();
+      loaded = ConfigStore.load(prefs);
       expect(loaded.amoledDarkMode, false);
     });
 
     group('Copying LemmyUserSettings', () {
-      test('works', () async {
+      test('works', () {
         store
           ..theme = ThemeMode.dark
           ..amoledDarkMode = false
@@ -92,7 +92,7 @@ void main() {
         expect(store.defaultListingType, PostListingType.local);
       });
 
-      test('detects dark theme', () async {
+      test('detects dark theme', () {
         store
           ..theme = ThemeMode.light
           ..copyLemmyUserSettings(_lemmyUserSettings.copyWith(theme: 'darkly'));
@@ -100,7 +100,7 @@ void main() {
         expect(store.theme, ThemeMode.dark);
       });
 
-      test('lang ignores unrecognized', () async {
+      test('lang ignores unrecognized', () {
         store
           ..locale = const Locale('en')
           ..copyLemmyUserSettings(
@@ -109,7 +109,7 @@ void main() {
         expect(store.locale, const Locale('en'));
       });
 
-      test('detects browser theme', () async {
+      test('detects browser theme', () {
         store
           ..theme = ThemeMode.light
           ..copyLemmyUserSettings(
