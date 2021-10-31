@@ -27,6 +27,7 @@ void main() {
     late ConfigStore store;
 
     setUpAll(() async {
+      SharedPreferences.setMockInitialValues({});
       prefs = await SharedPreferences.getInstance();
     });
 
