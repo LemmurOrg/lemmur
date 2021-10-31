@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 
 import 'l10n/l10n.dart';
-import 'pages/home_page.dart';
+import 'pages/main/main_page.dart';
 import 'resources/theme.dart';
 import 'stores/config_store.dart';
 import 'util/observer_consumers.dart';
@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
           darkTheme: store.amoledDarkMode ? amoledTheme : darkTheme,
           locale: store.locale,
           theme: lightTheme,
-          home: const HomePage(),
+          home: const MainPage(),
         ),
       ),
     );

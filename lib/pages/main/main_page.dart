@@ -2,27 +2,34 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-import '../util/extensions/brightness.dart';
-import 'communities_tab.dart';
-import 'create_post.dart';
-import 'home_tab.dart';
-import 'profile_tab.dart';
-import 'search_tab.dart';
+import '../../util/extensions/brightness.dart';
+import '../communities_tab.dart';
+import '../create_post.dart';
+import '../home_tab.dart';
+import '../profile_tab.dart';
+import '../search_tab.dart';
 
-class HomePage extends HookWidget {
-  const HomePage();
+enum AppTab {
+  home,
+  communities,
+  search,
+  profile,
+}
 
-  static const List<Widget> pages = [
-    HomeTab(),
-    CommunitiesTab(),
-    SearchTab(),
-    UserProfileTab(),
-  ];
+class MainPage extends HookWidget {
+  const MainPage();
+
+  static const tabs = {
+    AppTab.home: HomeTab(),
+    AppTab.communities: CommunitiesTab(),
+    AppTab.search: SearchTab(),
+    AppTab.profile: UserProfileTab(),
+  };
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final currentTab = useState(0);
+    final current = useState(AppTab.home);
 
     useEffect(() {
       Future.microtask(
@@ -35,15 +42,11 @@ class HomePage extends HookWidget {
       return null;
     }, [theme.scaffoldBackgroundColor]);
 
-    var tabCounter = 0;
-
-    tabButton(IconData icon) {
-      final tabNum = tabCounter++;
-
+    tabButton(AppTab tab) {
       return IconButton(
-        icon: Icon(icon),
-        color: tabNum == currentTab.value ? theme.colorScheme.secondary : null,
-        onPressed: () => currentTab.value = tabNum,
+        icon: Icon(tab.icon),
+        color: tab == current.value ? theme.colorScheme.secondary : null,
+        onPressed: () => current.value = tab,
       );
     }
 
@@ -53,8 +56,8 @@ class HomePage extends HookWidget {
         children: [
           Expanded(
             child: IndexedStack(
-              index: currentTab.value,
-              children: pages,
+              index: tabs.keys.toList().indexOf(current.value),
+              children: tabs.values.toList(),
             ),
           ),
           const SizedBox(height: kMinInteractiveDimension / 2),
@@ -70,16 +73,31 @@ class HomePage extends HookWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              tabButton(Icons.home),
-              tabButton(Icons.list),
+              tabButton(AppTab.home),
+              tabButton(AppTab.communities),
               const SizedBox.shrink(),
               const SizedBox.shrink(),
-              tabButton(Icons.search),
-              tabButton(Icons.person),
+              tabButton(AppTab.search),
+              tabButton(AppTab.profile),
             ],
           ),
         ),
       ),
     );
+  }
+}
+
+extension on AppTab {
+  IconData get icon {
+    switch (this) {
+      case AppTab.home:
+        return Icons.home;
+      case AppTab.communities:
+        return Icons.list;
+      case AppTab.search:
+        return Icons.search;
+      case AppTab.profile:
+        return Icons.person;
+    }
   }
 }
