@@ -58,20 +58,20 @@ class _Post extends StatelessWidget {
     final theme = Theme.of(context);
     final isFullPost = context.read<IsFullPost>();
 
-    return Container(
-      decoration: BoxDecoration(
-        boxShadow: const [BoxShadow(blurRadius: 10, color: Colors.black45)],
-        color: theme.cardColor,
-        borderRadius: const BorderRadius.all(Radius.circular(20)),
-      ),
-      child: GestureDetector(
-        onTap: isFullPost
-            ? null
-            : () {
-                final postStore = context.read<PostStore>();
-                Navigator.of(context)
-                    .push(FullPostPage.fromPostStoreRoute(postStore));
-              },
+    return GestureDetector(
+      onTap: isFullPost
+          ? null
+          : () {
+              final postStore = context.read<PostStore>();
+              Navigator.of(context)
+                  .push(FullPostPage.fromPostStoreRoute(postStore));
+            },
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          boxShadow: const [BoxShadow(blurRadius: 10, color: Colors.black45)],
+          color: theme.cardColor,
+          borderRadius: const BorderRadius.all(Radius.circular(20)),
+        ),
         child: Material(
           type: MaterialType.transparency,
           child: Column(
