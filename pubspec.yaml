@@ -33,7 +33,7 @@ dependencies:
   modal_bottom_sheet: ^2.0.0
 
   # native
-  share_plus: ^2.1.4
+  share_plus: ^3.0.4
   url_launcher: ^6.0.3
   shared_preferences: ^2.0.5
   package_info_plus: ^1.0.6
@@ -73,7 +73,7 @@ dev_dependencies:
   json_serializable: ^6.0.0
   build_runner: ^2.1.2
   mobx_codegen: ^2.0.2
-  freezed: ^0.14.1+2
+  freezed: ^0.15.0+1
 
 flutter_icons:
   android: true
