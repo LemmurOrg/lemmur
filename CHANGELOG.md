@@ -13,6 +13,10 @@
 - Full post will now open no matter where you press on the post card
 - Fixed overflows in various places
 
+### Changed
+
+- User banner photo now fits better on user profile
+
 ## v0.6.0 - 2021-09-06
 
 ### Added
