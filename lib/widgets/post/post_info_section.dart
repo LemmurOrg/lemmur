@@ -27,18 +27,14 @@ class PostInfoSection extends StatelessWidget {
         padding: const EdgeInsets.all(10),
         child: Row(
           children: [
-            if (post.community.icon != null)
-              InkWell(
-                borderRadius: BorderRadius.circular(20),
-                onTap: () => goToCommunity.byId(
-                    context, instanceHost, post.community.id),
-                child: Avatar(
-                  url: post.community.icon,
-                  noBlank: true,
-                  radius: 20,
-                ),
-              ),
-            const SizedBox(width: 10),
+            Avatar(
+              url: post.community.icon,
+              padding: const EdgeInsets.only(right: 10),
+              onTap: () =>
+                  goToCommunity.byId(context, instanceHost, post.community.id),
+              noBlank: true,
+              radius: 20,
+            ),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
