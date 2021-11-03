@@ -143,12 +143,17 @@ class _UserOverview extends HookWidget {
       fit: StackFit.expand,
       children: [
         if (userView.person.banner != null)
-          FullscreenableImage(
-            url: userView.person.banner!,
-            child: CachedNetworkImage(
-              fit: BoxFit.cover,
-              imageUrl: userView.person.banner!,
-              errorBuilder: (_, ___) => const SizedBox.shrink(),
+          Align(
+            alignment: Alignment.topCenter,
+            child: FullscreenableImage(
+              url: userView.person.banner!,
+              child: CachedNetworkImage(
+                fit: BoxFit.cover,
+                height: MediaQuery.of(context).padding.top + 100,
+                width: double.infinity,
+                imageUrl: userView.person.banner!,
+                errorBuilder: (_, ___) => const SizedBox.shrink(),
+              ),
             ),
           )
         else
