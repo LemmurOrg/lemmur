@@ -18,7 +18,7 @@ jobs:
           channel: "stable"
 
       - name: Get dependencies
-        run: flutter pub get && flutter gen-l10n
+        run: flutter pub get
 
       - name: Run lints
         run: flutter analyze
