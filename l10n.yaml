@@ -6,3 +6,4 @@ preferred-supported-locales: [en]
 output-class: L10n
 untranslated-messages-file: lib/l10n/untranslated.json
 synthetic-package: false
+nullable-getter: false
