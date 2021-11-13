@@ -62,6 +62,14 @@ const _languageNames = {
   'nb': 'Norwegian',
   'nb_NO': 'Norwegian Bokmål',
   'bg': 'български',
+  'cs': 'čeština',
+  'cy': 'Cymraeg',
+  'id': 'Bahasa Indonesia',
+  'ml': 'മലയാളം',
+  'sk': 'slovenčina',
+  'vi': 'Tiếng Việt',
+  'bn': 'বাংলা',
+  'mnc': 'Manchu',
 };
 
 extension LanguageName on Locale {
