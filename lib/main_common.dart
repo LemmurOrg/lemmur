@@ -121,13 +121,13 @@ void _setupTimeago() {
   setLocaleMessages('vi', ViMessages());
   setLocaleMessages('vi_short', ViShortMessages());
   setLocaleMessages('zh', ZhMessages());
-  setLocaleMessages('ms_MY', MsMyMessages());
-  setLocaleMessages('ms_MY_short', MsMyShortMessages());
-  setLocaleMessages('nb_NO', NbNoMessages());
-  setLocaleMessages('nb_NO_short', NbNoShortMessages());
-  setLocaleMessages('nn_NO', NnNoMessages());
-  setLocaleMessages('nn_NO_short', NnNoShortMessages());
-  setLocaleMessages('pt_BR', PtBrMessages());
-  setLocaleMessages('pt_BR_short', PtBrShortMessages());
-  setLocaleMessages('zh_CN', ZhCnMessages());
+  setLocaleMessages('ms-MY', MsMyMessages());
+  setLocaleMessages('ms-MY_short', MsMyShortMessages());
+  setLocaleMessages('nb-NO', NbNoMessages());
+  setLocaleMessages('nb-NO_short', NbNoShortMessages());
+  setLocaleMessages('nn-NO', NnNoMessages());
+  setLocaleMessages('nn-NO_short', NnNoShortMessages());
+  setLocaleMessages('pt-BR', PtBrMessages());
+  setLocaleMessages('pt-BR_short', PtBrShortMessages());
+  setLocaleMessages('zh-CN', ZhCnMessages());
 }
