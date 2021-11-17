@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:lemmy_api_client/v3.dart';
 
 import '../../util/extensions/api.dart';
 import '../../util/goto.dart';
@@ -12,7 +13,8 @@ import 'community_follow_button.dart';
 import 'community_store.dart';
 
 class CommunityOverview extends StatelessWidget {
-  const CommunityOverview();
+  final CommunityView community;
+  const CommunityOverview(this.community);
 
   @override
   Widget build(BuildContext context) {
@@ -21,10 +23,6 @@ class CommunityOverview extends StatelessWidget {
 
     return ObserverBuilder<CommunityStore>(
       builder: (context, store) {
-        final community = store.communityView;
-
-        if (community == null) return const SizedBox();
-
         final icon = community.community.icon != null
             ? Stack(
                 alignment: Alignment.center,

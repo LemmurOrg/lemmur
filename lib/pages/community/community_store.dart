@@ -12,7 +12,6 @@ abstract class _CommunityStore with Store {
   final String? communityName;
   final int? id;
 
-  _CommunityStore(this.instanceHost, this.communityName, this.id);
   // ignore: unused_element
   _CommunityStore.fromCommunityView(CommunityView this.communityView)
       : instanceHost = communityView.instanceHost,
@@ -56,18 +55,22 @@ abstract class _CommunityStore with Store {
 
   @action
   Future<void> subscribe(Jwt token) async {
-    if (communityView == null) throw UnimplementedError('Unreachable');
+    final communityView = this.communityView;
+
+    if (communityView == null) {
+      throw StateError("shouldn't be null at this point");
+    }
     final val = await subscribingState.runLemmy(
       instanceHost,
       FollowCommunity(
-        communityId: communityView!.community.id,
-        follow: !communityView!.subscribed,
+        communityId: communityView.community.id,
+        follow: !communityView.subscribed,
         auth: token.raw,
       ),
     );
 
     if (val != null) {
-      communityView = val;
+      this.communityView = val;
     }
   }
 }

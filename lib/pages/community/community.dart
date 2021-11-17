@@ -47,22 +47,15 @@ class CommunityPage extends HookWidget {
           return Scaffold(
             appBar: AppBar(),
             body: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  if (store.communityState.errorTerm != null) ...[
-                    FailedToLoad(
-                      refresh: () => store.refresh(context
-                          .read<AccountsStore>()
-                          .defaultUserDataFor(store.instanceHost)
-                          ?.jwt),
-                      message: store.communityState.errorTerm!.tr(context),
-                    ),
-                  ] else
-                    const CircularProgressIndicator.adaptive()
-                ],
-              ),
-            ),
+                child: (store.communityState.errorTerm != null)
+                    ? FailedToLoad(
+                        refresh: () => store.refresh(context
+                            .read<AccountsStore>()
+                            .defaultUserDataFor(store.instanceHost)
+                            ?.jwt),
+                        message: store.communityState.errorTerm!.tr(context),
+                      )
+                    : const CircularProgressIndicator.adaptive()),
           );
         }
 
@@ -121,8 +114,8 @@ class CommunityPage extends HookWidget {
                     IconButton(icon: Icon(shareIcon), onPressed: _share),
                     IconButton(icon: Icon(moreIcon), onPressed: _openMoreMenu),
                   ],
-                  flexibleSpace: const FlexibleSpaceBar(
-                    background: CommunityOverview(),
+                  flexibleSpace: FlexibleSpaceBar(
+                    background: CommunityOverview(community),
                   ),
                   bottom: PreferredSize(
                     preferredSize: const TabBar(tabs: []).preferredSize,
@@ -166,7 +159,7 @@ class CommunityPage extends HookWidget {
                             page: page,
                             savedOnly: false,
                           ))),
-                  const CommmunityAboutTab(),
+                  CommmunityAboutTab(community),
                 ],
               ),
             ),

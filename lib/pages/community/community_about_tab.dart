@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lemmy_api_client/v3.dart';
 
 import '../../l10n/l10n.dart';
 import '../../stores/accounts_store.dart';
@@ -14,7 +15,8 @@ import '../modlog_page.dart';
 import 'community_store.dart';
 
 class CommmunityAboutTab extends StatelessWidget {
-  const CommmunityAboutTab({Key? key}) : super(key: key);
+  final CommunityView community;
+  const CommmunityAboutTab(this.community, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
