@@ -43,10 +43,13 @@ class CommunityOverview extends StatelessWidget {
                   ),
                   FullscreenableImage(
                     url: community.community.icon!,
-                    child: Avatar(
-                      url: community.community.icon,
-                      radius: 83 / 2,
-                      alwaysShow: true,
+                    child: Material(
+                      color: Colors.transparent,
+                      child: Avatar(
+                        url: community.community.icon,
+                        radius: 83 / 2,
+                        alwaysShow: true,
+                      ),
                     ),
                   ),
                 ],
