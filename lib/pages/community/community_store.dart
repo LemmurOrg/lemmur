@@ -13,12 +13,6 @@ abstract class _CommunityStore with Store {
   final int? id;
 
   // ignore: unused_element
-  _CommunityStore.fromCommunityView(CommunityView this.communityView)
-      : instanceHost = communityView.instanceHost,
-        communityName = communityView.community.name,
-        id = communityView.community.id;
-
-  // ignore: unused_element
   _CommunityStore.fromName({
     required String this.communityName,
     required this.instanceHost,
@@ -26,9 +20,6 @@ abstract class _CommunityStore with Store {
   // ignore: unused_element
   _CommunityStore.fromId({required this.id, required this.instanceHost})
       : communityName = null;
-
-  @observable
-  CommunityView? communityView;
 
   @observable
   FullCommunityView? fullCommunityView;
@@ -49,13 +40,12 @@ abstract class _CommunityStore with Store {
 
     if (val != null) {
       fullCommunityView = val;
-      communityView = val.communityView;
     }
   }
 
   @action
   Future<void> subscribe(Jwt token) async {
-    final communityView = this.communityView;
+    final communityView = fullCommunityView?.communityView;
 
     if (communityView == null) {
       throw StateError("shouldn't be null at this point");
@@ -70,7 +60,7 @@ abstract class _CommunityStore with Store {
     );
 
     if (val != null) {
-      this.communityView = val;
+      fullCommunityView = fullCommunityView!.copyWith(communityView: val);
     }
   }
 }

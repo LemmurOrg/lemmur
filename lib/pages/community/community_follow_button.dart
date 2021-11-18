@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:lemmy_api_client/v3.dart';
 
 import '../../hooks/logged_in_action.dart';
 import '../../l10n/l10n.dart';
@@ -7,7 +8,9 @@ import '../../util/observer_consumers.dart';
 import 'community_store.dart';
 
 class CommunityFollowButton extends HookWidget {
-  const CommunityFollowButton();
+  final CommunityView communityView;
+
+  const CommunityFollowButton(this.communityView);
 
   @override
   Widget build(BuildContext context) {
@@ -17,10 +20,6 @@ class CommunityFollowButton extends HookWidget {
         useLoggedInAction(context.read<CommunityStore>().instanceHost);
 
     return ObserverBuilder<CommunityStore>(builder: (context, store) {
-      final communityView = store.communityView;
-
-      if (communityView == null) return const SizedBox();
-
       return ElevatedButtonTheme(
         data: ElevatedButtonThemeData(
           style: theme.elevatedButtonTheme.style?.copyWith(
@@ -30,29 +29,33 @@ class CommunityFollowButton extends HookWidget {
         ),
         child: Center(
           child: SizedBox(
-            height: 27,
-            width: 160,
-            child: store.subscribingState.isLoading
-                ? const ElevatedButton(
-                    onPressed: null,
-                    child: SizedBox(
-                      height: 15,
-                      width: 15,
-                      child: CircularProgressIndicator.adaptive(),
-                    ),
-                  )
-                : ElevatedButton.icon(
-                    onPressed: loggedInAction(store.subscribingState.isLoading
-                        ? (_) {}
-                        : store.subscribe),
-                    icon: communityView.subscribed
-                        ? const Icon(Icons.remove, size: 18)
-                        : const Icon(Icons.add, size: 18),
-                    label: Text(communityView.subscribed
-                        ? L10n.of(context).unsubscribe
-                        : L10n.of(context).subscribe),
-                  ),
-          ),
+              height: 27,
+              width: 160,
+              child: ElevatedButton(
+                onPressed: store.subscribingState.isLoading
+                    ? () {}
+                    : loggedInAction(store.subscribe),
+                child: store.subscribingState.isLoading
+                    ? const SizedBox(
+                        width: 15,
+                        height: 15,
+                        child: CircularProgressIndicator.adaptive(),
+                      )
+                    : Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          if (communityView.subscribed)
+                            const Icon(Icons.remove, size: 18)
+                          else
+                            const Icon(Icons.add, size: 18),
+                          const SizedBox(width: 5),
+                          Flexible(
+                              child: Text(communityView.subscribed
+                                  ? L10n.of(context).unsubscribe
+                                  : L10n.of(context).subscribe))
+                        ],
+                      ),
+              )),
         ),
       );
     });

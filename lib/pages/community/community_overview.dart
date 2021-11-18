@@ -136,7 +136,7 @@ class CommunityOverview extends StatelessWidget {
                           const Spacer(),
                         ],
                       ),
-                      const CommunityFollowButton(),
+                      CommunityFollowButton(community),
                     ],
                   ),
                 ],

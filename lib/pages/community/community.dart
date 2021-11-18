@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
 import 'package:nested/nested.dart';
-import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../../hooks/stores.dart';
 import '../../l10n/l10n.dart';
@@ -12,13 +11,12 @@ import '../../util/extensions/api.dart';
 import '../../util/icons.dart';
 import '../../util/observer_consumers.dart';
 import '../../util/share.dart';
-import '../../widgets/bottom_modal.dart';
 import '../../widgets/failed_to_load.dart';
-import '../../widgets/info_table_popup.dart';
 import '../../widgets/reveal_after_scroll.dart';
 import '../../widgets/sortable_infinite_list.dart';
 import '../create_post.dart';
 import 'community_about_tab.dart';
+import 'community_more_menu.dart';
 import 'community_overview.dart';
 import 'community_store.dart';
 
@@ -40,10 +38,10 @@ class CommunityPage extends HookWidget {
             asyncStore: context.read<CommunityStore>().subscribingState),
       ],
       child: ObserverBuilder<CommunityStore>(builder: (context, store) {
-        final community = store.communityView;
+        final fullCommunityView = store.fullCommunityView;
 
         // FALLBACK
-        if (community == null) {
+        if (fullCommunityView == null) {
           return Scaffold(
             appBar: AppBar(),
             body: Center(
@@ -59,35 +57,9 @@ class CommunityPage extends HookWidget {
           );
         }
 
-        void _share() => share(community.community.actorId, context: context);
+        final community = fullCommunityView.communityView;
 
-        void _openMoreMenu() {
-          showBottomModal(
-            context: context,
-            builder: (context) => Column(
-              children: [
-                ListTile(
-                  leading: const Icon(Icons.open_in_browser),
-                  title: const Text('Open in browser'),
-                  onTap: () async =>
-                      await ul.canLaunch(community.community.actorId)
-                          ? ul.launch(community.community.actorId)
-                          : ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text("can't open in browser"))),
-                ),
-                ListTile(
-                  leading: const Icon(Icons.info_outline),
-                  title: const Text('Nerd stuff'),
-                  onTap: () {
-                    showInfoTablePopup(
-                        context: context, table: community.toJson());
-                  },
-                ),
-              ],
-            ),
-          );
-        }
+        void _share() => share(community.community.actorId, context: context);
 
         return Scaffold(
           floatingActionButton: CreatePostFab(community: community),
@@ -112,7 +84,10 @@ class CommunityPage extends HookWidget {
                   ),
                   actions: [
                     IconButton(icon: Icon(shareIcon), onPressed: _share),
-                    IconButton(icon: Icon(moreIcon), onPressed: _openMoreMenu),
+                    IconButton(
+                        icon: Icon(moreIcon),
+                        onPressed: () =>
+                            CommunityMoreMenu.open(context, community)),
                   ],
                   flexibleSpace: FlexibleSpaceBar(
                     background: CommunityOverview(community),
@@ -159,7 +134,7 @@ class CommunityPage extends HookWidget {
                             page: page,
                             savedOnly: false,
                           ))),
-                  CommmunityAboutTab(community),
+                  CommmunityAboutTab(fullCommunityView),
                 ],
               ),
             ),
@@ -192,16 +167,6 @@ class CommunityPage extends HookWidget {
         create: (context) =>
             CommunityStore.fromId(id: id, instanceHost: instanceHost)
               ..refresh(_tryGetJwt(context, instanceHost)),
-        child: const CommunityPage(),
-      ),
-    );
-  }
-
-  static Route fromCommunityViewRoute(CommunityView communityView) {
-    return MaterialPageRoute(
-      builder: (context) => Provider(
-        create: (context) => CommunityStore.fromCommunityView(communityView)
-          ..refresh(_tryGetJwt(context, communityView.instanceHost)),
         child: const CommunityPage(),
       ),
     );
