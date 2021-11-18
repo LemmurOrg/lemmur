@@ -36,6 +36,14 @@ class CommunityPage extends HookWidget {
             asyncStore: context.read<CommunityStore>().communityState),
         AsyncStoreListener(
             asyncStore: context.read<CommunityStore>().subscribingState),
+        AsyncStoreListener(
+          asyncStore: context.read<CommunityStore>().blockingState,
+          successMessageBuilder: (context, BlockedCommunity data) {
+            final name = data.communityView.community.preferredName;
+            final blocked = data.blocked ? 'blocked' : 'unblocked';
+            return '$name $blocked';
+          },
+        ),
       ],
       child: ObserverBuilder<CommunityStore>(builder: (context, store) {
         final fullCommunityView = store.fullCommunityView;

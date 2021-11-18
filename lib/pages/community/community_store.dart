@@ -26,6 +26,7 @@ abstract class _CommunityStore with Store {
 
   final communityState = AsyncStore<FullCommunityView>();
   final subscribingState = AsyncStore<CommunityView>();
+  final blockingState = AsyncStore<BlockedCommunity>();
 
   @action
   Future<void> refresh(Jwt? token) async {
@@ -43,12 +44,34 @@ abstract class _CommunityStore with Store {
     }
   }
 
+  Future<void> block(Jwt token) async {
+    final communityView = fullCommunityView?.communityView;
+
+    if (communityView == null) {
+      throw StateError('FullCommunityView should be not null at this point');
+    }
+
+    final val = await blockingState.runLemmy(
+      instanceHost,
+      BlockCommunity(
+        communityId: communityView.community.id,
+        block: !communityView.blocked,
+        auth: token.raw,
+      ),
+    );
+
+    if (val != null) {
+      fullCommunityView =
+          fullCommunityView!.copyWith(communityView: val.communityView);
+    }
+  }
+
   @action
   Future<void> subscribe(Jwt token) async {
     final communityView = fullCommunityView?.communityView;
 
     if (communityView == null) {
-      throw StateError("shouldn't be null at this point");
+      throw StateError('FullCommunityView should be not null at this point');
     }
     final val = await subscribingState.runLemmy(
       instanceHost,
