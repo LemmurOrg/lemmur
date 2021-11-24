@@ -6,6 +6,7 @@ import 'package:nested/nested.dart';
 import '../../hooks/stores.dart';
 import '../../l10n/l10n.dart';
 import '../../stores/accounts_store.dart';
+import '../../util/async_store.dart';
 import '../../util/async_store_listener.dart';
 import '../../util/extensions/api.dart';
 import '../../util/icons.dart';
@@ -46,25 +47,27 @@ class CommunityPage extends HookWidget {
         ),
       ],
       child: ObserverBuilder<CommunityStore>(builder: (context, store) {
-        final fullCommunityView = store.fullCommunityView;
+        final communityState = store.communityState;
+        final communityAsyncState = communityState.asyncState;
 
         // FALLBACK
-        if (fullCommunityView == null) {
+        if (communityAsyncState is! AsyncStateData<FullCommunityView>) {
           return Scaffold(
             appBar: AppBar(),
             body: Center(
-                child: (store.communityState.errorTerm != null)
+                child: (communityState.errorTerm != null)
                     ? FailedToLoad(
                         refresh: () => store.refresh(context
                             .read<AccountsStore>()
                             .defaultUserDataFor(store.instanceHost)
                             ?.jwt),
-                        message: store.communityState.errorTerm!.tr(context),
+                        message: communityState.errorTerm!.tr(context),
                       )
                     : const CircularProgressIndicator.adaptive()),
           );
         }
 
+        final fullCommunityView = communityAsyncState.data;
         final community = fullCommunityView.communityView;
 
         void _share() => share(community.community.actorId, context: context);
@@ -95,10 +98,10 @@ class CommunityPage extends HookWidget {
                     IconButton(
                         icon: Icon(moreIcon),
                         onPressed: () =>
-                            CommunityMoreMenu.open(context, community)),
+                            CommunityMoreMenu.open(context, fullCommunityView)),
                   ],
                   flexibleSpace: FlexibleSpaceBar(
-                    background: CommunityOverview(community),
+                    background: CommunityOverview(fullCommunityView),
                   ),
                   bottom: PreferredSize(
                     preferredSize: const TabBar(tabs: []).preferredSize,

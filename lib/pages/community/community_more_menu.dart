@@ -11,13 +11,15 @@ import '../../widgets/info_table_popup.dart';
 import 'community_store.dart';
 
 class CommunityMoreMenu extends HookWidget {
-  final CommunityView communityView;
+  final FullCommunityView fullCommunityView;
 
-  const CommunityMoreMenu({Key? key, required this.communityView})
+  const CommunityMoreMenu({Key? key, required this.fullCommunityView})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final communityView = fullCommunityView.communityView;
+
     final loggedInAction = useLoggedInAction(communityView.instanceHost);
 
     return ObserverBuilder<CommunityStore>(
@@ -38,7 +40,7 @@ class CommunityMoreMenu extends HookWidget {
                   ? const CircularProgressIndicator.adaptive()
                   : const Icon(Icons.block),
               title: Text(
-                  '${store.fullCommunityView!.communityView.blocked ? 'Unblock' : 'Block'} ${communityView.community.preferredName}'),
+                  '${fullCommunityView.communityView.blocked ? 'Unblock' : 'Block'} ${communityView.community.preferredName}'),
               onTap: store.blockingState.isLoading
                   ? null
                   : loggedInAction((token) {
@@ -60,14 +62,14 @@ class CommunityMoreMenu extends HookWidget {
     );
   }
 
-  static void open(BuildContext context, CommunityView communityView) {
+  static void open(BuildContext context, FullCommunityView fullCommunityView) {
     final store = context.read<CommunityStore>();
     showBottomModal(
       context: context,
       builder: (context) => Provider.value(
         value: store,
         child: CommunityMoreMenu(
-          communityView: communityView,
+          fullCommunityView: fullCommunityView,
         ),
       ),
     );

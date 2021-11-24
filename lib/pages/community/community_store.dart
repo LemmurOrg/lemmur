@@ -21,16 +21,13 @@ abstract class _CommunityStore with Store {
   _CommunityStore.fromId({required this.id, required this.instanceHost})
       : communityName = null;
 
-  @observable
-  FullCommunityView? fullCommunityView;
-
   final communityState = AsyncStore<FullCommunityView>();
   final subscribingState = AsyncStore<CommunityView>();
   final blockingState = AsyncStore<BlockedCommunity>();
 
   @action
-  Future<void> refresh(Jwt? token) async {
-    final val = await communityState.runLemmy(
+  Future<void> fetch(Jwt? token) async {
+    await communityState.runLemmy(
       instanceHost,
       GetCommunity(
         auth: token?.raw,
@@ -38,20 +35,31 @@ abstract class _CommunityStore with Store {
         name: communityName,
       ),
     );
+  }
 
-    if (val != null) {
-      fullCommunityView = val;
-    }
+  @action
+  Future<void> refresh(Jwt? token) async {
+    await communityState.runLemmy(
+      instanceHost,
+      GetCommunity(
+        auth: token?.raw,
+        id: id,
+        name: communityName,
+      ),
+      refresh: true,
+    );
   }
 
   Future<void> block(Jwt token) async {
-    final communityView = fullCommunityView?.communityView;
+    final communityView = communityState.asyncState.mapOrNull(
+      data: (value) => value.data.communityView,
+    );
 
     if (communityView == null) {
       throw StateError('FullCommunityView should be not null at this point');
     }
 
-    final val = await blockingState.runLemmy(
+    final res = await blockingState.runLemmy(
       instanceHost,
       BlockCommunity(
         communityId: communityView.community.id,
@@ -60,20 +68,30 @@ abstract class _CommunityStore with Store {
       ),
     );
 
-    if (val != null) {
-      fullCommunityView =
-          fullCommunityView!.copyWith(communityView: val.communityView);
+    (communityState.asyncState as AsyncStateData).copyWith();
+
+    // communityState.asyncState.data.communityView = res.communityView
+    if (res != null) {
+      communityState.asyncState =
+          (communityState.asyncState as AsyncStateData<FullCommunityView>)
+              .copyWith(
+                  data: (communityState.asyncState
+                          as AsyncStateData<FullCommunityView>)
+                      .data
+                      .copyWith(communityView: res.communityView));
     }
   }
 
   @action
   Future<void> subscribe(Jwt token) async {
-    final communityView = fullCommunityView?.communityView;
+    final state = communityState.asyncState;
 
-    if (communityView == null) {
+    if (state is! AsyncStateData<FullCommunityView>) {
       throw StateError('FullCommunityView should be not null at this point');
     }
-    final val = await subscribingState.runLemmy(
+    final communityView = state.data.communityView;
+
+    final res = await subscribingState.runLemmy(
       instanceHost,
       FollowCommunity(
         communityId: communityView.community.id,
@@ -82,8 +100,15 @@ abstract class _CommunityStore with Store {
       ),
     );
 
-    if (val != null) {
-      fullCommunityView = fullCommunityView!.copyWith(communityView: val);
+    // communityState.asyncState.data.communityView = res
+    if (res != null) {
+      communityState.asyncState =
+          (communityState.asyncState as AsyncStateData<FullCommunityView>)
+              .copyWith(
+                  data: (communityState.asyncState
+                          as AsyncStateData<FullCommunityView>)
+                      .data
+                      .copyWith(communityView: res));
     }
   }
 }

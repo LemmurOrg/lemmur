@@ -13,8 +13,8 @@ import 'community_follow_button.dart';
 import 'community_store.dart';
 
 class CommunityOverview extends StatelessWidget {
-  final CommunityView community;
-  const CommunityOverview(this.community);
+  final FullCommunityView fullCommunityView;
+  const CommunityOverview(this.fullCommunityView);
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +23,8 @@ class CommunityOverview extends StatelessWidget {
 
     return ObserverBuilder<CommunityStore>(
       builder: (context, store) {
+        final community = fullCommunityView.communityView;
+
         final icon = community.community.icon != null
             ? Stack(
                 alignment: Alignment.center,
@@ -130,9 +132,7 @@ class CommunityOverview extends StatelessWidget {
                           const Spacer(flex: 4),
                           const Icon(Icons.record_voice_over, size: 20),
                           const SizedBox(width: 3),
-                          Text(store.fullCommunityView == null
-                              ? 'xx'
-                              : compactNumber(store.fullCommunityView!.online)),
+                          Text(compactNumber(fullCommunityView.online)),
                           const Spacer(),
                         ],
                       ),

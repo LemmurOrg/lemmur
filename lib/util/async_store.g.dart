@@ -41,15 +41,17 @@ mixin _$AsyncStore<T> on _AsyncStore<T>, Store {
   final _$runAsyncAction = AsyncAction('_AsyncStore.run');
 
   @override
-  Future<T?> run(AsyncValueGetter<T> callback) {
-    return _$runAsyncAction.run(() => super.run(callback));
+  Future<T?> run(AsyncValueGetter<T> callback, {bool refresh = false}) {
+    return _$runAsyncAction.run(() => super.run(callback, refresh: refresh));
   }
 
   final _$runLemmyAsyncAction = AsyncAction('_AsyncStore.runLemmy');
 
   @override
-  Future<T?> runLemmy(String instanceHost, LemmyApiQuery<T> query) {
-    return _$runLemmyAsyncAction.run(() => super.runLemmy(instanceHost, query));
+  Future<T?> runLemmy(String instanceHost, LemmyApiQuery<T> query,
+      {bool refresh = false}) {
+    return _$runLemmyAsyncAction
+        .run(() => super.runLemmy(instanceHost, query, refresh: refresh));
   }
 
   @override
