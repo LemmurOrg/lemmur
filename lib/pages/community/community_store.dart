@@ -26,18 +26,6 @@ abstract class _CommunityStore with Store {
   final blockingState = AsyncStore<BlockedCommunity>();
 
   @action
-  Future<void> fetch(Jwt? token) async {
-    await communityState.runLemmy(
-      instanceHost,
-      GetCommunity(
-        auth: token?.raw,
-        id: id,
-        name: communityName,
-      ),
-    );
-  }
-
-  @action
   Future<void> refresh(Jwt? token) async {
     await communityState.runLemmy(
       instanceHost,
