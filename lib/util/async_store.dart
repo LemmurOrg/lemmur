@@ -87,6 +87,20 @@ abstract class _AsyncStore<T> with Store {
       }
     }
   }
+
+  /// helper function for mapping [asyncState] into 3 variants
+  U map<U>({
+    required U Function() loading,
+    required U Function(String errorTerm) error,
+    required U Function(T data) data,
+  }) {
+    return asyncState.when<U>(
+      initial: loading,
+      data: (value, errorTerm) => data(value),
+      loading: loading,
+      error: error,
+    );
+  }
 }
 
 /// State in which an async action can be
