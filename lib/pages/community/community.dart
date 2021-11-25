@@ -155,31 +155,31 @@ class CommunityPage extends HookWidget {
     );
   }
 
-  static Jwt? _tryGetJwt(BuildContext context, String instanceHost) {
-    return context.read<AccountsStore>().defaultUserDataFor(instanceHost)?.jwt;
-  }
-
-  static Route fromNameRoute(String instanceHost, String name) {
+  static Route _route(String instanceHost, CommunityStore store) {
     return MaterialPageRoute(
       builder: (context) {
-        return Provider(
-          create: (context) => CommunityStore.fromName(
-              communityName: name, instanceHost: instanceHost)
-            ..refresh(_tryGetJwt(context, instanceHost)),
+        return Provider.value(
+          value: store
+            ..refresh(context
+                .read<AccountsStore>()
+                .defaultUserDataFor(instanceHost)
+                ?.jwt),
           child: const CommunityPage(),
         );
       },
     );
   }
 
-  static Route fromIdRoute(String instanceHost, int id) {
-    return MaterialPageRoute(
-      builder: (context) => Provider(
-        create: (context) =>
-            CommunityStore.fromId(id: id, instanceHost: instanceHost)
-              ..refresh(_tryGetJwt(context, instanceHost)),
-        child: const CommunityPage(),
-      ),
+  static Route fromNameRoute(String instanceHost, String name) {
+    return _route(
+      instanceHost,
+      CommunityStore.fromName(communityName: name, instanceHost: instanceHost),
     );
   }
-}
+
+  static Route fromIdRoute(String instanceHost, int id) {
+    return _route(
+      instanceHost,
+      CommunityStore.fromId(id: id, instanceHost: instanceHost),
+    );
+  }
