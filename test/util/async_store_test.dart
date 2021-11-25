@@ -25,7 +25,7 @@ void main() {
       expect(store.asyncState, isA<AsyncStateData>());
       expect(store.isLoading, false);
       expect(store.errorTerm, null);
-      expect((store.asyncState as AsyncStateData<FullPostView>).data, res);
+      expect(store.asyncState, AsyncState.data(res));
     });
 
     test('fails properly 1', () async {
@@ -75,7 +75,7 @@ void main() {
 
       expect(store.asyncState, isA<AsyncStateData>());
       expect(store.errorTerm, null);
-      expect((store.asyncState as AsyncStateData<FullPostView>).data, res);
+      expect(store.asyncState, AsyncState.data(res));
 
       await store.runLemmy(
         badInstanceHost,
@@ -85,7 +85,17 @@ void main() {
 
       expect(store.asyncState, isA<AsyncStateData>());
       expect(store.errorTerm, 'network_error');
-      expect((store.asyncState as AsyncStateData<FullPostView>).data, res);
+      expect(store.asyncState, AsyncState.data(res));
+
+      final res2 = await store.runLemmy(
+        instanceHost,
+        const GetPost(id: 91588),
+        refresh: true,
+      );
+
+      expect(store.asyncState, isA<AsyncStateData>());
+      expect(store.errorTerm, null);
+      expect(store.asyncState, AsyncState.data(res2));
     });
   });
 }
