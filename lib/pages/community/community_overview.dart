@@ -14,6 +14,7 @@ import 'community_store.dart';
 
 class CommunityOverview extends StatelessWidget {
   final FullCommunityView fullCommunityView;
+
   const CommunityOverview(this.fullCommunityView);
 
   @override

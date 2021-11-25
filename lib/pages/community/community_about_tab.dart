@@ -16,6 +16,7 @@ import 'community_store.dart';
 
 class CommmunityAboutTab extends StatelessWidget {
   final FullCommunityView fullCommunityView;
+
   const CommmunityAboutTab(this.fullCommunityView, {Key? key})
       : super(key: key);
 
