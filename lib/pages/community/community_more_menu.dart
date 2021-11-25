@@ -22,43 +22,39 @@ class CommunityMoreMenu extends HookWidget {
 
     final loggedInAction = useLoggedInAction(communityView.instanceHost);
 
-    return ObserverBuilder<CommunityStore>(
-      builder: (context, store) {
-        return Column(
-          children: [
-            ListTile(
-              leading: const Icon(Icons.open_in_browser),
-              title: const Text('Open in browser'),
-              onTap: () async => await ul
-                      .canLaunch(communityView.community.actorId)
-                  ? ul.launch(communityView.community.actorId)
-                  : ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("can't open in browser"))),
-            ),
-            ListTile(
-              leading: store.blockingState.isLoading
-                  ? const CircularProgressIndicator.adaptive()
-                  : const Icon(Icons.block),
-              title: Text(
-                  '${fullCommunityView.communityView.blocked ? 'Unblock' : 'Block'} ${communityView.community.preferredName}'),
-              onTap: store.blockingState.isLoading
-                  ? null
-                  : loggedInAction((token) {
-                      store.block(token);
-                      Navigator.of(context).pop();
-                    }),
-            ),
-            ListTile(
-              leading: const Icon(Icons.info_outline),
-              title: const Text('Nerd stuff'),
-              onTap: () {
-                showInfoTablePopup(
-                    context: context, table: communityView.toJson());
-              },
-            ),
-          ],
-        );
-      },
+    return Column(
+      children: [
+        ListTile(
+          leading: const Icon(Icons.open_in_browser),
+          title: const Text('Open in browser'),
+          onTap: () async => await ul.canLaunch(communityView.community.actorId)
+              ? ul.launch(communityView.community.actorId)
+              : ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("can't open in browser"))),
+        ),
+        ObserverBuilder<CommunityStore>(builder: (context, store) {
+          return ListTile(
+            leading: store.blockingState.isLoading
+                ? const CircularProgressIndicator.adaptive()
+                : const Icon(Icons.block),
+            title: Text(
+                '${fullCommunityView.communityView.blocked ? 'Unblock' : 'Block'} ${communityView.community.preferredName}'),
+            onTap: store.blockingState.isLoading
+                ? null
+                : loggedInAction((token) {
+                    store.block(token);
+                    Navigator.of(context).pop();
+                  }),
+          );
+        }),
+        ListTile(
+          leading: const Icon(Icons.info_outline),
+          title: const Text('Nerd stuff'),
+          onTap: () {
+            showInfoTablePopup(context: context, table: communityView.toJson());
+          },
+        ),
+      ],
     );
   }
 
