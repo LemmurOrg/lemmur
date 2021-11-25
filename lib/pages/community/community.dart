@@ -183,3 +183,4 @@ class CommunityPage extends HookWidget {
       CommunityStore.fromId(id: id, instanceHost: instanceHost),
     );
   }
+}
