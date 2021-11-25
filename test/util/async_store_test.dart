@@ -25,7 +25,7 @@ void main() {
       expect(store.asyncState, isA<AsyncStateData>());
       expect(store.isLoading, false);
       expect(store.errorTerm, null);
-      expect(store.asyncState, AsyncState.data(res));
+      expect(store.asyncState, AsyncState.data(res!));
     });
 
     test('fails properly 1', () async {
