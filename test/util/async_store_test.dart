@@ -75,7 +75,7 @@ void main() {
 
       expect(store.asyncState, isA<AsyncStateData>());
       expect(store.errorTerm, null);
-      expect(store.asyncState, AsyncState.data(res));
+      expect(store.asyncState, AsyncState.data(res!));
 
       await store.runLemmy(
         badInstanceHost,
@@ -95,7 +95,7 @@ void main() {
 
       expect(store.asyncState, isA<AsyncStateData>());
       expect(store.errorTerm, null);
-      expect(store.asyncState, AsyncState.data(res2));
+      expect(store.asyncState, AsyncState.data(res2!));
     });
   });
 }
