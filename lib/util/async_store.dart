@@ -24,6 +24,17 @@ abstract class _AsyncStore<T> with Store {
         data: (data, errorTerm) => errorTerm,
       );
 
+  /// sets data in asyncState
+  /// only to be used when asyncState is AsyncStateData
+  @action
+  void setData(T data) {
+    final state = asyncState;
+    if (state is! AsyncStateData<T>) {
+      throw StateError("this can only be used when there's some data already");
+    }
+    asyncState = state.copyWith(data: data);
+  }
+
   /// runs some async action and reflects the progress in [asyncState].
   /// If successful, the result is returned, otherwise null is returned.
   /// If this [AsyncStore] is already running some action, it will exit immediately and do nothing

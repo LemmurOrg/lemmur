@@ -54,6 +54,19 @@ mixin _$AsyncStore<T> on _AsyncStore<T>, Store {
         .run(() => super.runLemmy(instanceHost, query, refresh: refresh));
   }
 
+  final _$_AsyncStoreActionController = ActionController(name: '_AsyncStore');
+
+  @override
+  void setData(T data) {
+    final _$actionInfo =
+        _$_AsyncStoreActionController.startAction(name: '_AsyncStore.setData');
+    try {
+      return super.setData(data);
+    } finally {
+      _$_AsyncStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     return '''

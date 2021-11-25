@@ -51,7 +51,7 @@ abstract class _CommunityStore with Store {
   }
 
   Future<void> block(Jwt token) async {
-     final state = communityState.asyncState;
+    final state = communityState.asyncState;
     if (state is! AsyncStateData<FullCommunityView>) {
       throw StateError('communityState should be ready at this point');
     }
@@ -66,9 +66,8 @@ abstract class _CommunityStore with Store {
     );
 
     if (res != null) {
-      communityState.asyncState = state.copyWith(
-        data: state.data.copyWith(communityView: res.communityView),
-      );
+      communityState
+          .setData(state.data.copyWith(communityView: res.communityView));
     }
   }
 
@@ -90,15 +89,8 @@ abstract class _CommunityStore with Store {
       ),
     );
 
-    // communityState.asyncState.data.communityView = res
     if (res != null) {
-      communityState.asyncState =
-          (communityState.asyncState as AsyncStateData<FullCommunityView>)
-              .copyWith(
-                  data: (communityState.asyncState
-                          as AsyncStateData<FullCommunityView>)
-                      .data
-                      .copyWith(communityView: res));
+      communityState.setData(state.data.copyWith(communityView: res));
     }
   }
 }
