@@ -78,7 +78,7 @@ class CommunityPage extends HookWidget {
             length: 3,
             child: NestedScrollView(
               controller: scrollController,
-              headerSliverBuilder: (context, innerBoxIsScrolled) => <Widget>[
+              headerSliverBuilder: (context, innerBoxIsScrolled) => [
                 SliverAppBar(
                   expandedHeight: community.community.icon == null ? 220 : 300,
                   pinned: true,
