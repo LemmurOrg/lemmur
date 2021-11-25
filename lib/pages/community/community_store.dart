@@ -51,34 +51,24 @@ abstract class _CommunityStore with Store {
   }
 
   Future<void> block(Jwt token) async {
-    final communityView = communityState.asyncState.mapOrNull(
-      data: (value) => value.data.communityView,
-    );
-
-    if (communityView == null) {
-      throw StateError('FullCommunityView should be not null at this point');
+     final state = communityState.asyncState;
+    if (state is! AsyncStateData<FullCommunityView>) {
+      throw StateError('communityState should be ready at this point');
     }
 
     final res = await blockingState.runLemmy(
       instanceHost,
       BlockCommunity(
-        communityId: communityView.community.id,
-        block: !communityView.blocked,
+        communityId: state.data.communityView.community.id,
+        block: !state.data.communityView.blocked,
         auth: token.raw,
       ),
     );
 
-    (communityState.asyncState as AsyncStateData).copyWith();
-
-    // communityState.asyncState.data.communityView = res.communityView
     if (res != null) {
-      communityState.asyncState =
-          (communityState.asyncState as AsyncStateData<FullCommunityView>)
-              .copyWith(
-                  data: (communityState.asyncState
-                          as AsyncStateData<FullCommunityView>)
-                      .data
-                      .copyWith(communityView: res.communityView));
+      communityState.asyncState = state.copyWith(
+        data: state.data.copyWith(communityView: res.communityView),
+      );
     }
   }
 
