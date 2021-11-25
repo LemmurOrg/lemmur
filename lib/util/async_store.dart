@@ -76,7 +76,8 @@ abstract class _AsyncStore<T> with Store {
     bool refresh = false,
   }) async {
     try {
-      return await run(() => LemmyApiV3(instanceHost).run(query));
+      return await run(() => LemmyApiV3(instanceHost).run(query),
+          refresh: refresh);
     } on LemmyApiException catch (err) {
       final data = refresh ? asyncState.mapOrNull(data: (data) => data) : null;
       if (data != null) {

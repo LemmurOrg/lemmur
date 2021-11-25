@@ -68,13 +68,14 @@ void main() {
       expect(store.errorTerm, 'network_error');
     });
 
-    test('succeeds then fails on refresh', () async {
+    test('succeeds then fails on refresh, and then succeeds', () async {
       final store = AsyncStore<FullPostView>();
 
       final res = await store.runLemmy(instanceHost, const GetPost(id: 91588));
 
       expect(store.asyncState, isA<AsyncStateData>());
       expect(store.errorTerm, null);
+
       expect(store.asyncState, AsyncState.data(res!));
 
       await store.runLemmy(
@@ -85,7 +86,7 @@ void main() {
 
       expect(store.asyncState, isA<AsyncStateData>());
       expect(store.errorTerm, 'network_error');
-      expect(store.asyncState, AsyncState.data(res));
+      expect(store.asyncState, AsyncState.data(res, 'network_error'));
 
       final res2 = await store.runLemmy(
         instanceHost,
