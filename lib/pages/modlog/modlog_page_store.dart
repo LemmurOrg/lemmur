@@ -2,16 +2,19 @@ import 'package:lemmy_api_client/v3.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../util/async_store.dart';
+import '../../util/mobx_provider.dart';
 
 part 'modlog_page_store.g.dart';
 
 class ModlogPageStore = _ModlogPageStore with _$ModlogPageStore;
 
-abstract class _ModlogPageStore with Store {
+abstract class _ModlogPageStore with Store, DisposableStore {
   final String instanceHost;
   final int? communityId;
 
-  _ModlogPageStore(this.instanceHost, [this.communityId]);
+  _ModlogPageStore(this.instanceHost, [this.communityId]) {
+    addReaction(reaction((_) => page, (_) => fetchPage()));
+  }
 
   @observable
   int page = 1;
@@ -50,12 +53,10 @@ abstract class _ModlogPageStore with Store {
   @action
   void previousPage() {
     page--;
-    fetchPage();
   }
 
   @action
   void nextPage() {
     page++;
-    fetchPage();
   }
 }
