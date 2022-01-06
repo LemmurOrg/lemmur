@@ -36,7 +36,7 @@ dependencies:
   shared_preferences: ^2.0.5
   package_info_plus: ^1.0.6
   image_picker: ^0.8.4
-  extended_image: ^5.1.2
+  extended_image: ^6.0.1
 
   # state management
   flutter_hooks: ^0.18.0
@@ -81,7 +81,6 @@ flutter_icons:
 # following page: https://dart.dev/tools/pub/pubspec
 # The following section is specific to Flutter.
 flutter:
-  generate: true
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
