@@ -255,5 +255,14 @@
   "show_bot_accounts": "Pokaż konta botów",
   "@show_bot_accounts": {},
   "show_read_posts": "Pokaż przeczytane posty",
-  "@show_read_posts": {}
+  "@show_read_posts": {},
+  "number_of_posts": "{formattedCount,plural, =1{1 post} other{{formattedCount} postów}}",
+  "@number_of_posts": {
+    "placeholders": {
+      "formattedCount": {
+        "type": "int",
+        "format": "compact"
+      }
+    }
+  }
 }
