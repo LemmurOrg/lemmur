@@ -12,6 +12,10 @@ Everything is formatted with `dart format` (no flags) and linted with `dart anal
 
 ## Translations
 
+### Weblate
+
+Lemmy devs are kindly hosting lemmur translation strings on their [Weblate instance](https://weblate.yerbamate.ml/projects/lemmur/lemmur/). Feel free to contribute strings there, we regularly sync string changes with Weblate.
+
 ### Time ago strings
 
 Strings such as "_About one hour ago_" or "_~1h_" are localizable. We inherit a set of ready translations from [github.com/andresaraujo/timeago.dart/messages](https://github.com/andresaraujo/timeago.dart/tree/master/timeago/lib/src/messages) and provide our own in [lib/l10n/timeago](./lib/l10n/timeago).
@@ -53,6 +57,6 @@ If you come from a React background Flutter shouldn't be anything hard to grasp 
 
 - Components are called 'widgets' in flutter
 - `flutter_hooks` is a React hooks port to flutter. Though you will come to see that `flutter_hooks` are not as powerful
-- There is no CSS. You compose your layout with other widgets and style them by passing properties to them
-- There are no functional components, everything has to be a class
+- There is no CSS. You compose your layout with other widgets and style them by passing properties
+- There are no functional components, everything needs to be a class
 - Creating wrapping widgets is not as nice as in React, there is no `{ ...props }`. In flutter you need to pass each argument one by one
