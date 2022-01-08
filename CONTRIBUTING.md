@@ -16,7 +16,7 @@ Everything is formatted with `dart format` (no flags) and linted with `dart anal
 
 Lemmy devs are kindly hosting lemmur translation strings on their [Weblate instance](https://weblate.yerbamate.ml/projects/lemmur/lemmur/). Feel free to contribute strings there, we regularly sync string changes with Weblate.
 
-We use flutter's native file format for translations: ARB. In most cases you will be able to deduce the syntax based on the source string. Here are 3 important examples:
+We use flutter's native file format for translations: ARB, which itself uses the ICU message syntax. In most cases you will be able to deduce the syntax based on the source string. Here are 3 important examples:
 
 1. Placeholders
 

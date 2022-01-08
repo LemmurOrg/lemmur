@@ -2,8 +2,8 @@ name: weblate
 
 on:
   schedule:
-    # every sunday at 00:00
-    - cron: "0 0 * * 0"
+    # every friday at 19:00 UTC
+    - cron: "0 19 * * 5"
 
 jobs:
   weblate:
