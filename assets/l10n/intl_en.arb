@@ -291,5 +291,15 @@
   "show_bot_accounts": "Show Bot Accounts",
   "@show_bot_accounts": {},
   "show_read_posts": "Show Read Posts",
-  "@show_read_posts": {}
+  "@show_read_posts": {},
+  "site_not_set_up": "This site has not yet been set up",
+  "@site_not_set_up": {},
+  "nerd_stuff": "Nerd stuff",
+  "@nerd_stuff": {},
+  "open_in_browser": "Open in browser",
+  "@open_in_browser": {},
+  "cannot_open_in_browser": "Can't open in browser",
+  "@cannot_open_in_browser": {},
+  "about": "About",
+  "@about": {}
 }
