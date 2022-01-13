@@ -188,7 +188,7 @@ class InstancePage extends HookWidget {
     );
   }
 
-  static Route<void> route(String instanceHost) {
+  static Route route(String instanceHost) {
     return MaterialPageRoute(
       builder: (context) {
         return MobxProvider(
