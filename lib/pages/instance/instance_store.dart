@@ -16,23 +16,28 @@ abstract class _InstanceStore with Store {
   final communitiesState = AsyncStore<List<CommunityView>>();
 
   @action
-  Future<void> refresh(Jwt? token) async {
+  Future<void> fetch(Jwt? token, {bool refresh = false}) async {
     await Future.wait([
       siteState.runLemmy(
         instanceHost,
         GetSite(auth: token?.raw),
-        refresh: true,
+        refresh: refresh,
       ),
-      communitiesState.runLemmy(
-        instanceHost,
-        ListCommunities(
-          type: PostListingType.local,
-          sort: SortType.hot,
-          limit: 6,
-          auth: token?.raw,
-        ),
-        refresh: true,
-      ),
+      fetchCommunites(token, refresh: refresh),
     ]);
+  }
+
+  @action
+  Future<void> fetchCommunites(Jwt? token, {bool refresh = false}) async {
+    await communitiesState.runLemmy(
+      instanceHost,
+      ListCommunities(
+        type: PostListingType.local,
+        sort: SortType.hot,
+        limit: 6,
+        auth: token?.raw,
+      ),
+      refresh: refresh,
+    );
   }
 }

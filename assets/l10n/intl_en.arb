@@ -215,7 +215,10 @@
   "number_of_users_online": "{formattedCount,plural, =1{{formattedCount} user online} other{{formattedCount} users online}}",
   "@number_of_users_online": {
     "placeholders": {
-      "formattedCount": {}
+      "formattedCount": {
+        "type": "int",
+        "format": "compact"
+      }
     }
   },
   "number_of_comments": "{formattedCount,plural, =1{{formattedCount} comment} other{{formattedCount} comments}}",
@@ -239,13 +242,28 @@
   "number_of_subscribers": "{formattedCount,plural, =1{{formattedCount} subscriber} other{{formattedCount} subscribers}}",
   "@number_of_subscribers": {
     "placeholders": {
-      "formattedCount": {}
+      "formattedCount": {
+        "type": "int",
+        "format": "compact"
+      }
     }
   },
   "number_of_users": "{formattedCount,plural, =1{{formattedCount} user} other{{formattedCount} users}}",
   "@number_of_users": {
     "placeholders": {
-      "formattedCount": {}
+      "formattedCount": {
+        "type": "int",
+        "format": "compact"
+      }
+    }
+  },
+  "number_of_communities": "{formattedCount,plural, =1{{formattedCount} community} other{{formattedCount} communities}}",
+  "@number_of_communities": {
+    "placeholders": {
+      "formattedCount": {
+        "type": "int",
+        "format": "compact"
+      }
     }
   },
   "unsubscribe": "unsubscribe",
@@ -301,5 +319,27 @@
   "cannot_open_in_browser": "Can't open in browser",
   "@cannot_open_in_browser": {},
   "about": "About",
-  "@about": {}
+  "@about": {},
+  "see_all": "See all",
+  "@see_all": {},
+  "admins": "Admins",
+  "@admins": {},
+  "trending_communities": "Trending communities",
+  "@trending_communities": {},
+  "communities_of_instance": "Communities of {instance}",
+  "@communities_of_instance": {
+    "placeholders": {
+      "instance": {
+        "type": "String"
+      }
+    }
+  },
+  "day": "day",
+  "@day": {},
+  "week": "week",
+  "@week": {},
+  "month": "month",
+  "@month": {},
+  "six_months": "6 months",
+  "@six_months": {}
 }

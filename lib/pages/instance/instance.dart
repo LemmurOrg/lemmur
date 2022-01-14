@@ -39,11 +39,13 @@ class InstancePage extends HookWidget {
           ),
           error: (errorTerm) => Scaffold(
             appBar: AppBar(),
-            body: FailedToLoad(
-              refresh: () => store.refresh(
-                context.defaultJwt(store.instanceHost),
+            body: Center(
+              child: FailedToLoad(
+                refresh: () => store.fetch(
+                  context.defaultJwt(store.instanceHost),
+                ),
+                message: errorTerm.tr(context),
               ),
-              message: errorTerm.tr(context),
             ),
           ),
           data: (site) {
@@ -193,7 +195,7 @@ class InstancePage extends HookWidget {
       builder: (context) {
         return MobxProvider(
           create: (context) => InstanceStore(instanceHost)
-            ..refresh(context.defaultJwt(instanceHost)),
+            ..fetch(context.defaultJwt(instanceHost)),
           child: const InstancePage(),
         );
       },
