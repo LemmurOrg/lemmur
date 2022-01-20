@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lemmy_api_client/v3.dart';
 import 'package:url_launcher/url_launcher.dart' as ul;
 
 import '../../l10n/l10n.dart';
+import '../../stores/accounts_store.dart';
+import '../../util/observer_consumers.dart';
 import '../../widgets/bottom_modal.dart';
 import '../../widgets/info_table_popup.dart';
 
-class InstanceMoreMenu extends HookWidget {
+class InstanceMoreMenu extends StatelessWidget {
   final FullSiteView site;
 
   const InstanceMoreMenu({Key? key, required this.site}) : super(key: key);
@@ -15,9 +16,24 @@ class InstanceMoreMenu extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final instanceUrl = 'https://${site.instanceHost}';
+    final accountsStore = context.watch<AccountsStore>();
 
     return Column(
       children: [
+        if (!accountsStore.instances.contains(site.instanceHost))
+          ListTile(
+            leading: const Icon(Icons.add),
+            title: Text(L10n.of(context).add_instance),
+            onTap: () {
+              accountsStore.addInstance(site.instanceHost, assumeValid: true);
+              Navigator.of(context).pop();
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(content: Text(L10n.of(context).instance_added)),
+                );
+            },
+          ),
         ListTile(
           leading: const Icon(Icons.open_in_browser),
           title: Text(L10n.of(context).open_in_browser),

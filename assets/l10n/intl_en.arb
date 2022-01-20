@@ -341,5 +341,9 @@
   "month": "month",
   "@month": {},
   "six_months": "6 months",
-  "@six_months": {}
+  "@six_months": {},
+  "add_instance": "Add instance",
+  "@add_instance": {},
+  "instance_added": "Instance successfully added",
+  "@instance_added": {}
 }
