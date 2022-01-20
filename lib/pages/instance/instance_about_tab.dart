@@ -10,6 +10,7 @@ import '../../util/observer_consumers.dart';
 import '../../widgets/avatar.dart';
 import '../../widgets/failed_to_load.dart';
 import '../../widgets/markdown_text.dart';
+import '../../widgets/pull_to_refresh.dart';
 import '../../widgets/user_tile.dart';
 import '../communities_list.dart';
 import '../community/community.dart';
@@ -46,141 +47,146 @@ class InstanceAboutTab extends HookWidget {
       );
     }
 
-    return SingleChildScrollView(
-      child: SafeArea(
-        top: false,
-        child: Column(
-          children: [
-            if (siteView.site.description != null) ...[
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 15,
-                  vertical: 15,
+    return PullToRefresh(
+      onRefresh: () => context
+          .read<InstanceStore>()
+          .fetch(context.defaultJwt(site.instanceHost), refresh: true),
+      child: SingleChildScrollView(
+        child: SafeArea(
+          top: false,
+          child: Column(
+            children: [
+              if (siteView.site.description != null) ...[
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 15,
+                    vertical: 15,
+                  ),
+                  child: MarkdownText(
+                    siteView.site.description!,
+                    instanceHost: site.instanceHost,
+                  ),
                 ),
-                child: MarkdownText(
-                  siteView.site.description!,
-                  instanceHost: site.instanceHost,
+                const _Divider(),
+              ],
+              SizedBox(
+                height: 32,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  children: [
+                    Chip(
+                      label: Text(
+                        l10n.number_of_users_online(site.online),
+                      ),
+                    ),
+                    Chip(
+                      label: Text(
+                        '${l10n.number_of_users(siteView.counts.usersActiveDay)} / ${l10n.day}',
+                      ),
+                    ),
+                    Chip(
+                      label: Text(
+                        '${l10n.number_of_users(siteView.counts.usersActiveWeek)} / ${l10n.week}',
+                      ),
+                    ),
+                    Chip(
+                      label: Text(
+                        '${l10n.number_of_users(siteView.counts.usersActiveMonth)} / ${l10n.month}',
+                      ),
+                    ),
+                    Chip(
+                      label: Text(
+                        '${l10n.number_of_users(siteView.counts.usersActiveHalfYear)} / ${l10n.six_months}',
+                      ),
+                    ),
+                    Chip(
+                      label: Text(
+                        l10n.number_of_users(siteView.counts.users),
+                      ),
+                    ),
+                    Chip(
+                      label: Text(
+                        l10n.number_of_communities(siteView.counts.communities),
+                      ),
+                    ),
+                    Chip(
+                      label: Text(
+                        l10n.number_of_posts(siteView.counts.posts),
+                      ),
+                    ),
+                    Chip(
+                      label: Text(
+                        l10n.number_of_comments(siteView.counts.comments),
+                      ),
+                    ),
+                  ].spaced(8),
                 ),
               ),
               const _Divider(),
-            ],
-            SizedBox(
-              height: 32,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                children: [
-                  Chip(
-                    label: Text(
-                      l10n.number_of_users_online(site.online),
-                    ),
+              ListTile(
+                title: Center(
+                  child: Text(
+                    l10n.trending_communities,
+                    style: theme.textTheme.headline6?.copyWith(fontSize: 18),
                   ),
-                  Chip(
-                    label: Text(
-                      '${l10n.number_of_users(siteView.counts.usersActiveDay)} / ${l10n.day}',
-                    ),
-                  ),
-                  Chip(
-                    label: Text(
-                      '${l10n.number_of_users(siteView.counts.usersActiveWeek)} / ${l10n.week}',
-                    ),
-                  ),
-                  Chip(
-                    label: Text(
-                      '${l10n.number_of_users(siteView.counts.usersActiveMonth)} / ${l10n.month}',
-                    ),
-                  ),
-                  Chip(
-                    label: Text(
-                      '${l10n.number_of_users(siteView.counts.usersActiveHalfYear)} / ${l10n.six_months}',
-                    ),
-                  ),
-                  Chip(
-                    label: Text(
-                      l10n.number_of_users(siteView.counts.users),
-                    ),
-                  ),
-                  Chip(
-                    label: Text(
-                      l10n.number_of_communities(siteView.counts.communities),
-                    ),
-                  ),
-                  Chip(
-                    label: Text(
-                      l10n.number_of_posts(siteView.counts.posts),
-                    ),
-                  ),
-                  Chip(
-                    label: Text(
-                      l10n.number_of_comments(siteView.counts.comments),
-                    ),
-                  ),
-                ].spaced(8),
-              ),
-            ),
-            const _Divider(),
-            ListTile(
-              title: Center(
-                child: Text(
-                  l10n.trending_communities,
-                  style: theme.textTheme.headline6?.copyWith(fontSize: 18),
                 ),
               ),
-            ),
-            ObserverBuilder<InstanceStore>(
-              builder: (context, store) => store.communitiesState.map(
-                loading: () => const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10),
-                  child: CircularProgressIndicator.adaptive(),
-                ),
-                error: (errorTerm) => FailedToLoad(
-                  refresh: () => store
-                      .fetchCommunites(context.defaultJwt(store.instanceHost)),
-                  message: errorTerm.tr(context),
-                ),
-                data: (communities) => Column(
-                  children: [
-                    for (final c in communities)
-                      ListTile(
-                        onTap: () => Navigator.of(context).push(
-                          CommunityPage.fromIdRoute(
-                            store.instanceHost,
-                            c.community.id,
+              ObserverBuilder<InstanceStore>(
+                builder: (context, store) => store.communitiesState.map(
+                  loading: () => const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    child: CircularProgressIndicator.adaptive(),
+                  ),
+                  error: (errorTerm) => FailedToLoad(
+                    refresh: () => store.fetchCommunites(
+                        context.defaultJwt(store.instanceHost)),
+                    message: errorTerm.tr(context),
+                  ),
+                  data: (communities) => Column(
+                    children: [
+                      for (final c in communities)
+                        ListTile(
+                          onTap: () => Navigator.of(context).push(
+                            CommunityPage.fromIdRoute(
+                              store.instanceHost,
+                              c.community.id,
+                            ),
                           ),
-                        ),
-                        title: Text(c.community.name),
-                        leading: Avatar(url: c.community.icon),
-                      )
-                  ],
+                          title: Text(c.community.name),
+                          leading: Avatar(url: c.community.icon),
+                        )
+                    ],
+                  ),
                 ),
               ),
-            ),
-            ListTile(
-              title: Center(child: Text(l10n.see_all)),
-              onTap: goToCommunities,
-            ),
-            const _Divider(),
-            ListTile(
-              title: Center(
-                child: Text(
-                  l10n.admins,
-                  style: theme.textTheme.headline6?.copyWith(fontSize: 18),
+              ListTile(
+                title: Center(child: Text(l10n.see_all)),
+                onTap: goToCommunities,
+              ),
+              const _Divider(),
+              ListTile(
+                title: Center(
+                  child: Text(
+                    l10n.admins,
+                    style: theme.textTheme.headline6?.copyWith(fontSize: 18),
+                  ),
                 ),
               ),
-            ),
-            for (final u in site.admins)
-              PersonTile(
-                u.person,
-                expanded: true,
+              for (final u in site.admins)
+                PersonTile(
+                  u.person,
+                  expanded: true,
+                ),
+              const _Divider(),
+              ListTile(
+                title: Center(child: Text(l10n.modlog)),
+                onTap: () => Navigator.of(context).push(
+                  ModlogPage.forInstanceRoute(site.instanceHost),
+                ),
               ),
-            const _Divider(),
-            ListTile(
-              title: Center(child: Text(l10n.modlog)),
-              onTap: () => Navigator.of(context).push(
-                ModlogPage.forInstanceRoute(site.instanceHost),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
