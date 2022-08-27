@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,6 +20,7 @@ Future<void> mainCommon(AppConfig appConfig) async {
 
   final logConsoleStore = LogConsolePageStore();
   final sharedPrefs = await SharedPreferences.getInstance();
+  await Hive.initFlutter();
 
   _setupLogger(appConfig, logConsoleStore);
   _setupTimeago();
