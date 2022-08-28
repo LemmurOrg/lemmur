@@ -116,10 +116,15 @@ class WriteComment extends HookWidget {
         leading: CloseButton(
           onPressed: () async {
             // save draft before closing
-            if (!_isEdit &&
-                editorController.textEditingController.text.trim().isNotEmpty) {
-              await CommentDraftStore.saveDraft(comment?.apId ?? post.apId,
-                  editorController.textEditingController.text);
+            if (!_isEdit) {
+              if (editorController.textEditingController.text
+                  .trim()
+                  .isNotEmpty) {
+                await CommentDraftStore.saveDraft(comment?.apId ?? post.apId,
+                    editorController.textEditingController.text);
+              } else {
+                await CommentDraftStore.removeDraft(comment?.apId ?? post.apId);
+              }
             }
             Navigator.of(context).pop();
           },

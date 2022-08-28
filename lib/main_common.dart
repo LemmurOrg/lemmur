@@ -12,6 +12,7 @@ import 'app_config.dart';
 import 'l10n/timeago/pl.dart';
 import 'pages/log_console/log_console_page_store.dart';
 import 'stores/accounts_store.dart';
+import 'stores/comment_drafts_store.dart';
 import 'stores/config_store.dart';
 import 'util/mobx_provider.dart';
 
@@ -21,6 +22,7 @@ Future<void> mainCommon(AppConfig appConfig) async {
   final logConsoleStore = LogConsolePageStore();
   final sharedPrefs = await SharedPreferences.getInstance();
   await Hive.initFlutter();
+  await CommentDraftStore.open();
 
   _setupLogger(appConfig, logConsoleStore);
   _setupTimeago();

@@ -16,6 +16,7 @@ import '../manage_account.dart';
 import 'add_account_page.dart';
 import 'add_instance_page.dart';
 import 'blocks/blocks.dart';
+import 'drafts_page.dart';
 
 /// Page with a list of different settings sections
 class SettingsPage extends HookWidget {
@@ -58,6 +59,13 @@ class SettingsPage extends HookWidget {
             title: const Text('Appearance'),
             onTap: () {
               goTo(context, (_) => const AppearanceConfigPage());
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.drive_file_rename_outline_outlined),
+            title: const Text('Drafts'),
+            onTap: () {
+              Navigator.of(context).push(DraftsPage.route());
             },
           ),
           const AboutTile()
