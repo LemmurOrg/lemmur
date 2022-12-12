@@ -22,6 +22,7 @@ A mobile client for [Lemmy](https://github.com/LemmyNet/lemmy) - a federated red
     - [Prerequisites](#prerequisites)
     - [Android](#android)
     - [Linux](#linux)
+    - [Flatpak](#flatpak)
     - [Windows](#windows)
   - [FAQ](#faq)
     - [Version x.x.x was released, why is it not yet on F-droid?](#version-xxx-was-released-why-is-it-not-yet-on-f-droid)
@@ -47,6 +48,18 @@ The apk will be in `build/app/outputs/flutter-apk/app-prod-release.apk`
 2. Build: `flutter build linux --target lib/main_prod.dart --release`
 
 The executable will be in `build/linux/x64/release/bundle/lemmur` (be aware, however, that this executable is not standalone)
+
+### Flatpak
+Currently flutter does not support crosscompiling to Linux ARM64
+1. Make sure you have the additional [linux requirements](https://flutter.dev/desktop#additional-linux-requirements) (verify with `flutter doctor`), and that you have setup [flathub](https://flatpak.org/setup/) with the flatpak dependencies (flatpak
+flatpak-builder)
+2. Building and installing: 
+```bash
+flutter build linux --target lib/main_prod.dart --release
+cd flatpak
+tar -C ../build/linux/x64/release/bundle -cvf lemmur-linux-x86.tar.gz .
+flatpak-builder --user --install --force-clean build-dir com.krawieck.lemmur.json
+```
 
 ### Windows
 
