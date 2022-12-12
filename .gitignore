@@ -40,3 +40,8 @@ app.*.map.json
 
 # Xcode build files
 ios/build
+
+# Flatpak build files
+flatpak/.flatpak-builder
+flatpak/build-dir
+flatpak/lemmur-linux-*.tar.gz
