@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>com.krawieck.lemmur</id>
+  
+  <name>Lemmur</name>
+  <summary>A client for lemmy - a federated reddit alternative</summary>
+  
+  <metadata_license>FSFAP</metadata_license>
+  <project_license>GPL-2.0-only</project_license>
+  
+  <supports>
+    <control>pointing</control>
+    <control>keyboard</control>
+    <control>touch</control>
+  </supports>
+  
+  <description>
+    <p>
+      Lemmur aims to provide a seamless experience when browsing different Lemmy instances.
+    </p>
+    <p>
+      You can have multiple multiple instances added at the same time without having to awkwardly switch between them.
+    </p>
+  </description>
+  
+  <launchable type="desktop-id">com.krawieck.lemmur.desktop</launchable>
+</component>
