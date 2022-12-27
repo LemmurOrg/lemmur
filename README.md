@@ -22,10 +22,9 @@ A mobile client for [Lemmy](https://github.com/LemmyNet/lemmy) - a federated red
     - [Prerequisites](#prerequisites)
     - [Android](#android)
     - [Linux](#linux)
-    - [Flatpak](#flatpak)
     - [Windows](#windows)
   - [FAQ](#faq)
-    - [Version x.x.x was released, why is it not yet on F-droid?](#version-xxx-was-released-why-is-it-not-yet-on-f-droid)
+    - [Version x.x.x was released, why is it not yet on F-droid/Flatpak?](#version-xxx-was-released-why-is-it-not-yet-on-f-droidflatpak)
     - ["App not installed" - what to do?](#app-not-installed---what-to-do)
 
 ## Build from source
@@ -49,18 +48,6 @@ The apk will be in `build/app/outputs/flutter-apk/app-prod-release.apk`
 
 The executable will be in `build/linux/x64/release/bundle/lemmur` (be aware, however, that this executable is not standalone)
 
-### Flatpak
-Currently flutter does not support crosscompiling to Linux ARM64
-1. Make sure you have the additional [linux requirements](https://flutter.dev/desktop#additional-linux-requirements) (verify with `flutter doctor`), and that you have setup [flathub](https://flatpak.org/setup/) with the flatpak dependencies (flatpak
-flatpak-builder)
-2. Building and installing: 
-```bash
-flutter build linux --target lib/main_prod.dart --release
-cd flatpak
-tar -C ../build/linux/x64/release/bundle -cvf lemmur-linux-x86.tar.gz .
-flatpak-builder --user --install --force-clean build-dir com.krawieck.lemmur.json
-```
-
 ### Windows
 
 1. Make sure you have the additional [windows requirements](https://flutter.dev/desktop#additional-windows-requirements) (verify with `flutter doctor`)
@@ -70,7 +57,7 @@ The executable will be in `build\windows\runner\Release\lemmur.exe` (be aware, h
 
 ## FAQ
 
-### Version x.x.x was released, why is it not yet on F-droid?
+### Version x.x.x was released, why is it not yet on F-droid/Flatpak?
 
 We have no control over F-droid's build process. This process is automatic and not always predictable in terms of time it takes. If a new version does not appear in F-droid a week after its release, then feel free to open an issue about it and we will look into it.
 
