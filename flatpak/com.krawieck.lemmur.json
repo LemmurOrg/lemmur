@@ -52,7 +52,13 @@
             "url": "https://github.com/LemmurOrg/lemmur/releases/download/v0.8.0/lemmur-v0.8.0-x86_64-linux.tar.gz",
             "dest": "lemmur",
             "sha256": "47bbd7cc7ad2c4f036cd26ba552d2a17c786f0e834d214bf4cb1ab2395ec2079",
-            "strip-components": 0
+            "strip-components": 0,
+            "x-checker-data": {
+              "type": "json",
+              "url": "https://api.github.com/repos/lemmurorg/lemmur/releases/latest",
+              "version-query": ".tag_name",
+              "url-query":".assets[] | select(.name==\"lemmur-\" + $version + \"-x86_64-linux.tar.gz\") | .browser_download_url"
+            }
           }
 
 
