@@ -5,6 +5,7 @@ import 'package:lemmy_api_client/v3.dart';
 import '../hooks/delayed_loading.dart';
 import '../hooks/logged_in_action.dart';
 import '../l10n/l10n.dart';
+import '../stores/comment_drafts_store.dart';
 import 'editor/editor.dart';
 import 'markdown_mode_icon.dart';
 import 'markdown_text.dart';
@@ -39,6 +40,20 @@ class WriteComment extends HookWidget {
       instanceHost: post.instanceHost,
       text: _isEdit ? comment?.content : null,
     );
+
+    // load draft if exists
+    useEffect(() {
+      () async {
+        if (_isEdit) return;
+
+        final previousDraft =
+            await CommentDraftStore.loadDraft(comment?.apId ?? post.apId);
+        if (previousDraft != null) {
+          editorController.textEditingController.text = previousDraft;
+        }
+      }();
+      return null;
+    }, []);
 
     final preview = () {
       final body = () {
@@ -84,6 +99,10 @@ class WriteComment extends HookWidget {
             ));
           }
         }();
+
+        // remove draft because it's not needed anymore
+        await CommentDraftStore.removeDraft(comment?.apId ?? post.apId);
+
         Navigator.of(context).pop(res.commentView);
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -94,7 +113,22 @@ class WriteComment extends HookWidget {
 
     return Scaffold(
       appBar: AppBar(
-        leading: const CloseButton(),
+        leading: CloseButton(
+          onPressed: () async {
+            // save draft before closing
+            if (!_isEdit) {
+              if (editorController.textEditingController.text
+                  .trim()
+                  .isNotEmpty) {
+                await CommentDraftStore.saveDraft(comment?.apId ?? post.apId,
+                    editorController.textEditingController.text);
+              } else {
+                await CommentDraftStore.removeDraft(comment?.apId ?? post.apId);
+              }
+            }
+            Navigator.of(context).pop();
+          },
+        ),
         actions: [
           IconButton(
             icon: markdownModeIcon(fancy: showFancy.value),
