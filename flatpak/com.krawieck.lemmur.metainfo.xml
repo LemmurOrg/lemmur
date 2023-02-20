@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>com.krawieck.lemmur</id>
+  
+  <name>Lemmur</name>
+  <summary>A client for lemmy - a federated reddit alternative</summary>
+  
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-2.0-only</project_license>
+  
+  <supports>
+    <control>pointing</control>
+    <control>keyboard</control>
+    <control>touch</control>
+  </supports>
+  
+  <developer_name>Filip Krawczyk</developer_name>
+  <url type="homepage">https://github.com/LemmurOrg/lemmur</url>
+  <url type="bugtracker">https://github.com/LemmurOrg/lemmur/issues</url>
+  <url type="donation">https://www.buymeacoffee.com/lemmur</url>
+  <url type="translate">https://weblate.join-lemmy.org/engage/lemmur</url>
+  
+  <description>
+    <p>
+      Lemmur aims to provide a seamless experience when browsing different Lemmy instances.
+    </p>
+    <p>
+      You can have multiple multiple instances added at the same time without having to awkwardly switch between them.
+    </p>
+  </description>
+  
+  <screenshots>
+    <screenshot>
+      <image type="source">https://f-droid.org/repo/com.krawieck.lemmur/en-US/phoneScreenshots/1.png</image>
+      <image type="source">https://f-droid.org/repo/com.krawieck.lemmur/en-US/phoneScreenshots/2.png</image>
+      <image type="source">https://f-droid.org/repo/com.krawieck.lemmur/en-US/phoneScreenshots/3.png</image>
+      <image type="source">https://f-droid.org/repo/com.krawieck.lemmur/en-US/phoneScreenshots/4.png</image>
+      <image type="source">https://f-droid.org/repo/com.krawieck.lemmur/en-US/phoneScreenshots/5.png</image>
+      <image type="source">https://f-droid.org/repo/com.krawieck.lemmur/en-US/phoneScreenshots/6.png</image>
+    </screenshot>
+  </screenshots>
+
+  <launchable type="desktop-id">com.krawieck.lemmur.desktop</launchable>
+
+  <content_rating type="oars-1.1">
+    <content_attribute id="social-chat">intense</content_attribute>
+    <content_attribute id="social-info">mild</content_attribute>
+    <content_attribute id="social-contacts">intense</content_attribute>
+  </content_rating>
+</component>

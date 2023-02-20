@@ -30,7 +30,7 @@ A mobile client for [Lemmy](https://github.com/LemmyNet/lemmy) - a federated red
     - [Linux](#linux)
     - [Windows](#windows)
   - [FAQ](#faq)
-    - [Version x.x.x was released, why is it not yet on F-droid?](#version-xxx-was-released-why-is-it-not-yet-on-f-droid)
+    - [Version x.x.x was released, why is it not yet on F-droid/Flatpak?](#version-xxx-was-released-why-is-it-not-yet-on-f-droidflatpak)
     - ["App not installed" - what to do?](#app-not-installed---what-to-do)
 
 ## Build from source
@@ -63,7 +63,7 @@ The executable will be in `build\windows\runner\Release\lemmur.exe` (be aware, h
 
 ## FAQ
 
-### Version x.x.x was released, why is it not yet on F-droid?
+### Version x.x.x was released, why is it not yet on F-droid/Flatpak?
 
 We have no control over F-droid's build process. This process is automatic and not always predictable in terms of time it takes. If a new version does not appear in F-droid a week after its release, then feel free to open an issue about it and we will look into it.
 

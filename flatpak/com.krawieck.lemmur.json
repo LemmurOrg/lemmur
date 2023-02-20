@@ -1,0 +1,68 @@
+{
+    "app-id": "com.krawieck.lemmur",
+    "runtime": "org.freedesktop.Platform",
+    "runtime-version": "22.08",
+    "sdk": "org.freedesktop.Sdk",
+    "command": "lemmur",
+    "separate-locales": false,
+    "finish-args": [
+      "--share=ipc",
+      "--socket=fallback-x11",
+      "--socket=wayland",
+      "--device=dri",
+      "--socket=pulseaudio",
+      "--share=network",
+      "--filesystem=xdg-download"
+    ],
+    "modules": [
+      {
+        "name": "lemmur",
+        "buildsystem": "simple",
+        "only-arches": [
+          "x86_64"
+        ],
+        "build-commands": [
+          "ls lemmur",
+          "cp -r lemmur /app/lemmur",
+          "chmod +x /app/lemmur/lemmur",
+          "mkdir -p /app/bin",
+          "install -Dm644 ./app_icon.svg /app/share/icons/hicolor/scalable/apps/com.krawieck.lemmur.svg",
+          "ln -s /app/lemmur/lemmur /app/bin/lemmur",
+          "install -Dm644 com.krawieck.lemmur.desktop /app/share/applications/com.krawieck.lemmur.desktop",
+          "install -Dm644 com.krawieck.lemmur.metainfo.xml /app/share/appdata/com.krawieck.lemmur.metainfo.xml"
+        ],
+        "sources": [
+          {
+            "type": "file",
+            "path": "com.krawieck.lemmur.metainfo.xml"
+          },
+          {
+            "type": "file",
+            "path": "com.krawieck.lemmur.desktop"
+          },
+          {
+            "type": "file",
+            "path": "app_icon.svg"
+          },
+          {
+            "type": "archive",
+            "only-arches": [
+              "x86_64"
+            ],
+            "url": "https://github.com/LemmurOrg/lemmur/releases/download/v0.8.0/lemmur-v0.8.0-x86_64-linux.tar.gz",
+            "dest": "lemmur",
+            "sha256": "47bbd7cc7ad2c4f036cd26ba552d2a17c786f0e834d214bf4cb1ab2395ec2079",
+            "strip-components": 0,
+            "x-checker-data": {
+              "type": "json",
+              "url": "https://api.github.com/repos/lemmurorg/lemmur/releases/latest",
+              "version-query": ".tag_name",
+              "url-query":".assets[] | select(.name==\"lemmur-\" + $version + \"-x86_64-linux.tar.gz\") | .browser_download_url"
+            }
+          }
+
+
+        ]
+      }
+    ]
+  }

@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+
+Name=Lemmur
+Comment=A client for lemmy - a federated reddit alternative
+Categories=Network;News;X-Social Media;
+
+Icon=com.krawieck.lemmur
+Exec=lemmur
+Terminal=false
+StartupWMClass=lemmur

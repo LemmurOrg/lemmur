@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 
@@ -6,6 +8,15 @@ import 'pages/home_page.dart';
 import 'resources/theme.dart';
 import 'stores/config_store.dart';
 import 'util/observer_consumers.dart';
+
+//Fixes scroll behaviour on Linux devices
+class TouchScrollBehaviour extends MaterialScrollBehavior {
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+      };
+}
 
 class MyApp extends StatelessWidget {
   const MyApp();
@@ -22,6 +33,7 @@ class MyApp extends StatelessWidget {
           darkTheme: store.amoledDarkMode ? amoledTheme : darkTheme,
           locale: store.locale,
           theme: lightTheme,
+          scrollBehavior: TouchScrollBehaviour(),
           home: const HomePage(),
         ),
       ),
